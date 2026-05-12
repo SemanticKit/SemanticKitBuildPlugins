@@ -6,11 +6,9 @@ import Yams
 
 public struct RepositoryValidator {
     private let policyEngine = SwiftOPAPolicyEngine()
-    private let swiftFactCollector: SwiftSourceFactCollector
+    private let swiftFactCollector = SwiftSourceFactCollector()
 
-    public init(swiftFactCollector: SwiftSourceFactCollector = SwiftSourceFactCollector()) {
-        self.swiftFactCollector = swiftFactCollector
-    }
+    public init() {}
 
     public func validate(packageDirectory: URL) async -> CommandResult {
         var report = ValidationReport()
