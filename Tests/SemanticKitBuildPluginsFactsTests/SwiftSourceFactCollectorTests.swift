@@ -54,6 +54,26 @@ final class SwiftSourceFactCollectorTests: XCTestCase {
             encoding: .utf8
         )
         try FileManager.default.createDirectory(at: root.appendingPathComponent("Docs/Guide.docc"), withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: root.appendingPathComponent("Config"), withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: root.appendingPathComponent("Shaders"), withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: root.appendingPathComponent("Sources/C"), withIntermediateDirectories: true)
+        try "<plist/>".write(
+            to: root.appendingPathComponent("Config/Info.plist"),
+            atomically: true,
+            encoding: .utf8
+        )
+        try "kernel void k() {}".write(
+            to: root.appendingPathComponent("Shaders/Compute.metal"),
+            atomically: true,
+            encoding: .utf8
+        )
+        try "int x;".write(
+            to: root.appendingPathComponent("Sources/C/include.h"),
+            atomically: true,
+            encoding: .utf8
+        )
+        try FileManager.default.createDirectory(at: root.appendingPathComponent("App.xcodeproj"), withIntermediateDirectories: true)
+        try FileManager.default.createDirectory(at: root.appendingPathComponent("Workspace.xcworkspace"), withIntermediateDirectories: true)
 
         let catalog = try SwiftSourceFactCollector().collectArtifactCatalog(
             packageDirectory: root,
@@ -66,6 +86,10 @@ final class SwiftSourceFactCollectorTests: XCTestCase {
         XCTAssertEqual(catalog.workflowYAML, [".github/workflows/ci.yml"])
         XCTAssertEqual(catalog.markdownFiles, ["README.md"])
         XCTAssertEqual(catalog.doccCatalogs, ["Docs/Guide.docc"])
+        XCTAssertEqual(catalog.propertyLists, ["Config/Info.plist"])
+        XCTAssertEqual(catalog.metalSources, ["Shaders/Compute.metal"])
+        XCTAssertEqual(catalog.cFamilySources, ["Sources/C/include.h"])
+        XCTAssertEqual(catalog.xcodeMetadata, ["App.xcodeproj", "Workspace.xcworkspace"])
         XCTAssertEqual(catalog.policyModuleRoots, [root.appendingPathComponent("Policies").path])
     }
 
