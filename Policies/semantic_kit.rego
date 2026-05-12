@@ -1,5 +1,7 @@
 package semantickit.main
 
+import data.semantickit.shared
+
 default decision := {"deny": [], "warn": [], "note": []}
 
 decision := {
@@ -42,6 +44,15 @@ baseline_denial contains {
   "severity": "error",
 } if {
   input.workflowContainsScriptEntrypoints
+}
+
+baseline_denial contains {
+  "message": sprintf("Direct dependency URL must use a secure transport: %v", [url]),
+  "artifact": "Package.swift",
+  "severity": "error",
+} if {
+  url := input.directDependencyURLs[_]
+  shared.insecure_dependency(url)
 }
 
 swiftui_denial contains {

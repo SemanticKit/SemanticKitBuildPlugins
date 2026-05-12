@@ -66,6 +66,42 @@ test_denies_binding_get_set_constructor if {
 }
 
 
+test_denies_insecure_dependency_url if {
+  result := decision with input as {
+    "repositoryConfiguration": {
+      "swiftVersion": "6.3",
+      "macOSDeploymentTarget": "26"
+    },
+    "directDependencyURLs": ["http://example.com/Policies.git"],
+    "workflowContainsScriptEntrypoints": false,
+    "swiftSourceFacts": {"bindingConstructionFacts": []},
+    "artifactCatalog": {
+      "markdownFiles": ["README.md"],
+      "doccCatalogs": ["Docs/Guide.docc"],
+      "propertyLists": ["Config/Info.plist"]
+    }
+  }
+  count(result.deny) == 1
+}
+
+test_allows_secure_dependency_url if {
+  result := decision with input as {
+    "repositoryConfiguration": {
+      "swiftVersion": "6.3",
+      "macOSDeploymentTarget": "26"
+    },
+    "directDependencyURLs": ["https://example.com/Policies.git"],
+    "workflowContainsScriptEntrypoints": false,
+    "swiftSourceFacts": {"bindingConstructionFacts": []},
+    "artifactCatalog": {
+      "markdownFiles": ["README.md"],
+      "doccCatalogs": ["Docs/Guide.docc"],
+      "propertyLists": ["Config/Info.plist"]
+    }
+  }
+  count(result.deny) == 0
+}
+
 test_warns_when_docs_artifacts_missing if {
   result := decision with input as {
     "repositoryConfiguration": {
