@@ -1,6 +1,6 @@
 # SemanticKitBuildPlugins
 
-SwiftPM-native CI/CD build tooling for the SemanticKit workspace.
+SwiftPM-native build tooling for OPA/Rego-first policy enforcement in SemanticKit and consumer repositories.
 
 ## Commands
 
@@ -14,3 +14,5 @@ swift package --allow-writing-to-package-directory semantic-kit-build-plugins mi
 ```
 
 The command and build-tool plugins delegate to an internal executable target so plugin entrypoints stay thin while business logic remains in Swift modules.
+
+Architecture contract: `Docs/OPA-Rego-First-Architecture.md`

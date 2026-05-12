@@ -23,25 +23,34 @@ public struct RepositoryValidator {
         let workflowScan = scanGeneratedWorkflow(packageDirectory: packageDirectory)
         report.append(contentsOf: workflowScan.decodeDiagnostics)
 
-        let swiftFacts: SwiftSourceFacts
+        let policyRoots = discoverPolicyModuleRoots(packageDirectory: packageDirectory, report: &report)
+
+        var swiftFacts: SwiftSourceFacts
+        var artifactCatalog: ArtifactCatalog
         do {
             swiftFacts = try swiftFactCollector.collect(packageDirectory: packageDirectory)
+            artifactCatalog = try swiftFactCollector.collectArtifactCatalog(
+                packageDirectory: packageDirectory,
+                policyModuleRoots: policyRoots
+            )
         } catch {
             report.append(
                 ValidationDiagnostic(
                     severity: .error,
-                    message: "Unable to collect Swift source facts via SwiftSyntax: \(error)",
+                    message: "Unable to collect project artifacts via SwiftSyntax/artifact discovery: \(error)",
                     location: "Sources"
                 )
             )
             swiftFacts = SwiftSourceFacts()
+            artifactCatalog = ArtifactCatalog(policyModuleRoots: policyRoots.map(\.path))
         }
 
         let policyInput = PolicyInput(
             repositoryConfiguration: configuration,
             directDependencyURLs: dependencyURLs,
             workflowContainsScriptEntrypoints: workflowScan.containsScriptEntrypoints,
-            swiftSourceFacts: swiftFacts
+            swiftSourceFacts: swiftFacts,
+            artifactCatalog: artifactCatalog
         )
         report.append(contentsOf: await policyEngine.evaluate(policyInput, packageDirectory: packageDirectory).diagnostics)
 
@@ -111,9 +120,83 @@ public struct RepositoryValidator {
         let matches = text.matches(of: /\.package\(url:\s*"([^"]+)"/)
         return matches.map { String($0.1) }
     }
+
+    private func discoverPolicyModuleRoots(packageDirectory: URL, report: inout ValidationReport) -> [URL] {
+        var roots: [URL] = []
+        let localRoot = packageDirectory.appendingPathComponent("Policies", isDirectory: true)
+        if FileManager.default.fileExists(atPath: localRoot.path) {
+            roots.append(localRoot)
+        }
+
+        let dependencyRoots = discoverDependencyPolicyRoots(packageDirectory: packageDirectory, report: &report)
+        roots.append(contentsOf: dependencyRoots)
+
+        return Array(Set(roots.map(\.standardizedFileURL))).sorted { $0.path < $1.path }
+    }
+
+    private func discoverDependencyPolicyRoots(packageDirectory: URL, report: inout ValidationReport) -> [URL] {
+        do {
+            let data = try runSwiftPackageShowDependencies(packageDirectory: packageDirectory)
+            let graph = try JSONDecoder().decode(DependencyNode.self, from: data)
+            var roots: [URL] = []
+            collectPolicyRoots(from: graph, into: &roots)
+            return roots
+        } catch {
+            report.append(
+                ValidationDiagnostic(
+                    severity: .warning,
+                    message: "Unable to discover dependency policy roots from SwiftPM graph: \(error)",
+                    location: "Package.swift"
+                )
+            )
+            return []
+        }
+    }
+
+    private func runSwiftPackageShowDependencies(packageDirectory: URL) throws -> Data {
+        let process = Process()
+        process.currentDirectoryURL = packageDirectory
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/swift")
+        process.arguments = ["package", "show-dependencies", "--format", "json"]
+
+        let output = Pipe()
+        let errors = Pipe()
+        process.standardOutput = output
+        process.standardError = errors
+
+        try process.run()
+        process.waitUntilExit()
+
+        guard process.terminationStatus == 0 else {
+            let message = String(data: errors.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8) ?? ""
+            throw NSError(domain: "RepositoryValidator.DependencyDiscovery", code: Int(process.terminationStatus), userInfo: [NSLocalizedDescriptionKey: message])
+        }
+
+        return output.fileHandleForReading.readDataToEndOfFile()
+    }
+
+    private func collectPolicyRoots(from node: DependencyNode, into roots: inout [URL]) {
+        if let path = node.path {
+            let root = URL(fileURLWithPath: path).appendingPathComponent("Policies", isDirectory: true)
+            if FileManager.default.fileExists(atPath: root.path) {
+                roots.append(root)
+            }
+        }
+
+        for dependency in node.dependencies {
+            collectPolicyRoots(from: dependency, into: &roots)
+        }
+    }
 }
 
 private struct WorkflowScanResult {
     var decodeDiagnostics: [ValidationDiagnostic]
     var containsScriptEntrypoints: Bool
+}
+
+private struct DependencyNode: Decodable {
+    var identity: String?
+    var name: String?
+    var path: String?
+    var dependencies: [DependencyNode]
 }

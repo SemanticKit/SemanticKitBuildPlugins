@@ -24,11 +24,51 @@ public struct SwiftSourceFacts: Codable, Equatable, Sendable {
     }
 }
 
+public struct ArtifactCatalog: Codable, Equatable, Sendable {
+    public var regoModules: [String]
+    public var swiftSources: [String]
+    public var packageManifest: [String]
+    public var workflowYAML: [String]
+    public var policyModuleRoots: [String]
+
+    public init(
+        regoModules: [String] = [],
+        swiftSources: [String] = [],
+        packageManifest: [String] = [],
+        workflowYAML: [String] = [],
+        policyModuleRoots: [String] = []
+    ) {
+        self.regoModules = regoModules
+        self.swiftSources = swiftSources
+        self.packageManifest = packageManifest
+        self.workflowYAML = workflowYAML
+        self.policyModuleRoots = policyModuleRoots
+    }
+}
+
 public struct SwiftSourceFactCollector {
     private let fileManager: FileManager
 
     public init(fileManager: FileManager = .default) {
         self.fileManager = fileManager
+    }
+
+    public func collectArtifactCatalog(packageDirectory: URL, policyModuleRoots: [URL]) throws -> ArtifactCatalog {
+        let regoModules = discoverRegoModules(policyModuleRoots: policyModuleRoots, packageDirectory: packageDirectory)
+        let swiftSources = discoverSwiftSources(packageDirectory: packageDirectory)
+        let packageManifest: [String] = {
+            let manifest = packageDirectory.appendingPathComponent("Package.swift")
+            guard fileManager.fileExists(atPath: manifest.path) else { return [] }
+            return ["Package.swift"]
+        }()
+        let workflowYAML = discoverWorkflowYAML(packageDirectory: packageDirectory)
+        return ArtifactCatalog(
+            regoModules: regoModules,
+            swiftSources: swiftSources,
+            packageManifest: packageManifest,
+            workflowYAML: workflowYAML,
+            policyModuleRoots: policyModuleRoots.map { $0.path }.sorted()
+        )
     }
 
     public func collect(packageDirectory: URL) throws -> SwiftSourceFacts {
@@ -58,6 +98,45 @@ public struct SwiftSourceFactCollector {
             return String(filePath.dropFirst(packagePath.count + 1))
         }
         return fileURL.lastPathComponent
+    }
+
+    private func discoverRegoModules(policyModuleRoots: [URL], packageDirectory: URL) -> [String] {
+        var files: [String] = []
+        for root in policyModuleRoots {
+            let enumerator = fileManager.enumerator(at: root, includingPropertiesForKeys: [.isRegularFileKey])
+            while let fileURL = enumerator?.nextObject() as? URL {
+                guard fileURL.pathExtension == "rego" else { continue }
+                files.append(relativeArtifactPath(fileURL: fileURL, packageDirectory: packageDirectory))
+            }
+        }
+        return files.sorted()
+    }
+
+    private func discoverSwiftSources(packageDirectory: URL) -> [String] {
+        let sourcesRoot = packageDirectory.appendingPathComponent("Sources", isDirectory: true)
+        guard fileManager.fileExists(atPath: sourcesRoot.path) else { return [] }
+
+        var files: [String] = []
+        let enumerator = fileManager.enumerator(at: sourcesRoot, includingPropertiesForKeys: [.isRegularFileKey])
+        while let fileURL = enumerator?.nextObject() as? URL {
+            guard fileURL.pathExtension == "swift" else { continue }
+            files.append(relativeArtifactPath(fileURL: fileURL, packageDirectory: packageDirectory))
+        }
+        return files.sorted()
+    }
+
+    private func discoverWorkflowYAML(packageDirectory: URL) -> [String] {
+        let workflowsRoot = packageDirectory.appendingPathComponent(".github/workflows", isDirectory: true)
+        guard fileManager.fileExists(atPath: workflowsRoot.path) else { return [] }
+
+        var files: [String] = []
+        let enumerator = fileManager.enumerator(at: workflowsRoot, includingPropertiesForKeys: [.isRegularFileKey])
+        while let fileURL = enumerator?.nextObject() as? URL {
+            let ext = fileURL.pathExtension.lowercased()
+            guard ext == "yml" || ext == "yaml" else { continue }
+            files.append(relativeArtifactPath(fileURL: fileURL, packageDirectory: packageDirectory))
+        }
+        return files.sorted()
     }
 }
 

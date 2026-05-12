@@ -23,6 +23,44 @@ final class SwiftSourceFactCollectorTests: XCTestCase {
         XCTAssertEqual(facts.bindingConstructionFacts.first?.artifact, "Sources/App/Demo.swift")
     }
 
+    func testCollectArtifactCatalogDiscoversKinds() throws {
+        let root = try makeTempPackage()
+        try FileManager.default.createDirectory(at: root.appendingPathComponent("Policies"), withIntermediateDirectories: true)
+        try "package x".write(
+            to: root.appendingPathComponent("Policies/policy.rego"),
+            atomically: true,
+            encoding: .utf8
+        )
+        try FileManager.default.createDirectory(at: root.appendingPathComponent("Sources/App"), withIntermediateDirectories: true)
+        try "struct A {}".write(
+            to: root.appendingPathComponent("Sources/App/A.swift"),
+            atomically: true,
+            encoding: .utf8
+        )
+        try FileManager.default.createDirectory(at: root.appendingPathComponent(".github/workflows"), withIntermediateDirectories: true)
+        try "name: CI".write(
+            to: root.appendingPathComponent(".github/workflows/ci.yml"),
+            atomically: true,
+            encoding: .utf8
+        )
+        try "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"X\")\n".write(
+            to: root.appendingPathComponent("Package.swift"),
+            atomically: true,
+            encoding: .utf8
+        )
+
+        let catalog = try SwiftSourceFactCollector().collectArtifactCatalog(
+            packageDirectory: root,
+            policyModuleRoots: [root.appendingPathComponent("Policies")]
+        )
+
+        XCTAssertEqual(catalog.regoModules, ["Policies/policy.rego"])
+        XCTAssertEqual(catalog.swiftSources, ["Sources/App/A.swift"])
+        XCTAssertEqual(catalog.packageManifest, ["Package.swift"])
+        XCTAssertEqual(catalog.workflowYAML, [".github/workflows/ci.yml"])
+        XCTAssertEqual(catalog.policyModuleRoots, [root.appendingPathComponent("Policies").path])
+    }
+
     func testIgnoresOtherCalls() throws {
         let root = try makeTempPackage()
         let sourceDir = root.appendingPathComponent("Sources/App", isDirectory: true)

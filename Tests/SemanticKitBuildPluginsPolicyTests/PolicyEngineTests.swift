@@ -15,7 +15,8 @@ final class PolicyEngineTests: XCTestCase {
             repositoryConfiguration: RepositoryConfiguration(swiftVersion: "6.2"),
             directDependencyURLs: [],
             workflowContainsScriptEntrypoints: false,
-            swiftSourceFacts: SwiftSourceFacts()
+            swiftSourceFacts: SwiftSourceFacts(),
+            artifactCatalog: ArtifactCatalog(policyModuleRoots: [packageDirectory.appendingPathComponent("Policies").path])
         )
 
         let evaluation = await SwiftOPAPolicyEngine().evaluate(input, packageDirectory: packageDirectory)
@@ -27,7 +28,8 @@ final class PolicyEngineTests: XCTestCase {
             repositoryConfiguration: RepositoryConfiguration(),
             directDependencyURLs: [],
             workflowContainsScriptEntrypoints: true,
-            swiftSourceFacts: SwiftSourceFacts()
+            swiftSourceFacts: SwiftSourceFacts(),
+            artifactCatalog: ArtifactCatalog(policyModuleRoots: [packageDirectory.appendingPathComponent("Policies").path])
         )
 
         let evaluation = await SwiftOPAPolicyEngine().evaluate(input, packageDirectory: packageDirectory)

@@ -9,17 +9,20 @@ public struct PolicyInput: Codable, Equatable, Sendable {
     public var directDependencyURLs: [String]
     public var workflowContainsScriptEntrypoints: Bool
     public var swiftSourceFacts: SwiftSourceFacts
+    public var artifactCatalog: ArtifactCatalog
 
     public init(
         repositoryConfiguration: RepositoryConfiguration,
         directDependencyURLs: [String],
         workflowContainsScriptEntrypoints: Bool,
-        swiftSourceFacts: SwiftSourceFacts
+        swiftSourceFacts: SwiftSourceFacts,
+        artifactCatalog: ArtifactCatalog
     ) {
         self.repositoryConfiguration = repositoryConfiguration
         self.directDependencyURLs = directDependencyURLs
         self.workflowContainsScriptEntrypoints = workflowContainsScriptEntrypoints
         self.swiftSourceFacts = swiftSourceFacts
+        self.artifactCatalog = artifactCatalog
     }
 }
 
@@ -44,7 +47,8 @@ public struct SwiftOPAPolicyEngine {
 
     public func evaluate(_ input: PolicyInput, packageDirectory: URL) async -> PolicyEvaluation {
         do {
-            let policies = try discoverPolicyModules(packageDirectory: packageDirectory)
+            let policyRoots = input.artifactCatalog.policyModuleRoots.map(URL.init(fileURLWithPath:))
+            let policies = try discoverPolicyModules(policyRoots: policyRoots)
             guard !policies.isEmpty else {
                 return PolicyEvaluation(backendName: backendName, diagnostics: [])
             }
@@ -68,9 +72,9 @@ public struct SwiftOPAPolicyEngine {
         }
     }
 
-    private func discoverPolicyModules(packageDirectory: URL) throws -> [URL] {
+    private func discoverPolicyModules(policyRoots: [URL]) throws -> [URL] {
         var moduleFiles: [URL] = []
-        for root in try policyRoots(packageDirectory: packageDirectory) {
+        for root in policyRoots where fileManager.fileExists(atPath: root.path) {
             let enumerator = fileManager.enumerator(
                 at: root,
                 includingPropertiesForKeys: [.isRegularFileKey],
@@ -84,24 +88,6 @@ public struct SwiftOPAPolicyEngine {
         }
 
         return moduleFiles.sorted { $0.path < $1.path }
-    }
-
-    private func policyRoots(packageDirectory: URL) throws -> [URL] {
-        var roots: [URL] = []
-        let localRoot = packageDirectory.appendingPathComponent("Policies", isDirectory: true)
-        if fileManager.fileExists(atPath: localRoot.path) {
-            roots.append(localRoot)
-        }
-
-        let checkoutsRoot = packageDirectory.appendingPathComponent(".build/checkouts", isDirectory: true)
-        if fileManager.fileExists(atPath: checkoutsRoot.path) {
-            let dependencyRoots = try fileManager.contentsOfDirectory(at: checkoutsRoot, includingPropertiesForKeys: nil)
-                .map { $0.appendingPathComponent("Policies", isDirectory: true) }
-                .filter { fileManager.fileExists(atPath: $0.path) }
-            roots.append(contentsOf: dependencyRoots)
-        }
-
-        return roots
     }
 
     private func buildBundleDirectory(from moduleFiles: [URL]) throws -> URL {
