@@ -70,3 +70,30 @@ documentation_warning contains {
 } if {
   count(input.artifactCatalog.doccCatalogs) == 0
 }
+
+documentation_warning contains {
+  "message": "Xcode projects should include at least one property list (.plist) artifact.",
+  "artifact": "Config",
+  "severity": "warning",
+} if {
+  count(input.artifactCatalog.xcodeMetadata) > 0
+  count(input.artifactCatalog.propertyLists) == 0
+}
+
+documentation_warning contains {
+  "message": "Metal shader sources should be accompanied by developer-facing DocC documentation.",
+  "artifact": "Docs",
+  "severity": "warning",
+} if {
+  count(input.artifactCatalog.metalSources) > 0
+  count(input.artifactCatalog.doccCatalogs) == 0
+}
+
+documentation_warning contains {
+  "message": "C-family sources should include at least one markdown design note.",
+  "artifact": "README.md",
+  "severity": "warning",
+} if {
+  count(input.artifactCatalog.cFamilySources) > 0
+  count(input.artifactCatalog.markdownFiles) == 0
+}

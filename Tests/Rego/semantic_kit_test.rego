@@ -93,3 +93,59 @@ test_allows_when_docs_artifacts_present if {
   }
   count(result.warn) == 0
 }
+
+
+test_warns_when_xcode_metadata_missing_plist if {
+  result := decision with input as {
+    "repositoryConfiguration": {
+      "swiftVersion": "6.3",
+      "macOSDeploymentTarget": "26"
+    },
+    "directDependencyURLs": [],
+    "workflowContainsScriptEntrypoints": false,
+    "swiftSourceFacts": {"bindingConstructionFacts": []},
+    "artifactCatalog": {
+      "markdownFiles": ["README.md"],
+      "doccCatalogs": ["Docs/Guide.docc"],
+      "xcodeMetadata": ["App.xcodeproj"],
+      "propertyLists": []
+    }
+  }
+  count(result.warn) == 1
+}
+
+test_warns_when_metal_sources_missing_docc if {
+  result := decision with input as {
+    "repositoryConfiguration": {
+      "swiftVersion": "6.3",
+      "macOSDeploymentTarget": "26"
+    },
+    "directDependencyURLs": [],
+    "workflowContainsScriptEntrypoints": false,
+    "swiftSourceFacts": {"bindingConstructionFacts": []},
+    "artifactCatalog": {
+      "markdownFiles": ["README.md"],
+      "doccCatalogs": [],
+      "metalSources": ["Shaders/Compute.metal"]
+    }
+  }
+  count(result.warn) == 2
+}
+
+test_warns_when_cfamily_sources_missing_markdown if {
+  result := decision with input as {
+    "repositoryConfiguration": {
+      "swiftVersion": "6.3",
+      "macOSDeploymentTarget": "26"
+    },
+    "directDependencyURLs": [],
+    "workflowContainsScriptEntrypoints": false,
+    "swiftSourceFacts": {"bindingConstructionFacts": []},
+    "artifactCatalog": {
+      "markdownFiles": [],
+      "doccCatalogs": ["Docs/Guide.docc"],
+      "cFamilySources": ["Sources/C/include.h"]
+    }
+  }
+  count(result.warn) == 2
+}
