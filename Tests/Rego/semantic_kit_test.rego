@@ -9,7 +9,7 @@ test_denies_lowered_swift_baseline if {
     "directDependencyURLs": [],
     "workflowContainsScriptEntrypoints": false,
     "swiftSourceFacts": {"bindingConstructionFacts": []},
-    "artifactCatalog": {"markdownFiles": ["README.md"], "doccCatalogs": ["Docs/Guide.docc"]}
+    "artifactCatalog": {"markdownFiles": ["README.md"], "doccCatalogs": ["Docs/Guide.docc"], "propertyLists": ["Config/Info.plist"]}
   }
   count(result.deny) == 1
 }
@@ -75,7 +75,7 @@ test_warns_when_docs_artifacts_missing if {
     "directDependencyURLs": [],
     "workflowContainsScriptEntrypoints": false,
     "swiftSourceFacts": {"bindingConstructionFacts": []},
-    "artifactCatalog": {"markdownFiles": [], "doccCatalogs": []}
+    "artifactCatalog": {"markdownFiles": [], "doccCatalogs": [], "propertyLists": ["Config/Info.plist"]}
   }
   count(result.warn) == 2
 }
@@ -95,7 +95,7 @@ test_allows_when_docs_artifacts_present if {
 }
 
 
-test_warns_when_xcode_metadata_missing_plist if {
+test_warns_when_property_lists_missing if {
   result := decision with input as {
     "repositoryConfiguration": {
       "swiftVersion": "6.3",
@@ -107,7 +107,6 @@ test_warns_when_xcode_metadata_missing_plist if {
     "artifactCatalog": {
       "markdownFiles": ["README.md"],
       "doccCatalogs": ["Docs/Guide.docc"],
-      "xcodeMetadata": ["App.xcodeproj"],
       "propertyLists": []
     }
   }
@@ -126,6 +125,7 @@ test_warns_when_metal_sources_missing_docc if {
     "artifactCatalog": {
       "markdownFiles": ["README.md"],
       "doccCatalogs": [],
+      "propertyLists": ["Config/Info.plist"],
       "metalSources": ["Shaders/Compute.metal"]
     }
   }
@@ -144,6 +144,7 @@ test_warns_when_cfamily_sources_missing_markdown if {
     "artifactCatalog": {
       "markdownFiles": [],
       "doccCatalogs": ["Docs/Guide.docc"],
+      "propertyLists": ["Config/Info.plist"],
       "cFamilySources": ["Sources/C/include.h"]
     }
   }

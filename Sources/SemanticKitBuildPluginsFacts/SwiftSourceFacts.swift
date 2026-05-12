@@ -34,7 +34,6 @@ public struct ArtifactCatalog: Codable, Equatable, Sendable {
     public var propertyLists: [String]
     public var metalSources: [String]
     public var cFamilySources: [String]
-    public var xcodeMetadata: [String]
     public var policyModuleRoots: [String]
 
     public init(
@@ -47,7 +46,6 @@ public struct ArtifactCatalog: Codable, Equatable, Sendable {
         propertyLists: [String] = [],
         metalSources: [String] = [],
         cFamilySources: [String] = [],
-        xcodeMetadata: [String] = [],
         policyModuleRoots: [String] = []
     ) {
         self.regoModules = regoModules
@@ -59,7 +57,6 @@ public struct ArtifactCatalog: Codable, Equatable, Sendable {
         self.propertyLists = propertyLists
         self.metalSources = metalSources
         self.cFamilySources = cFamilySources
-        self.xcodeMetadata = xcodeMetadata
         self.policyModuleRoots = policyModuleRoots
     }
 }
@@ -85,7 +82,6 @@ public struct SwiftSourceFactCollector {
         let propertyLists = discoverPropertyLists(packageDirectory: packageDirectory)
         let metalSources = discoverMetalSources(packageDirectory: packageDirectory)
         let cFamilySources = discoverCFamilySources(packageDirectory: packageDirectory)
-        let xcodeMetadata = discoverXcodeMetadata(packageDirectory: packageDirectory)
         return ArtifactCatalog(
             regoModules: regoModules,
             swiftSources: swiftSources,
@@ -96,7 +92,6 @@ public struct SwiftSourceFactCollector {
             propertyLists: propertyLists,
             metalSources: metalSources,
             cFamilySources: cFamilySources,
-            xcodeMetadata: xcodeMetadata,
             policyModuleRoots: policyModuleRoots.map { $0.path }.sorted()
         )
     }
@@ -207,21 +202,6 @@ public struct SwiftSourceFactCollector {
 
     private func discoverCFamilySources(packageDirectory: URL) -> [String] {
         discoverFiles(packageDirectory: packageDirectory, allowedExtensions: ["c", "cc", "cpp", "h", "hpp"])
-    }
-
-    private func discoverXcodeMetadata(packageDirectory: URL) -> [String] {
-        var artifacts: [String] = []
-        let enumerator = fileManager.enumerator(at: packageDirectory, includingPropertiesForKeys: [.isDirectoryKey])
-        while let fileURL = enumerator?.nextObject() as? URL {
-            let path = fileURL.path
-            if path.contains("/.build/") || path.contains("/.swiftpm/") || path.contains("/.git/") {
-                continue
-            }
-            let ext = fileURL.pathExtension.lowercased()
-            guard ext == "xcodeproj" || ext == "xcworkspace" else { continue }
-            artifacts.append(relativeArtifactPath(fileURL: fileURL, packageDirectory: packageDirectory))
-        }
-        return artifacts.sorted()
     }
 
     private func discoverFiles(packageDirectory: URL, allowedExtensions: Set<String>) -> [String] {

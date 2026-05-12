@@ -72,8 +72,6 @@ final class SwiftSourceFactCollectorTests: XCTestCase {
             atomically: true,
             encoding: .utf8
         )
-        try FileManager.default.createDirectory(at: root.appendingPathComponent("App.xcodeproj"), withIntermediateDirectories: true)
-        try FileManager.default.createDirectory(at: root.appendingPathComponent("Workspace.xcworkspace"), withIntermediateDirectories: true)
 
         let catalog = try SwiftSourceFactCollector().collectArtifactCatalog(
             packageDirectory: root,
@@ -89,7 +87,6 @@ final class SwiftSourceFactCollectorTests: XCTestCase {
         XCTAssertEqual(catalog.propertyLists, ["Config/Info.plist"])
         XCTAssertEqual(catalog.metalSources, ["Shaders/Compute.metal"])
         XCTAssertEqual(catalog.cFamilySources, ["Sources/C/include.h"])
-        XCTAssertEqual(catalog.xcodeMetadata, ["App.xcodeproj", "Workspace.xcworkspace"])
         XCTAssertEqual(catalog.policyModuleRoots, [root.appendingPathComponent("Policies").path])
     }
 

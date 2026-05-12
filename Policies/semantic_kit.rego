@@ -72,11 +72,10 @@ documentation_warning contains {
 }
 
 documentation_warning contains {
-  "message": "Xcode projects should include at least one property list (.plist) artifact.",
+  "message": "Repository should include at least one property list (.plist) artifact.",
   "artifact": "Config",
   "severity": "warning",
 } if {
-  count(input.artifactCatalog.xcodeMetadata) > 0
   count(input.artifactCatalog.propertyLists) == 0
 }
 
