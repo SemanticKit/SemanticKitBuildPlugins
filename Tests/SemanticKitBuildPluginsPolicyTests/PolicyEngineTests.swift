@@ -34,7 +34,10 @@ final class PolicyEngineTests: XCTestCase {
             artifactCatalog: ArtifactCatalog(policyModuleRoots: [packageDirectory.appendingPathComponent("Policies").path])
         )
 
-        let evaluation = await SwiftOPAPolicyEngine().evaluate(input, packageDirectory: packageDirectory)
+        let bundleDirectory = try buildPlanBundleDirectory(from: packageDirectory.appendingPathComponent("Policies", isDirectory: true))
+        defer { try? FileManager.default.removeItem(at: bundleDirectory.deletingLastPathComponent()) }
+
+        let evaluation = await SwiftOPAPolicyEngine().evaluate(input, preparedBundleDirectory: bundleDirectory)
         let diagnostic = try XCTUnwrap(evaluation.diagnostics.first)
         XCTAssertEqual(diagnostic.message, "Denied by fixture policy")
         XCTAssertEqual(diagnostic.location, "Sources/App/Fixture.swift:8:4")
@@ -50,7 +53,7 @@ final class PolicyEngineTests: XCTestCase {
             artifactCatalog: ArtifactCatalog(policyModuleRoots: [packageDirectory.appendingPathComponent("Policies").path])
         )
 
-        let evaluation = await SwiftOPAPolicyEngine().evaluate(input, packageDirectory: packageDirectory)
+        let evaluation = await SwiftOPAPolicyEngine().evaluate(input, preparedBundleDirectory: nil)
         XCTAssertTrue(evaluation.diagnostics.isEmpty)
     }
 
@@ -66,5 +69,43 @@ final class PolicyEngineTests: XCTestCase {
         }
 
         return directory
+    }
+
+    private func buildPlanBundleDirectory(from policiesDirectory: URL) throws -> URL {
+        let tempRoot = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let outputArchive = tempRoot.appendingPathComponent("bundle.tar.gz")
+        let extractedBundle = tempRoot.appendingPathComponent("bundle", isDirectory: true)
+
+        try FileManager.default.createDirectory(at: tempRoot, withIntermediateDirectories: true)
+        try runProcess(
+            executable: "/Users/me/.local/bin/opa",
+            arguments: ["build", "--bundle", "--target", "plan", "--entrypoint", "semantickit/main/decision", "--output", outputArchive.path, policiesDirectory.path],
+            currentDirectory: tempRoot
+        )
+        try FileManager.default.createDirectory(at: extractedBundle, withIntermediateDirectories: true)
+        try runProcess(
+            executable: "/usr/bin/tar",
+            arguments: ["-xzf", outputArchive.path, "-C", extractedBundle.path],
+            currentDirectory: tempRoot
+        )
+        return extractedBundle
+    }
+
+    private func runProcess(executable: String, arguments: [String], currentDirectory: URL) throws {
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: executable)
+        process.arguments = arguments
+        process.currentDirectoryURL = currentDirectory
+
+        let errorPipe = Pipe()
+        process.standardError = errorPipe
+
+        try process.run()
+        process.waitUntilExit()
+
+        guard process.terminationStatus == 0 else {
+            let errorOutput = String(data: errorPipe.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8) ?? ""
+            throw NSError(domain: "PolicyEngineTests.Process", code: Int(process.terminationStatus), userInfo: [NSLocalizedDescriptionKey: errorOutput])
+        }
     }
 }

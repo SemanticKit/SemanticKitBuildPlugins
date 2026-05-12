@@ -37,26 +37,16 @@ public struct PolicyEvaluation: Equatable, Sendable {
 }
 
 public struct SwiftOPAPolicyEngine {
-    private let fileManager: FileManager
-
-    public init(fileManager: FileManager = .default) {
-        self.fileManager = fileManager
-    }
+    public init() {}
 
     public var backendName: String { "SwiftOPA" }
 
-    public func evaluate(_ input: PolicyInput, packageDirectory: URL) async -> PolicyEvaluation {
+    public func evaluate(_ input: PolicyInput, preparedBundleDirectory: URL?) async -> PolicyEvaluation {
         do {
-            let policyRoots = input.artifactCatalog.policyModuleRoots.map(URL.init(fileURLWithPath:))
-            let policies = try discoverPolicyModules(policyRoots: policyRoots)
-            guard !policies.isEmpty else {
+            guard let preparedBundleDirectory else {
                 return PolicyEvaluation(backendName: backendName, diagnostics: [])
             }
-
-            let bundleDirectory = try buildBundleDirectory(from: policies)
-            defer { try? fileManager.removeItem(at: bundleDirectory.deletingLastPathComponent()) }
-
-            let diagnostics = try await Self.evaluateBundleAsync(bundleDirectory: bundleDirectory, input: input)
+            let diagnostics = try await Self.evaluateBundleAsync(bundleDirectory: preparedBundleDirectory, input: input)
             return PolicyEvaluation(backendName: backendName, diagnostics: diagnostics)
         } catch {
             return PolicyEvaluation(
@@ -70,53 +60,6 @@ public struct SwiftOPAPolicyEngine {
                 ]
             )
         }
-    }
-
-    private func discoverPolicyModules(policyRoots: [URL]) throws -> [URL] {
-        var moduleFiles: [URL] = []
-        for root in policyRoots where fileManager.fileExists(atPath: root.path) {
-            let enumerator = fileManager.enumerator(
-                at: root,
-                includingPropertiesForKeys: [.isRegularFileKey],
-                options: [.skipsHiddenFiles]
-            )
-
-            while let fileURL = enumerator?.nextObject() as? URL {
-                guard fileURL.pathExtension == "rego" else { continue }
-                moduleFiles.append(fileURL)
-            }
-        }
-
-        return moduleFiles.sorted { $0.path < $1.path }
-    }
-
-    private func buildBundleDirectory(from moduleFiles: [URL]) throws -> URL {
-        let tempRoot = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
-        let sourceDirectory = tempRoot.appendingPathComponent("bundle-source", isDirectory: true)
-        let outputArchive = tempRoot.appendingPathComponent("bundle.tar.gz")
-        let extractedBundle = tempRoot.appendingPathComponent("bundle", isDirectory: true)
-
-        try fileManager.createDirectory(at: sourceDirectory, withIntermediateDirectories: true)
-
-        for (index, moduleURL) in moduleFiles.enumerated() {
-            let destination = sourceDirectory.appendingPathComponent("module-\(index).rego")
-            try fileManager.copyItem(at: moduleURL, to: destination)
-        }
-
-        try runProcess(
-            executable: "/Users/me/.local/bin/opa",
-            arguments: ["build", "--bundle", "--target", "plan", "--entrypoint", "semantickit/main/decision", "--output", outputArchive.path, sourceDirectory.path],
-            currentDirectory: tempRoot
-        )
-
-        try fileManager.createDirectory(at: extractedBundle, withIntermediateDirectories: true)
-        try runProcess(
-            executable: "/usr/bin/tar",
-            arguments: ["-xzf", outputArchive.path, "-C", extractedBundle.path],
-            currentDirectory: tempRoot
-        )
-
-        return extractedBundle
     }
 
     private static func evaluateBundleAsync(bundleDirectory: URL, input: PolicyInput) async throws -> [ValidationDiagnostic] {
@@ -240,28 +183,5 @@ public struct SwiftOPAPolicyEngine {
         }
     }
 
-    private func runProcess(executable: String, arguments: [String], currentDirectory: URL) throws {
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: executable)
-        process.arguments = arguments
-        process.currentDirectoryURL = currentDirectory
-
-        let outputPipe = Pipe()
-        let errorPipe = Pipe()
-        process.standardOutput = outputPipe
-        process.standardError = errorPipe
-
-        try process.run()
-        process.waitUntilExit()
-
-        guard process.terminationStatus == 0 else {
-            let errorOutput = String(data: errorPipe.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8) ?? ""
-            throw NSError(
-                domain: "SemanticKitBuildPluginsPolicy.Process",
-                code: Int(process.terminationStatus),
-                userInfo: [NSLocalizedDescriptionKey: errorOutput]
-            )
-        }
-    }
 }
 

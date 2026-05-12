@@ -46,7 +46,24 @@ public struct RepositoryValidator {
             swiftSourceFacts: swiftFacts,
             artifactCatalog: artifactCatalog
         )
-        report.append(contentsOf: await policyEngine.evaluate(policyInput, packageDirectory: packageDirectory).diagnostics)
+
+        var preparedBundleDirectory: URL?
+        do {
+            preparedBundleDirectory = try preparePolicyBundleDirectory(policyModuleRoots: policyRoots)
+        } catch {
+            report.append(
+                ValidationDiagnostic(
+                    severity: .error,
+                    message: "Unable to prepare OPA bundle artifacts: \(error)",
+                    location: "Policies"
+                )
+            )
+        }
+
+        report.append(contentsOf: await policyEngine.evaluate(policyInput, preparedBundleDirectory: preparedBundleDirectory).diagnostics)
+        if let preparedBundleDirectory {
+            try? FileManager.default.removeItem(at: preparedBundleDirectory.deletingLastPathComponent())
+        }
 
         let messages: [String]
         if report.hasErrors {
@@ -179,6 +196,80 @@ public struct RepositoryValidator {
 
         for dependency in node.dependencies {
             collectPolicyRoots(from: dependency, into: &roots)
+        }
+    }
+
+    private func preparePolicyBundleDirectory(policyModuleRoots: [URL]) throws -> URL? {
+        let moduleFiles = discoverPolicyModules(policyRoots: policyModuleRoots)
+        guard !moduleFiles.isEmpty else { return nil }
+
+        let tempRoot = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let sourceDirectory = tempRoot.appendingPathComponent("bundle-source", isDirectory: true)
+        let outputArchive = tempRoot.appendingPathComponent("bundle.tar.gz")
+        let extractedBundle = tempRoot.appendingPathComponent("bundle", isDirectory: true)
+
+        try FileManager.default.createDirectory(at: sourceDirectory, withIntermediateDirectories: true)
+
+        for (index, moduleURL) in moduleFiles.enumerated() {
+            let destination = sourceDirectory.appendingPathComponent("module-\(index).rego")
+            try FileManager.default.copyItem(at: moduleURL, to: destination)
+        }
+
+        try runProcess(
+            executable: "/Users/me/.local/bin/opa",
+            arguments: ["build", "--bundle", "--target", "plan", "--entrypoint", "semantickit/main/decision", "--output", outputArchive.path, sourceDirectory.path],
+            currentDirectory: tempRoot
+        )
+
+        try FileManager.default.createDirectory(at: extractedBundle, withIntermediateDirectories: true)
+        try runProcess(
+            executable: "/usr/bin/tar",
+            arguments: ["-xzf", outputArchive.path, "-C", extractedBundle.path],
+            currentDirectory: tempRoot
+        )
+
+        return extractedBundle
+    }
+
+    private func discoverPolicyModules(policyRoots: [URL]) -> [URL] {
+        var moduleFiles: [URL] = []
+        for root in policyRoots where FileManager.default.fileExists(atPath: root.path) {
+            let enumerator = FileManager.default.enumerator(
+                at: root,
+                includingPropertiesForKeys: [.isRegularFileKey],
+                options: [.skipsHiddenFiles]
+            )
+
+            while let fileURL = enumerator?.nextObject() as? URL {
+                guard fileURL.pathExtension == "rego" else { continue }
+                moduleFiles.append(fileURL)
+            }
+        }
+
+        return moduleFiles.sorted { $0.path < $1.path }
+    }
+
+    private func runProcess(executable: String, arguments: [String], currentDirectory: URL) throws {
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: executable)
+        process.arguments = arguments
+        process.currentDirectoryURL = currentDirectory
+
+        let outputPipe = Pipe()
+        let errorPipe = Pipe()
+        process.standardOutput = outputPipe
+        process.standardError = errorPipe
+
+        try process.run()
+        process.waitUntilExit()
+
+        guard process.terminationStatus == 0 else {
+            let errorOutput = String(data: errorPipe.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8) ?? ""
+            throw NSError(
+                domain: "RepositoryValidator.Process",
+                code: Int(process.terminationStatus),
+                userInfo: [NSLocalizedDescriptionKey: errorOutput]
+            )
         }
     }
 }
