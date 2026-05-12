@@ -29,6 +29,8 @@ public struct ArtifactCatalog: Codable, Equatable, Sendable {
     public var swiftSources: [String]
     public var packageManifest: [String]
     public var workflowYAML: [String]
+    public var markdownFiles: [String]
+    public var doccCatalogs: [String]
     public var policyModuleRoots: [String]
 
     public init(
@@ -36,12 +38,16 @@ public struct ArtifactCatalog: Codable, Equatable, Sendable {
         swiftSources: [String] = [],
         packageManifest: [String] = [],
         workflowYAML: [String] = [],
+        markdownFiles: [String] = [],
+        doccCatalogs: [String] = [],
         policyModuleRoots: [String] = []
     ) {
         self.regoModules = regoModules
         self.swiftSources = swiftSources
         self.packageManifest = packageManifest
         self.workflowYAML = workflowYAML
+        self.markdownFiles = markdownFiles
+        self.doccCatalogs = doccCatalogs
         self.policyModuleRoots = policyModuleRoots
     }
 }
@@ -62,11 +68,15 @@ public struct SwiftSourceFactCollector {
             return ["Package.swift"]
         }()
         let workflowYAML = discoverWorkflowYAML(packageDirectory: packageDirectory)
+        let markdownFiles = discoverMarkdownFiles(packageDirectory: packageDirectory)
+        let doccCatalogs = discoverDoccCatalogs(packageDirectory: packageDirectory)
         return ArtifactCatalog(
             regoModules: regoModules,
             swiftSources: swiftSources,
             packageManifest: packageManifest,
             workflowYAML: workflowYAML,
+            markdownFiles: markdownFiles,
+            doccCatalogs: doccCatalogs,
             policyModuleRoots: policyModuleRoots.map { $0.path }.sorted()
         )
     }
@@ -137,6 +147,34 @@ public struct SwiftSourceFactCollector {
             files.append(relativeArtifactPath(fileURL: fileURL, packageDirectory: packageDirectory))
         }
         return files.sorted()
+    }
+
+    private func discoverMarkdownFiles(packageDirectory: URL) -> [String] {
+        var files: [String] = []
+        let enumerator = fileManager.enumerator(at: packageDirectory, includingPropertiesForKeys: [.isRegularFileKey, .isDirectoryKey])
+        while let fileURL = enumerator?.nextObject() as? URL {
+            let path = fileURL.path
+            if path.contains("/.build/") || path.contains("/.swiftpm/") || path.contains("/.git/") {
+                continue
+            }
+            guard fileURL.pathExtension.lowercased() == "md" else { continue }
+            files.append(relativeArtifactPath(fileURL: fileURL, packageDirectory: packageDirectory))
+        }
+        return files.sorted()
+    }
+
+    private func discoverDoccCatalogs(packageDirectory: URL) -> [String] {
+        var catalogs: [String] = []
+        let enumerator = fileManager.enumerator(at: packageDirectory, includingPropertiesForKeys: [.isDirectoryKey])
+        while let fileURL = enumerator?.nextObject() as? URL {
+            let path = fileURL.path
+            if path.contains("/.build/") || path.contains("/.swiftpm/") || path.contains("/.git/") {
+                continue
+            }
+            guard fileURL.pathExtension.lowercased() == "docc" else { continue }
+            catalogs.append(relativeArtifactPath(fileURL: fileURL, packageDirectory: packageDirectory))
+        }
+        return catalogs.sorted()
     }
 }
 

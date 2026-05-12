@@ -48,6 +48,12 @@ final class SwiftSourceFactCollectorTests: XCTestCase {
             atomically: true,
             encoding: .utf8
         )
+        try "# Project".write(
+            to: root.appendingPathComponent("README.md"),
+            atomically: true,
+            encoding: .utf8
+        )
+        try FileManager.default.createDirectory(at: root.appendingPathComponent("Docs/Guide.docc"), withIntermediateDirectories: true)
 
         let catalog = try SwiftSourceFactCollector().collectArtifactCatalog(
             packageDirectory: root,
@@ -58,6 +64,8 @@ final class SwiftSourceFactCollectorTests: XCTestCase {
         XCTAssertEqual(catalog.swiftSources, ["Sources/App/A.swift"])
         XCTAssertEqual(catalog.packageManifest, ["Package.swift"])
         XCTAssertEqual(catalog.workflowYAML, [".github/workflows/ci.yml"])
+        XCTAssertEqual(catalog.markdownFiles, ["README.md"])
+        XCTAssertEqual(catalog.doccCatalogs, ["Docs/Guide.docc"])
         XCTAssertEqual(catalog.policyModuleRoots, [root.appendingPathComponent("Policies").path])
     }
 

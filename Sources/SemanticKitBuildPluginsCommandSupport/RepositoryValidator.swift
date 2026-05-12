@@ -5,14 +5,10 @@ import SemanticKitBuildPluginsPolicy
 import Yams
 
 public struct RepositoryValidator {
-    private let policyEngine: SwiftOPAPolicyEngine
+    private let policyEngine = SwiftOPAPolicyEngine()
     private let swiftFactCollector: SwiftSourceFactCollector
 
-    public init(
-        policyEngine: SwiftOPAPolicyEngine = SwiftOPAPolicyEngine(),
-        swiftFactCollector: SwiftSourceFactCollector = SwiftSourceFactCollector()
-    ) {
-        self.policyEngine = policyEngine
+    public init(swiftFactCollector: SwiftSourceFactCollector = SwiftSourceFactCollector()) {
         self.swiftFactCollector = swiftFactCollector
     }
 

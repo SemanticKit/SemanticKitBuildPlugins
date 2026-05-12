@@ -4,7 +4,7 @@ default decision := {"deny": [], "warn": [], "note": []}
 
 decision := {
   "deny": array.concat(baseline_denials, swiftui_denials),
-  "warn": [],
+  "warn": documentation_warnings,
   "note": []
 }
 
@@ -14,6 +14,10 @@ baseline_denials := [d |
 
 swiftui_denials := [d |
   d := swiftui_denial[_]
+]
+
+documentation_warnings := [w |
+  w := documentation_warning[_]
 ]
 
 baseline_denial contains {
@@ -49,4 +53,20 @@ swiftui_denial contains {
 } if {
   fact := input.swiftSourceFacts.bindingConstructionFacts[_]
   fact.kind == "binding_get_set_initializer"
+}
+
+documentation_warning contains {
+  "message": "Repository should include a README.md for policy/documentation discoverability.",
+  "artifact": "README.md",
+  "severity": "warning",
+} if {
+  count(input.artifactCatalog.markdownFiles) == 0
+}
+
+documentation_warning contains {
+  "message": "Repository should include at least one DocC catalog (.docc) for developer-facing docs.",
+  "artifact": "Docs",
+  "severity": "warning",
+} if {
+  count(input.artifactCatalog.doccCatalogs) == 0
 }
