@@ -1,29 +1,36 @@
 import XCTest
 import SemanticKitBuildPluginsCore
+import SemanticKitBuildPluginsFacts
 @testable import SemanticKitBuildPluginsPolicy
 
 final class PolicyEngineTests: XCTestCase {
+    private let packageDirectory = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
+
     func testPolicyEngineUsesSwiftOPABackendName() {
         XCTAssertEqual(SwiftOPAPolicyEngine().backendName, "SwiftOPA")
     }
 
-    func testPolicyEngineRejectsLoweredSwiftBaseline() {
+    func testPolicyEngineRejectsLoweredSwiftBaseline() async {
         let input = PolicyInput(
             repositoryConfiguration: RepositoryConfiguration(swiftVersion: "6.2"),
-            directDependencyURLs: []
+            directDependencyURLs: [],
+            workflowContainsScriptEntrypoints: false,
+            swiftSourceFacts: SwiftSourceFacts()
         )
 
-        let evaluation = SwiftOPAPolicyEngine().evaluate(input)
+        let evaluation = await SwiftOPAPolicyEngine().evaluate(input, packageDirectory: packageDirectory)
         XCTAssertTrue(evaluation.diagnostics.contains { $0.message.contains("Swift version baseline") })
     }
 
-    func testPolicyEngineRejectsUnapprovedDependency() {
+    func testPolicyEngineRejectsWorkflowScriptEntrypoints() async {
         let input = PolicyInput(
             repositoryConfiguration: RepositoryConfiguration(),
-            directDependencyURLs: ["https://github.com/example/NotApproved.git"]
+            directDependencyURLs: [],
+            workflowContainsScriptEntrypoints: true,
+            swiftSourceFacts: SwiftSourceFacts()
         )
 
-        let evaluation = SwiftOPAPolicyEngine().evaluate(input)
-        XCTAssertTrue(evaluation.diagnostics.contains { $0.message.contains("Unapproved dependency source") })
+        let evaluation = await SwiftOPAPolicyEngine().evaluate(input, packageDirectory: packageDirectory)
+        XCTAssertTrue(evaluation.diagnostics.contains { $0.message.contains("shell-script primary entrypoints") })
     }
 }

@@ -1,12 +1,12 @@
 import Foundation
 import SemanticKitBuildPluginsCommandSupport
 
-private let parsedInvocation = ToolInvocation(commandLineArguments: Array(CommandLine.arguments.dropFirst()))
-private let context = ToolExecutionContext(
+let parsedInvocation = ToolInvocation(commandLineArguments: Array(CommandLine.arguments.dropFirst()))
+let context = ToolExecutionContext(
     arguments: parsedInvocation.arguments,
     packageDirectory: parsedInvocation.packageDirectory
 )
-private let result = SemanticKitCommandRunner().run(context: context)
+let result = await SemanticKitCommandRunner().run(context: context)
 
 for message in result.messages {
     print(message)
@@ -19,7 +19,7 @@ for diagnostic in result.diagnostics {
 
 Foundation.exit(result.exitCode)
 
-private struct ToolInvocation {
+struct ToolInvocation {
     var arguments: [String]
     var packageDirectory: URL
 

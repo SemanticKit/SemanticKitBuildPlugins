@@ -10,7 +10,7 @@ public struct ToolExecutionContext: Sendable {
     }
 }
 
-public struct SemanticKitCommandRunner: Sendable {
+public struct SemanticKitCommandRunner {
     private let initializer: RepositoryInitializer
     private let validator: RepositoryValidator
     private let migrationReporter: MigrationReporter
@@ -25,7 +25,7 @@ public struct SemanticKitCommandRunner: Sendable {
         self.migrationReporter = migrationReporter
     }
 
-    public func run(context: ToolExecutionContext) -> CommandResult {
+    public func run(context: ToolExecutionContext) async -> CommandResult {
         do {
             let options = ParsedOptions(arguments: context.arguments)
             switch options.command {
@@ -36,11 +36,11 @@ public struct SemanticKitCommandRunner: Sendable {
                     includeReleaseWorkflow: options.includeReleaseWorkflow
                 )
             case .validate:
-                return validator.validate(packageDirectory: context.packageDirectory)
+                return await validator.validate(packageDirectory: context.packageDirectory)
             case .migrateScripts:
                 return migrationReporter.report()
             case .buildTool:
-                return try runBuildToolValidation(context: context, outputDirectory: options.outputDirectory)
+                return try await runBuildToolValidation(context: context, outputDirectory: options.outputDirectory)
             case .help:
                 return CommandResult(exitCode: 0, messages: [Self.helpText])
             }
@@ -49,8 +49,8 @@ public struct SemanticKitCommandRunner: Sendable {
         }
     }
 
-    private func runBuildToolValidation(context: ToolExecutionContext, outputDirectory: URL?) throws -> CommandResult {
-        let result = validator.validate(packageDirectory: context.packageDirectory)
+    private func runBuildToolValidation(context: ToolExecutionContext, outputDirectory: URL?) async throws -> CommandResult {
+        let result = await validator.validate(packageDirectory: context.packageDirectory)
         guard let outputDirectory else {
             return result
         }

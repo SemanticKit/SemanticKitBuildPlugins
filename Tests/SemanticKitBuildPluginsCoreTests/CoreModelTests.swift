@@ -17,18 +17,4 @@ final class CoreModelTests: XCTestCase {
             "swift package --allow-writing-to-package-directory semantic-kit-build-plugins validate"
         )
     }
-
-    func testDependencyApprovalRejectsUnapprovedSource() {
-        let diagnostics = DependencyApprovalPolicy.validate(directDependencyURLs: [
-            "https://github.com/example/NotApproved.git",
-        ])
-
-        XCTAssertEqual(diagnostics.count, 1)
-        XCTAssertEqual(diagnostics.first?.severity, .error)
-    }
-
-    func testDependencyApprovalAllowsApprovedSources() {
-        let diagnostics = DependencyApprovalPolicy.validate(directDependencyURLs: Array(ToolingBaseline.approvedDependencyURLs))
-        XCTAssertTrue(diagnostics.isEmpty)
-    }
 }

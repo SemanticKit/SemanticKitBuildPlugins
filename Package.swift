@@ -15,6 +15,7 @@ let package = Package(
         .package(url: "https://github.com/jpsim/Yams.git", from: "6.2.1"),
         .package(url: "https://github.com/open-policy-agent/swift-opa.git", from: "0.0.5"),
         .package(url: "https://github.com/realm/SwiftLint.git", from: "0.63.2"),
+        .package(url: "https://github.com/swiftlang/swift-syntax.git", exact: "604.0.0-prerelease-2026-01-20"),
     ],
     targets: [
         .target(
@@ -27,9 +28,17 @@ let package = Package(
             ]
         ),
         .target(
+            name: "SemanticKitBuildPluginsFacts",
+            dependencies: [
+                .product(name: "SwiftParser", package: "swift-syntax"),
+                .product(name: "SwiftSyntax", package: "swift-syntax"),
+            ]
+        ),
+        .target(
             name: "SemanticKitBuildPluginsPolicy",
             dependencies: [
                 "SemanticKitBuildPluginsCore",
+                "SemanticKitBuildPluginsFacts",
                 .product(name: "SwiftOPA", package: "swift-opa"),
             ]
         ),
@@ -39,6 +48,7 @@ let package = Package(
                 "SemanticKitBuildPluginsCore",
                 "SemanticKitBuildPluginsProfiles",
                 "SemanticKitBuildPluginsPolicy",
+                "SemanticKitBuildPluginsFacts",
                 .product(name: "Yams", package: "Yams"),
             ]
         ),
@@ -90,9 +100,16 @@ let package = Package(
             ]
         ),
         .testTarget(
+            name: "SemanticKitBuildPluginsFactsTests",
+            dependencies: [
+                "SemanticKitBuildPluginsFacts",
+            ]
+        ),
+        .testTarget(
             name: "SemanticKitBuildPluginsPolicyTests",
             dependencies: [
                 "SemanticKitBuildPluginsPolicy",
+                "SemanticKitBuildPluginsFacts",
             ]
         ),
     ],
