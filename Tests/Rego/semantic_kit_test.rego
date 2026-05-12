@@ -26,6 +26,19 @@ test_allows_baseline_configuration if {
   count(result.deny) == 0
 }
 
+test_denies_workflow_script_entrypoints if {
+  result := decision with input as {
+    "repositoryConfiguration": {
+      "swiftVersion": "6.3",
+      "macOSDeploymentTarget": "26"
+    },
+    "directDependencyURLs": [],
+    "workflowContainsScriptEntrypoints": true,
+    "swiftSourceFacts": {"bindingConstructionFacts": []}
+  }
+  count(result.deny) == 1
+}
+
 test_denies_binding_get_set_constructor if {
   result := decision with input as {
     "repositoryConfiguration": {
