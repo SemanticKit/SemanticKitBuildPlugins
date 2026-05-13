@@ -12,16 +12,16 @@ public struct ToolExecutionContext: Sendable {
 
 public struct SemanticKitCommandRunner {
     private let initializer: RepositoryInitializer
-    private let validator: RepositoryValidator
+    private let evaluator: BuildToolPolicyEvaluator
     private let migrationReporter: MigrationReporter
 
     public init(
         initializer: RepositoryInitializer = RepositoryInitializer(),
-        validator: RepositoryValidator = RepositoryValidator(),
+        evaluator: BuildToolPolicyEvaluator = BuildToolPolicyEvaluator(),
         migrationReporter: MigrationReporter = MigrationReporter()
     ) {
         self.initializer = initializer
-        self.validator = validator
+        self.evaluator = evaluator
         self.migrationReporter = migrationReporter
     }
 
@@ -36,11 +36,19 @@ public struct SemanticKitCommandRunner {
                     includeReleaseWorkflow: options.includeReleaseWorkflow
                 )
             case .validate:
-                return await validator.validate(packageDirectory: context.packageDirectory)
+                return await evaluator.evaluate(
+                    packageDirectory: context.packageDirectory,
+                    policyModuleRoots: options.policyModuleRoots
+                )
             case .migrateScripts:
                 return migrationReporter.report()
             case .buildTool:
-                return try await runBuildToolValidation(context: context, outputDirectory: options.outputDirectory)
+                return try await runBuildToolValidation(
+                    context: context,
+                    outputDirectory: options.outputDirectory,
+                    policyBundleArchive: options.policyBundleArchive,
+                    policyModuleRoots: options.policyModuleRoots
+                )
             case .help:
                 return CommandResult(exitCode: 0, messages: [Self.helpText])
             }
@@ -49,8 +57,17 @@ public struct SemanticKitCommandRunner {
         }
     }
 
-    private func runBuildToolValidation(context: ToolExecutionContext, outputDirectory: URL?) async throws -> CommandResult {
-        let result = await validator.validate(packageDirectory: context.packageDirectory)
+    private func runBuildToolValidation(
+        context: ToolExecutionContext,
+        outputDirectory: URL?,
+        policyBundleArchive: URL?,
+        policyModuleRoots: [URL]
+    ) async throws -> CommandResult {
+        let result = await evaluator.evaluate(
+            packageDirectory: context.packageDirectory,
+            policyBundleArchive: policyBundleArchive,
+            policyModuleRoots: policyModuleRoots
+        )
         guard let outputDirectory else {
             return result
         }
@@ -79,6 +96,8 @@ public struct SemanticKitCommandRunner {
       --dry-run              Preview generated files.
       --include-release      Include release workflow generation.
       --output-directory DIR Build-tool validation output directory.
+      --policy-bundle FILE   Prebuilt OPA bundle archive produced by the build-tool plugin.
+      --policy-root DIR      Policy module root included in the prebuilt OPA bundle.
     """
 }
 
@@ -95,12 +114,16 @@ private struct ParsedOptions {
     var writeMode: WriteMode
     var includeReleaseWorkflow: Bool
     var outputDirectory: URL?
+    var policyBundleArchive: URL?
+    var policyModuleRoots: [URL]
 
     init(arguments: [String]) {
         command = .help
         writeMode = .dryRun
         includeReleaseWorkflow = false
         outputDirectory = nil
+        policyBundleArchive = nil
+        policyModuleRoots = []
 
         var index = 0
         while index < arguments.count {
@@ -123,6 +146,16 @@ private struct ParsedOptions {
             case "--output-directory":
                 if arguments.indices.contains(index + 1) {
                     outputDirectory = URL(fileURLWithPath: arguments[index + 1])
+                    index += 1
+                }
+            case "--policy-bundle":
+                if arguments.indices.contains(index + 1) {
+                    policyBundleArchive = URL(fileURLWithPath: arguments[index + 1])
+                    index += 1
+                }
+            case "--policy-root":
+                if arguments.indices.contains(index + 1) {
+                    policyModuleRoots.append(URL(fileURLWithPath: arguments[index + 1], isDirectory: true))
                     index += 1
                 }
             case "--help", "-h":

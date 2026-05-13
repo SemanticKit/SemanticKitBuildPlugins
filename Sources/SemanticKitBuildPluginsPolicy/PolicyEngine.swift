@@ -6,20 +6,17 @@ import SemanticKitBuildPluginsFacts
 
 public struct PolicyInput: Codable, Equatable, Sendable {
     public var repositoryConfiguration: RepositoryConfiguration
-    public var directDependencyURLs: [String]
     public var workflowContainsScriptEntrypoints: Bool
     public var swiftSourceFacts: SwiftSourceFacts
     public var artifactCatalog: ArtifactCatalog
 
     public init(
         repositoryConfiguration: RepositoryConfiguration,
-        directDependencyURLs: [String],
         workflowContainsScriptEntrypoints: Bool,
         swiftSourceFacts: SwiftSourceFacts,
         artifactCatalog: ArtifactCatalog
     ) {
         self.repositoryConfiguration = repositoryConfiguration
-        self.directDependencyURLs = directDependencyURLs
         self.workflowContainsScriptEntrypoints = workflowContainsScriptEntrypoints
         self.swiftSourceFacts = swiftSourceFacts
         self.artifactCatalog = artifactCatalog

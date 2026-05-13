@@ -4,20 +4,25 @@ import SemanticKitBuildPluginsFacts
 import SemanticKitBuildPluginsPolicy
 import Yams
 
-public struct RepositoryValidator {
+public struct BuildToolPolicyEvaluator {
     private let policyEngine = SwiftOPAPolicyEngine()
     private let swiftFactCollector = SwiftSourceFactCollector()
 
     public init() {}
 
-    public func validate(packageDirectory: URL) async -> CommandResult {
+    public func evaluate(
+        packageDirectory: URL,
+        policyBundleArchive: URL? = nil,
+        policyModuleRoots: [URL] = []
+    ) async -> CommandResult {
         var report = ValidationReport()
         let configuration = loadConfiguration(packageDirectory: packageDirectory, report: &report)
-        let dependencyURLs = readDirectDependencyURLs(packageDirectory: packageDirectory)
         let workflowScan = scanGeneratedWorkflow(packageDirectory: packageDirectory)
         report.append(contentsOf: workflowScan.decodeDiagnostics)
 
-        let policyRoots = discoverPolicyModuleRoots(packageDirectory: packageDirectory, report: &report)
+        let policyRoots = policyModuleRoots.isEmpty
+            ? discoverPolicyModuleRoots(packageDirectory: packageDirectory)
+            : Array(Set(policyModuleRoots.map(\.standardizedFileURL))).sorted { $0.path < $1.path }
 
         var swiftFacts: SwiftSourceFacts
         var artifactCatalog: ArtifactCatalog
@@ -41,7 +46,6 @@ public struct RepositoryValidator {
 
         let policyInput = PolicyInput(
             repositoryConfiguration: configuration,
-            directDependencyURLs: dependencyURLs,
             workflowContainsScriptEntrypoints: workflowScan.containsScriptEntrypoints,
             swiftSourceFacts: swiftFacts,
             artifactCatalog: artifactCatalog
@@ -49,7 +53,9 @@ public struct RepositoryValidator {
 
         var preparedBundleDirectory: URL?
         do {
-            preparedBundleDirectory = try preparePolicyBundleDirectory(policyModuleRoots: policyRoots)
+            if let policyBundleArchive {
+                preparedBundleDirectory = try extractPolicyBundleArchive(policyBundleArchive)
+            }
         } catch {
             report.append(
                 ValidationDiagnostic(
@@ -122,137 +128,28 @@ public struct RepositoryValidator {
         }
     }
 
-    private func readDirectDependencyURLs(packageDirectory: URL) -> [String] {
-        let manifest = packageDirectory.appendingPathComponent("Package.swift")
-        guard let text = try? String(contentsOf: manifest, encoding: .utf8) else {
-            return []
-        }
-
-        let matches = text.matches(of: /\.package\(url:\s*"([^"]+)"/)
-        return matches.map { String($0.1) }
-    }
-
-    private func discoverPolicyModuleRoots(packageDirectory: URL, report: inout ValidationReport) -> [URL] {
-        var roots: [URL] = []
+    private func discoverPolicyModuleRoots(packageDirectory: URL) -> [URL] {
         let localRoot = packageDirectory.appendingPathComponent("Policies", isDirectory: true)
-        if FileManager.default.fileExists(atPath: localRoot.path) {
-            roots.append(localRoot)
-        }
-
-        let dependencyRoots = discoverDependencyPolicyRoots(packageDirectory: packageDirectory, report: &report)
-        roots.append(contentsOf: dependencyRoots)
-
-        return Array(Set(roots.map(\.standardizedFileURL))).sorted { $0.path < $1.path }
+        guard FileManager.default.fileExists(atPath: localRoot.path) else { return [] }
+        return [localRoot.standardizedFileURL]
     }
 
-    private func discoverDependencyPolicyRoots(packageDirectory: URL, report: inout ValidationReport) -> [URL] {
-        do {
-            let data = try runSwiftPackageShowDependencies(packageDirectory: packageDirectory)
-            let graph = try JSONDecoder().decode(DependencyNode.self, from: data)
-            var roots: [URL] = []
-            collectPolicyRoots(from: graph, into: &roots)
-            return roots
-        } catch {
-            report.append(
-                ValidationDiagnostic(
-                    severity: .warning,
-                    message: "Unable to discover dependency policy roots from SwiftPM graph: \(error)",
-                    location: "Package.swift"
-                )
-            )
-            return []
-        }
-    }
-
-    private func runSwiftPackageShowDependencies(packageDirectory: URL) throws -> Data {
-        let process = Process()
-        process.currentDirectoryURL = packageDirectory
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/swift")
-        process.arguments = ["package", "show-dependencies", "--format", "json"]
-
-        let output = Pipe()
-        let errors = Pipe()
-        process.standardOutput = output
-        process.standardError = errors
-
-        try process.run()
-        process.waitUntilExit()
-
-        guard process.terminationStatus == 0 else {
-            let message = String(data: errors.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8) ?? ""
-            throw NSError(domain: "RepositoryValidator.DependencyDiscovery", code: Int(process.terminationStatus), userInfo: [NSLocalizedDescriptionKey: message])
-        }
-
-        return output.fileHandleForReading.readDataToEndOfFile()
-    }
-
-    private func collectPolicyRoots(from node: DependencyNode, into roots: inout [URL]) {
-        if let path = node.path {
-            let root = URL(fileURLWithPath: path).appendingPathComponent("Policies", isDirectory: true)
-            if FileManager.default.fileExists(atPath: root.path) {
-                roots.append(root)
-            }
-        }
-
-        for dependency in node.dependencies {
-            collectPolicyRoots(from: dependency, into: &roots)
-        }
-    }
-
-    private func preparePolicyBundleDirectory(policyModuleRoots: [URL]) throws -> URL? {
-        let moduleFiles = discoverPolicyModules(policyRoots: policyModuleRoots)
-        guard !moduleFiles.isEmpty else { return nil }
-
+    private func extractPolicyBundleArchive(_ archiveURL: URL) throws -> URL {
         let tempRoot = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
-        let sourceDirectory = tempRoot.appendingPathComponent("bundle-source", isDirectory: true)
-        let outputArchive = tempRoot.appendingPathComponent("bundle.tar.gz")
         let extractedBundle = tempRoot.appendingPathComponent("bundle", isDirectory: true)
-
-        try FileManager.default.createDirectory(at: sourceDirectory, withIntermediateDirectories: true)
-
-        for (index, moduleURL) in moduleFiles.enumerated() {
-            let destination = sourceDirectory.appendingPathComponent("module-\(index).rego")
-            try FileManager.default.copyItem(at: moduleURL, to: destination)
-        }
-
-        try runProcess(
-            executable: "/Users/me/.local/bin/opa",
-            arguments: ["build", "--bundle", "--target", "plan", "--entrypoint", "semantickit/main/decision", "--output", outputArchive.path, sourceDirectory.path],
-            currentDirectory: tempRoot
-        )
-
         try FileManager.default.createDirectory(at: extractedBundle, withIntermediateDirectories: true)
-        try runProcess(
-            executable: "/usr/bin/tar",
-            arguments: ["-xzf", outputArchive.path, "-C", extractedBundle.path],
+        try runCommand(
+            "tar",
+            arguments: ["-xzf", archiveURL.path, "-C", extractedBundle.path],
             currentDirectory: tempRoot
         )
-
         return extractedBundle
     }
 
-    private func discoverPolicyModules(policyRoots: [URL]) -> [URL] {
-        var moduleFiles: [URL] = []
-        for root in policyRoots where FileManager.default.fileExists(atPath: root.path) {
-            let enumerator = FileManager.default.enumerator(
-                at: root,
-                includingPropertiesForKeys: [.isRegularFileKey],
-                options: [.skipsHiddenFiles]
-            )
-
-            while let fileURL = enumerator?.nextObject() as? URL {
-                guard fileURL.pathExtension == "rego" else { continue }
-                moduleFiles.append(fileURL)
-            }
-        }
-
-        return moduleFiles.sorted { $0.path < $1.path }
-    }
-
-    private func runProcess(executable: String, arguments: [String], currentDirectory: URL) throws {
+    private func runCommand(_ command: String, arguments: [String], currentDirectory: URL) throws {
         let process = Process()
-        process.executableURL = URL(fileURLWithPath: executable)
-        process.arguments = arguments
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
+        process.arguments = [command] + arguments
         process.currentDirectoryURL = currentDirectory
 
         let outputPipe = Pipe()
@@ -266,7 +163,7 @@ public struct RepositoryValidator {
         guard process.terminationStatus == 0 else {
             let errorOutput = String(data: errorPipe.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8) ?? ""
             throw NSError(
-                domain: "RepositoryValidator.Process",
+                domain: "BuildToolPolicyEvaluator.Process",
                 code: Int(process.terminationStatus),
                 userInfo: [NSLocalizedDescriptionKey: errorOutput]
             )
@@ -279,9 +176,3 @@ private struct WorkflowScanResult {
     var containsScriptEntrypoints: Bool
 }
 
-private struct DependencyNode: Decodable {
-    var identity: String?
-    var name: String?
-    var path: String?
-    var dependencies: [DependencyNode]
-}

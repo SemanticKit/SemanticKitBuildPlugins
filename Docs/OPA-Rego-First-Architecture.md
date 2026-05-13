@@ -8,10 +8,10 @@ Policy semantics are defined in Rego modules under `Policies/`. Swift code does 
 
 ## Build Flow
 
-1. Build-tool plugin runs the internal executable.
-2. Validator discovers artifacts by kind (rego modules, swift sources, package manifest, workflow yaml).
-3. SwiftSyntax/SwiftParser extract Swift facts into policy-neutral facts.
-4. Rego modules from local and dependency `Policies/` roots are bundled via `opa build --target plan`.
+1. Build-tool plugin discovers local and dependency `Policies/` roots from SwiftPM plugin context.
+2. Build-tool plugin invokes `opa build --target plan` as a build command and declares the OPA bundle archive as a build output.
+3. Build-tool plugin runs the internal evaluator executable as a separate build command that consumes the declared bundle output.
+4. SwiftSyntax/SwiftParser extract Swift facts into policy-neutral input facts.
 5. `swift-opa` evaluates `data.semantickit.main.decision` with the generated input.
 6. Decision diagnostics are rendered as build output; deny fails validation.
 
@@ -35,7 +35,7 @@ Rego owns:
 
 ## Dependency Discovery
 
-Dependency policy roots are discovered from `swift package show-dependencies --format json` path entries.
+Dependency policy roots are discovered from SwiftPM's plugin context (`Package.dependencies`) and must not be discovered by invoking nested `swift package` commands from a build-tool plugin.
 
 ## Parser Constraint
 

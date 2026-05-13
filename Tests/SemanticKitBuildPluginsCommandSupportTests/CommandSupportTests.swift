@@ -30,7 +30,7 @@ final class CommandSupportTests: XCTestCase {
         let directory = try temporaryDirectory()
         _ = try RepositoryInitializer().initialize(packageDirectory: directory, mode: .write)
 
-        let result = await RepositoryValidator().validate(packageDirectory: directory)
+        let result = await BuildToolPolicyEvaluator().evaluate(packageDirectory: directory)
         XCTAssertEqual(result.exitCode, 0, result.diagnostics.map(\.message).joined(separator: "\n"))
     }
 

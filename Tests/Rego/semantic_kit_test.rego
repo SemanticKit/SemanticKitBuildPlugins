@@ -6,7 +6,6 @@ test_denies_lowered_swift_baseline if {
       "swiftVersion": "6.2",
       "macOSDeploymentTarget": "26"
     },
-    "directDependencyURLs": [],
     "workflowContainsScriptEntrypoints": false,
     "swiftSourceFacts": {"bindingConstructionFacts": []},
     "artifactCatalog": {"markdownFiles": ["README.md"], "doccCatalogs": ["Docs/Guide.docc"], "propertyLists": ["Config/Info.plist"]}
@@ -20,7 +19,6 @@ test_allows_baseline_configuration if {
       "swiftVersion": "6.3",
       "macOSDeploymentTarget": "26"
     },
-    "directDependencyURLs": [],
     "workflowContainsScriptEntrypoints": false,
     "swiftSourceFacts": {"bindingConstructionFacts": []},
     "artifactCatalog": {"markdownFiles": ["README.md"], "doccCatalogs": ["Docs/Guide.docc"]}
@@ -34,7 +32,6 @@ test_denies_workflow_script_entrypoints if {
       "swiftVersion": "6.3",
       "macOSDeploymentTarget": "26"
     },
-    "directDependencyURLs": [],
     "workflowContainsScriptEntrypoints": true,
     "swiftSourceFacts": {"bindingConstructionFacts": []},
     "artifactCatalog": {"markdownFiles": ["README.md"], "doccCatalogs": ["Docs/Guide.docc"]}
@@ -48,7 +45,6 @@ test_denies_binding_get_set_constructor if {
       "swiftVersion": "6.3",
       "macOSDeploymentTarget": "26"
     },
-    "directDependencyURLs": [],
     "workflowContainsScriptEntrypoints": false,
     "swiftSourceFacts": {
       "bindingConstructionFacts": [
@@ -66,41 +62,6 @@ test_denies_binding_get_set_constructor if {
 }
 
 
-test_denies_insecure_dependency_url if {
-  result := decision with input as {
-    "repositoryConfiguration": {
-      "swiftVersion": "6.3",
-      "macOSDeploymentTarget": "26"
-    },
-    "directDependencyURLs": ["http://example.com/Policies.git"],
-    "workflowContainsScriptEntrypoints": false,
-    "swiftSourceFacts": {"bindingConstructionFacts": []},
-    "artifactCatalog": {
-      "markdownFiles": ["README.md"],
-      "doccCatalogs": ["Docs/Guide.docc"],
-      "propertyLists": ["Config/Info.plist"]
-    }
-  }
-  count(result.deny) == 1
-}
-
-test_allows_secure_dependency_url if {
-  result := decision with input as {
-    "repositoryConfiguration": {
-      "swiftVersion": "6.3",
-      "macOSDeploymentTarget": "26"
-    },
-    "directDependencyURLs": ["https://example.com/Policies.git"],
-    "workflowContainsScriptEntrypoints": false,
-    "swiftSourceFacts": {"bindingConstructionFacts": []},
-    "artifactCatalog": {
-      "markdownFiles": ["README.md"],
-      "doccCatalogs": ["Docs/Guide.docc"],
-      "propertyLists": ["Config/Info.plist"]
-    }
-  }
-  count(result.deny) == 0
-}
 
 test_warns_when_docs_artifacts_missing if {
   result := decision with input as {
@@ -108,7 +69,6 @@ test_warns_when_docs_artifacts_missing if {
       "swiftVersion": "6.3",
       "macOSDeploymentTarget": "26"
     },
-    "directDependencyURLs": [],
     "workflowContainsScriptEntrypoints": false,
     "swiftSourceFacts": {"bindingConstructionFacts": []},
     "artifactCatalog": {"markdownFiles": [], "doccCatalogs": [], "propertyLists": ["Config/Info.plist"]}
@@ -122,7 +82,6 @@ test_allows_when_docs_artifacts_present if {
       "swiftVersion": "6.3",
       "macOSDeploymentTarget": "26"
     },
-    "directDependencyURLs": [],
     "workflowContainsScriptEntrypoints": false,
     "swiftSourceFacts": {"bindingConstructionFacts": []},
     "artifactCatalog": {"markdownFiles": ["README.md"], "doccCatalogs": ["Docs/Guide.docc"]}
@@ -131,31 +90,12 @@ test_allows_when_docs_artifacts_present if {
 }
 
 
-test_warns_when_property_lists_missing if {
-  result := decision with input as {
-    "repositoryConfiguration": {
-      "swiftVersion": "6.3",
-      "macOSDeploymentTarget": "26"
-    },
-    "directDependencyURLs": [],
-    "workflowContainsScriptEntrypoints": false,
-    "swiftSourceFacts": {"bindingConstructionFacts": []},
-    "artifactCatalog": {
-      "markdownFiles": ["README.md"],
-      "doccCatalogs": ["Docs/Guide.docc"],
-      "propertyLists": []
-    }
-  }
-  count(result.warn) == 1
-}
-
 test_warns_when_metal_sources_missing_docc if {
   result := decision with input as {
     "repositoryConfiguration": {
       "swiftVersion": "6.3",
       "macOSDeploymentTarget": "26"
     },
-    "directDependencyURLs": [],
     "workflowContainsScriptEntrypoints": false,
     "swiftSourceFacts": {"bindingConstructionFacts": []},
     "artifactCatalog": {
@@ -174,7 +114,6 @@ test_warns_when_cfamily_sources_missing_markdown if {
       "swiftVersion": "6.3",
       "macOSDeploymentTarget": "26"
     },
-    "directDependencyURLs": [],
     "workflowContainsScriptEntrypoints": false,
     "swiftSourceFacts": {"bindingConstructionFacts": []},
     "artifactCatalog": {

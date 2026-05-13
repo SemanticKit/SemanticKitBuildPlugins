@@ -28,7 +28,6 @@ final class PolicyEngineTests: XCTestCase {
 
         let input = PolicyInput(
             repositoryConfiguration: RepositoryConfiguration(),
-            directDependencyURLs: [],
             workflowContainsScriptEntrypoints: false,
             swiftSourceFacts: SwiftSourceFacts(),
             artifactCatalog: ArtifactCatalog(policyModuleRoots: [packageDirectory.appendingPathComponent("Policies").path])
@@ -47,7 +46,6 @@ final class PolicyEngineTests: XCTestCase {
         let packageDirectory = try makeTemporaryPackageDirectory(regoSource: nil)
         let input = PolicyInput(
             repositoryConfiguration: RepositoryConfiguration(),
-            directDependencyURLs: [],
             workflowContainsScriptEntrypoints: false,
             swiftSourceFacts: SwiftSourceFacts(),
             artifactCatalog: ArtifactCatalog(policyModuleRoots: [packageDirectory.appendingPathComponent("Policies").path])
@@ -77,24 +75,24 @@ final class PolicyEngineTests: XCTestCase {
         let extractedBundle = tempRoot.appendingPathComponent("bundle", isDirectory: true)
 
         try FileManager.default.createDirectory(at: tempRoot, withIntermediateDirectories: true)
-        try runProcess(
-            executable: "/Users/me/.local/bin/opa",
-            arguments: ["build", "--bundle", "--target", "plan", "--entrypoint", "semantickit/main/decision", "--output", outputArchive.path, policiesDirectory.path],
+        try runCommand(
+            "opa",
+            arguments: ["build", "--target", "plan", "--entrypoint", "semantickit/main/decision", "--output", outputArchive.path, policiesDirectory.path],
             currentDirectory: tempRoot
         )
         try FileManager.default.createDirectory(at: extractedBundle, withIntermediateDirectories: true)
-        try runProcess(
-            executable: "/usr/bin/tar",
+        try runCommand(
+            "tar",
             arguments: ["-xzf", outputArchive.path, "-C", extractedBundle.path],
             currentDirectory: tempRoot
         )
         return extractedBundle
     }
 
-    private func runProcess(executable: String, arguments: [String], currentDirectory: URL) throws {
+    private func runCommand(_ command: String, arguments: [String], currentDirectory: URL) throws {
         let process = Process()
-        process.executableURL = URL(fileURLWithPath: executable)
-        process.arguments = arguments
+        process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
+        process.arguments = [command] + arguments
         process.currentDirectoryURL = currentDirectory
 
         let errorPipe = Pipe()

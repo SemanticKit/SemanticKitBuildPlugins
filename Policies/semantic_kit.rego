@@ -1,7 +1,5 @@
 package semantickit.main
 
-import data.semantickit.shared
-
 default decision := {"deny": [], "warn": [], "note": []}
 
 decision := {
@@ -46,15 +44,6 @@ baseline_denial contains {
   input.workflowContainsScriptEntrypoints
 }
 
-baseline_denial contains {
-  "message": sprintf("Direct dependency URL must use a secure transport: %v", [url]),
-  "artifact": "Package.swift",
-  "severity": "error",
-} if {
-  url := input.directDependencyURLs[_]
-  shared.insecure_dependency(url)
-}
-
 swiftui_denial contains {
   "message": "Do not manually construct Binding(get:set:) in SwiftUI contexts.",
   "artifact": fact.artifact,
@@ -80,14 +69,6 @@ documentation_warning contains {
   "severity": "warning",
 } if {
   count(input.artifactCatalog.doccCatalogs) == 0
-}
-
-documentation_warning contains {
-  "message": "Repository should include at least one property list (.plist) artifact.",
-  "artifact": "Config",
-  "severity": "warning",
-} if {
-  count(input.artifactCatalog.propertyLists) == 0
 }
 
 documentation_warning contains {
