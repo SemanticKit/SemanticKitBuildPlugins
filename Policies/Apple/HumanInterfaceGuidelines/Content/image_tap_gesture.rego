@@ -12,22 +12,15 @@ warnings := [warning |
   warning := tap_gesture_action_warning[_]
 ]
 
-tap_gesture_action_warning contains {
-  "rule_id": "apple.hig.content.review_tap_gesture_action",
-  "message": "Review tap gesture action; use a Button when visible content initiates an action.",
-  "artifact": fact.artifact,
-  "line": fact.line,
-  "column": fact.column,
-  "severity": "warning",
-} if {
-  fact := input.swiftSourceFacts.callFacts[_]
-  tap_gesture_call(fact)
+tap_gesture_action_warning contains data.apple.hig.swift_syntax.warning(call, "apple.hig.content.review_tap_gesture_action", "Review tap gesture action; use a Button when visible content initiates an action.") if {
+  call := data.apple.hig.swift_syntax.function_calls[_]
+  tap_gesture_call(call)
 }
 
-tap_gesture_call(fact) if {
-  fact.baseName == "onTapGesture"
+tap_gesture_call(call) if {
+  data.apple.hig.swift_syntax.call_named(call, "onTapGesture")
 }
 
-tap_gesture_call(fact) if {
-  fact.memberName == "onTapGesture"
+tap_gesture_call(call) if {
+  data.apple.hig.swift_syntax.call_named(call, "onTapGesture")
 }

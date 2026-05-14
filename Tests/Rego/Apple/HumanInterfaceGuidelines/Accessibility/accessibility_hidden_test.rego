@@ -1,23 +1,11 @@
 package apple.hig.accessibility.accessibility_hidden
 
-test_warns_for_accessibility_hidden_call_fact if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/ContentView.swift",
-          "line": 18,
-          "column": 10,
-          "calledExpression": "accessibilityHidden",
-          "baseName": "",
-          "memberName": "accessibilityHidden",
-          "argumentLabels": ["_"],
-          "stringArguments": [],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+test_warns_for_accessibility_hidden_swift_syntax if {
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/ContentView.swift", [
+  data.swift.syntax.test.function_call(18, 10, [
+        data.swift.syntax.test.identifier("accessibilityHidden")
+      ])
+])
 
   count(result.warn) == 1
   result.warn[0].rule_id == "apple.hig.accessibility.review_accessibility_hidden"
@@ -28,24 +16,13 @@ test_warns_for_accessibility_hidden_call_fact if {
   result.warn[0].severity == "warning"
 }
 
-test_does_not_warn_for_accessibility_label_call_fact if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/ContentView.swift",
-          "line": 22,
-          "column": 10,
-          "calledExpression": "accessibilityLabel",
-          "baseName": "",
-          "memberName": "accessibilityLabel",
-          "argumentLabels": ["_"],
-          "stringArguments": ["Route"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+test_does_not_warn_for_accessibility_label_swift_syntax if {
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/ContentView.swift", [
+  data.swift.syntax.test.function_call(22, 10, [
+        data.swift.syntax.test.identifier("accessibilityLabel"),
+        data.swift.syntax.test.string_segment("Route")
+      ])
+])
 
   count(result.warn) == 0
 }

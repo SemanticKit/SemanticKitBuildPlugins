@@ -1,23 +1,13 @@
 package apple.hig.accessibility.symbol_accessibility
 
-test_warns_for_system_symbol_image_call_fact if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/ContentView.swift",
-          "line": 24,
-          "column": 13,
-          "calledExpression": "Image",
-          "baseName": "Image",
-          "memberName": "",
-          "argumentLabels": ["systemName"],
-          "stringArguments": ["square.and.arrow.up"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+test_warns_for_system_symbol_image_swift_syntax if {
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/ContentView.swift", [
+  data.swift.syntax.test.function_call(24, 13, [
+        data.swift.syntax.test.identifier("Image"),
+        data.swift.syntax.test.identifier("systemName"),
+        data.swift.syntax.test.string_segment("square.and.arrow.up")
+      ])
+])
 
   count(result.warn) == 1
   result.warn[0].rule_id == "apple.hig.accessibility.review_symbol_accessibility_label"
@@ -28,24 +18,13 @@ test_warns_for_system_symbol_image_call_fact if {
   result.warn[0].severity == "warning"
 }
 
-test_does_not_warn_for_asset_image_call_fact if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/ContentView.swift",
-          "line": 31,
-          "column": 13,
-          "calledExpression": "Image",
-          "baseName": "Image",
-          "memberName": "",
-          "argumentLabels": ["_"],
-          "stringArguments": ["assetName"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+test_does_not_warn_for_asset_image_swift_syntax if {
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/ContentView.swift", [
+  data.swift.syntax.test.function_call(31, 13, [
+        data.swift.syntax.test.identifier("Image"),
+        data.swift.syntax.test.string_segment("assetName")
+      ])
+])
 
   count(result.warn) == 0
 }

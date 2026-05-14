@@ -12,31 +12,24 @@ warnings := [warning |
   warning := symbol_accessibility_warning[_]
 ]
 
-symbol_accessibility_warning contains {
-  "rule_id": "apple.hig.accessibility.review_symbol_accessibility_label",
-  "message": "Review symbol image accessibility; provide alternative text for custom interface icons and symbols.",
-  "artifact": fact.artifact,
-  "line": fact.line,
-  "column": fact.column,
-  "severity": "warning",
-} if {
-  fact := input.swiftSourceFacts.callFacts[_]
-  symbol_image_call(fact)
+symbol_accessibility_warning contains data.apple.hig.swift_syntax.warning(call, "apple.hig.accessibility.review_symbol_accessibility_label", "Review symbol image accessibility; provide alternative text for custom interface icons and symbols.") if {
+  call := data.apple.hig.swift_syntax.function_calls[_]
+  symbol_image_call(call)
 }
 
-symbol_image_call(fact) if {
-  image_call(fact)
-  has_argument_label(fact, "systemName")
+symbol_image_call(call) if {
+  image_call(call)
+  has_argument_label(call, "systemName")
 }
 
-image_call(fact) if {
-  fact.baseName == "Image"
+image_call(call) if {
+  data.apple.hig.swift_syntax.call_named(call, "Image")
 }
 
-image_call(fact) if {
-  fact.memberName == "Image"
+image_call(call) if {
+  data.apple.hig.swift_syntax.call_named(call, "Image")
 }
 
-has_argument_label(fact, label) if {
-  fact.argumentLabels[_] == label
+has_argument_label(call, label) if {
+  data.apple.hig.swift_syntax.argument_label(call, label)
 }

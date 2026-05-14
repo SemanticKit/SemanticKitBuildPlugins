@@ -12,34 +12,28 @@ warnings := [warning |
   warning := small_hit_region_warning[_]
 ]
 
-small_hit_region_warning contains {
-  "rule_id": "apple.hig.components.review_small_hit_region",
-  "message": "Review explicit small frame dimensions; width or height below 44 pt may affect interactive hit regions.",
-  "artifact": fact.artifact,
-  "line": fact.line,
-  "column": fact.column,
-  "severity": "warning",
-} if {
-  fact := input.swiftSourceFacts.callFacts[_]
-  frame_call(fact)
-  has_argument_label(fact, "width")
-  has_argument_label(fact, "height")
-  has_small_numeric_argument(fact)
+small_hit_region_warning contains data.apple.hig.swift_syntax.warning(call, "apple.hig.components.review_small_hit_region", "Review explicit small frame dimensions; width or height below 44 pt may affect interactive hit regions.") if {
+  call := data.apple.hig.swift_syntax.function_calls[_]
+  frame_call(call)
+  has_argument_label(call, "width")
+  has_argument_label(call, "height")
+  has_small_numeric_argument(call)
 }
 
-frame_call(fact) if {
-  fact.baseName == "frame"
+frame_call(call) if {
+  data.apple.hig.swift_syntax.call_named(call, "frame")
 }
 
-frame_call(fact) if {
-  fact.memberName == "frame"
+frame_call(call) if {
+  data.apple.hig.swift_syntax.call_named(call, "frame")
 }
 
-has_argument_label(fact, label) if {
-  fact.argumentLabels[_] == label
+has_argument_label(call, label) if {
+  data.apple.hig.swift_syntax.argument_label(call, label)
 }
 
-has_small_numeric_argument(fact) if {
-  dimension := to_number(fact.numericArguments[_])
+has_small_numeric_argument(call) if {
+  value := data.apple.hig.swift_syntax.numeric_literals(call)[_]
+  dimension := to_number(value)
   dimension < 44
 }

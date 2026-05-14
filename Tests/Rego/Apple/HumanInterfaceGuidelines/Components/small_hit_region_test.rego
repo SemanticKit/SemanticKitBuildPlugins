@@ -1,23 +1,15 @@
 package apple.hig.components.small_hit_region
 
 test_warns_for_explicit_small_frame_dimensions_that_may_affect_hit_regions if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/ContentView.swift",
-          "line": 31,
-          "column": 12,
-          "calledExpression": ".frame",
-          "baseName": "frame",
-          "memberName": "frame",
-          "argumentLabels": ["width", "height"],
-          "stringArguments": [],
-          "numericArguments": ["32", "32"]
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/ContentView.swift", [
+  data.swift.syntax.test.function_call(31, 12, [
+        data.swift.syntax.test.identifier("frame"),
+        data.swift.syntax.test.identifier("width"),
+        data.swift.syntax.test.identifier("height"),
+        data.swift.syntax.test.integer_literal("32"),
+        data.swift.syntax.test.integer_literal("32")
+      ])
+])
 
   count(result.warn) == 1
   result.warn[0].rule_id == "apple.hig.components.review_small_hit_region"
@@ -29,67 +21,41 @@ test_warns_for_explicit_small_frame_dimensions_that_may_affect_hit_regions if {
 }
 
 test_does_not_warn_for_explicit_44_by_44_frame_dimensions if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/ContentView.swift",
-          "line": 31,
-          "column": 12,
-          "calledExpression": ".frame",
-          "baseName": "frame",
-          "memberName": "frame",
-          "argumentLabels": ["width", "height"],
-          "stringArguments": [],
-          "numericArguments": ["44", "44"]
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/ContentView.swift", [
+  data.swift.syntax.test.function_call(31, 12, [
+        data.swift.syntax.test.identifier("frame"),
+        data.swift.syntax.test.identifier("width"),
+        data.swift.syntax.test.identifier("height"),
+        data.swift.syntax.test.integer_literal("44"),
+        data.swift.syntax.test.integer_literal("44")
+      ])
+])
 
   count(result.warn) == 0
 }
 
 test_does_not_warn_for_small_numeric_argument_without_width_and_height_labels if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/ContentView.swift",
-          "line": 31,
-          "column": 12,
-          "calledExpression": ".frame",
-          "baseName": "frame",
-          "memberName": "frame",
-          "argumentLabels": ["width"],
-          "stringArguments": [],
-          "numericArguments": ["32"]
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/ContentView.swift", [
+  data.swift.syntax.test.function_call(31, 12, [
+        data.swift.syntax.test.identifier("frame"),
+        data.swift.syntax.test.identifier("width"),
+        data.swift.syntax.test.integer_literal("32")
+      ])
+])
 
   count(result.warn) == 0
 }
 
 test_does_not_warn_for_non_frame_call if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/ContentView.swift",
-          "line": 31,
-          "column": 12,
-          "calledExpression": "customSize",
-          "baseName": "customSize",
-          "memberName": "",
-          "argumentLabels": ["width", "height"],
-          "stringArguments": [],
-          "numericArguments": ["32", "32"]
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/ContentView.swift", [
+  data.swift.syntax.test.function_call(31, 12, [
+        data.swift.syntax.test.identifier("customSize"),
+        data.swift.syntax.test.identifier("width"),
+        data.swift.syntax.test.identifier("height"),
+        data.swift.syntax.test.integer_literal("32"),
+        data.swift.syntax.test.integer_literal("32")
+      ])
+])
 
   count(result.warn) == 0
 }

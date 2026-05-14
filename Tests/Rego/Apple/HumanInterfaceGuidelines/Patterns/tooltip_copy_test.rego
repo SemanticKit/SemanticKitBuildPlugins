@@ -1,23 +1,12 @@
 package apple.hig.patterns.tooltip_copy
 
 test_warns_for_help_base_name_with_long_tooltip_copy if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/RouteToolbar.swift",
-          "line": 31,
-          "column": 14,
-          "calledExpression": ".help",
-          "baseName": "help",
-          "memberName": "",
-          "argumentLabels": ["_"],
-          "stringArguments": ["Open route planning controls and show detailed guidance for every available route option"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/RouteToolbar.swift", [
+  data.swift.syntax.test.function_call(31, 14, [
+        data.swift.syntax.test.identifier("help"),
+        data.swift.syntax.test.string_segment("Open route planning controls and show detailed guidance for every available route option")
+      ])
+])
 
   count(result.warn) == 1
   result.warn[0].rule_id == "apple.hig.patterns.review_tooltip_copy"
@@ -29,23 +18,12 @@ test_warns_for_help_base_name_with_long_tooltip_copy if {
 }
 
 test_warns_for_help_member_name_with_long_tooltip_copy if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/RouteToolbar.swift",
-          "line": 44,
-          "column": 10,
-          "calledExpression": "view.help",
-          "baseName": "",
-          "memberName": "help",
-          "argumentLabels": ["_"],
-          "stringArguments": ["Review all routing controls and choose the setting that best matches the selected trip"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/RouteToolbar.swift", [
+  data.swift.syntax.test.function_call(44, 10, [
+        data.swift.syntax.test.identifier("help"),
+        data.swift.syntax.test.string_segment("Review all routing controls and choose the setting that best matches the selected trip")
+      ])
+])
 
   count(result.warn) == 1
   result.warn[0].rule_id == "apple.hig.patterns.review_tooltip_copy"
@@ -56,45 +34,23 @@ test_warns_for_help_member_name_with_long_tooltip_copy if {
 }
 
 test_does_not_warn_for_help_call_with_short_tooltip_copy if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/RouteToolbar.swift",
-          "line": 52,
-          "column": 14,
-          "calledExpression": ".help",
-          "baseName": "help",
-          "memberName": "",
-          "argumentLabels": ["_"],
-          "stringArguments": ["Show route options"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/RouteToolbar.swift", [
+  data.swift.syntax.test.function_call(52, 14, [
+        data.swift.syntax.test.identifier("help"),
+        data.swift.syntax.test.string_segment("Show route options")
+      ])
+])
 
   count(result.warn) == 0
 }
 
 test_does_not_warn_for_non_help_call_with_long_copy if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/RouteToolbar.swift",
-          "line": 60,
-          "column": 12,
-          "calledExpression": "Text",
-          "baseName": "Text",
-          "memberName": "",
-          "argumentLabels": ["_"],
-          "stringArguments": ["Open route planning controls and show detailed guidance for every available route option"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/RouteToolbar.swift", [
+  data.swift.syntax.test.function_call(60, 12, [
+        data.swift.syntax.test.identifier("Text"),
+        data.swift.syntax.test.string_segment("Open route planning controls and show detailed guidance for every available route option")
+      ])
+])
 
   count(result.warn) == 0
 }

@@ -12,28 +12,21 @@ warnings := [warning |
   warning := fixed_font_size_warning[_]
 ]
 
-fixed_font_size_warning contains {
-  "rule_id": "apple.hig.accessibility.review_fixed_font_size",
-  "message": "Review literal SwiftUI system font size use; support larger text sizes.",
-  "artifact": fact.artifact,
-  "line": fact.line,
-  "column": fact.column,
-  "severity": "warning",
-} if {
-  fact := input.swiftSourceFacts.callFacts[_]
-  swiftui_system_size_call(fact)
+fixed_font_size_warning contains data.apple.hig.swift_syntax.warning(call, "apple.hig.accessibility.review_fixed_font_size", "Review literal SwiftUI system font size use; support larger text sizes.") if {
+  call := data.apple.hig.swift_syntax.function_calls[_]
+  swiftui_system_size_call(call)
 }
 
-swiftui_system_size_call(fact) if {
-  fact.baseName == "system"
-  has_argument_label(fact, "size")
-  has_numeric_argument(fact)
+swiftui_system_size_call(call) if {
+  data.apple.hig.swift_syntax.call_named(call, "system")
+  has_argument_label(call, "size")
+  has_numeric_argument(call)
 }
 
-has_argument_label(fact, label) if {
-  fact.argumentLabels[_] == label
+has_argument_label(call, label) if {
+  data.apple.hig.swift_syntax.argument_label(call, label)
 }
 
-has_numeric_argument(fact) if {
-  count(fact.numericArguments) > 0
+has_numeric_argument(call) if {
+  data.apple.hig.swift_syntax.has_numeric_argument(call)
 }

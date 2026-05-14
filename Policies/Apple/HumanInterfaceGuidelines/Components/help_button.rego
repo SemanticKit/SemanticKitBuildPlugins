@@ -12,29 +12,22 @@ warnings := [warning |
   warning := custom_help_button_warning[_]
 ]
 
-custom_help_button_warning contains {
-  "rule_id": "apple.hig.components.review_custom_help_button",
-  "message": "Review custom Help button; use the system help button for help documentation where appropriate.",
-  "artifact": fact.artifact,
-  "line": fact.line,
-  "column": fact.column,
-  "severity": "warning",
-} if {
-  fact := input.swiftSourceFacts.callFacts[_]
-  help_text_call(fact)
-  has_help_text(fact)
+custom_help_button_warning contains data.apple.hig.swift_syntax.warning(call, "apple.hig.components.review_custom_help_button", "Review custom Help button; use the system help button for help documentation where appropriate.") if {
+  call := data.apple.hig.swift_syntax.function_calls[_]
+  help_text_call(call)
+  has_help_text(call)
 }
 
 help_text_call_names := {"Button", "Text", "Label", "Link"}
 
-help_text_call(fact) if {
-  help_text_call_names[fact.baseName]
+help_text_call(call) if {
+  data.apple.hig.swift_syntax.call_named_in(call, help_text_call_names)
 }
 
-help_text_call(fact) if {
-  help_text_call_names[fact.memberName]
+help_text_call(call) if {
+  data.apple.hig.swift_syntax.call_named_in(call, help_text_call_names)
 }
 
-has_help_text(fact) if {
-  fact.stringArguments[_] == "Help"
+has_help_text(call) if {
+  data.apple.hig.swift_syntax.string_argument(call, "Help")
 }

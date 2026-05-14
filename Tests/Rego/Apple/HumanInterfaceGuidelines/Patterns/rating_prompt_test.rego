@@ -1,23 +1,12 @@
 package apple.hig.patterns.rating_prompt
 
 test_warns_for_custom_button_with_rate_text if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/SettingsView.swift",
-          "line": 42,
-          "column": 17,
-          "calledExpression": "Button",
-          "baseName": "Button",
-          "memberName": "",
-          "argumentLabels": ["_"],
-          "stringArguments": ["Rate This App"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/SettingsView.swift", [
+  data.swift.syntax.test.function_call(42, 17, [
+        data.swift.syntax.test.identifier("Button"),
+        data.swift.syntax.test.string_segment("Rate This App")
+      ])
+])
 
   count(result.warn) == 1
   result.warn[0].rule_id == "apple.hig.patterns.review_custom_rating_prompt"
@@ -29,23 +18,12 @@ test_warns_for_custom_button_with_rate_text if {
 }
 
 test_does_not_warn_for_request_review_call if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/SettingsView.swift",
-          "line": 51,
-          "column": 9,
-          "calledExpression": "requestReview",
-          "baseName": "requestReview",
-          "memberName": "",
-          "argumentLabels": [],
-          "stringArguments": ["Review"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/SettingsView.swift", [
+  data.swift.syntax.test.function_call(51, 9, [
+        data.swift.syntax.test.identifier("requestReview"),
+        data.swift.syntax.test.string_segment("Review")
+      ])
+])
 
   count(result.warn) == 0
 }

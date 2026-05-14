@@ -12,45 +12,38 @@ warnings := [warning |
   warning := custom_rating_prompt_warning[_]
 ]
 
-custom_rating_prompt_warning contains {
-  "rule_id": "apple.hig.patterns.review_custom_rating_prompt",
-  "message": "Review custom rating prompt; prefer the system rating prompt and ask only after engagement.",
-  "artifact": fact.artifact,
-  "line": fact.line,
-  "column": fact.column,
-  "severity": "warning",
-} if {
-  fact := input.swiftSourceFacts.callFacts[_]
-  custom_rating_surface_call(fact)
-  has_visible_rating_string_argument(fact)
-  not system_rating_prompt_call(fact)
+custom_rating_prompt_warning contains data.apple.hig.swift_syntax.warning(call, "apple.hig.patterns.review_custom_rating_prompt", "Review custom rating prompt; prefer the system rating prompt and ask only after engagement.") if {
+  call := data.apple.hig.swift_syntax.function_calls[_]
+  custom_rating_surface_call(call)
+  has_visible_rating_string_argument(call)
+  not system_rating_prompt_call(call)
 }
 
 custom_rating_surface_names := {"Button", "Text", "Label", "Link"}
 system_rating_prompt_names := {"RequestReviewAction", "requestReview", "SKStoreReviewController", "requestReviewInCurrentScene"}
 
-custom_rating_surface_call(fact) if {
-  custom_rating_surface_names[fact.baseName]
+custom_rating_surface_call(call) if {
+  data.apple.hig.swift_syntax.call_named_in(call, custom_rating_surface_names)
 }
 
-custom_rating_surface_call(fact) if {
-  custom_rating_surface_names[fact.memberName]
+custom_rating_surface_call(call) if {
+  data.apple.hig.swift_syntax.call_named_in(call, custom_rating_surface_names)
 }
 
-system_rating_prompt_call(fact) if {
-  system_rating_prompt_names[fact.baseName]
+system_rating_prompt_call(call) if {
+  data.apple.hig.swift_syntax.call_named_in(call, system_rating_prompt_names)
 }
 
-system_rating_prompt_call(fact) if {
-  system_rating_prompt_names[fact.memberName]
+system_rating_prompt_call(call) if {
+  data.apple.hig.swift_syntax.call_named_in(call, system_rating_prompt_names)
 }
 
-has_visible_rating_string_argument(fact) if {
-  argument := fact.stringArguments[_]
+has_visible_rating_string_argument(call) if {
+  argument := data.apple.hig.swift_syntax.string_literals(call)[_]
   indexof(argument, "Rate") >= 0
 }
 
-has_visible_rating_string_argument(fact) if {
-  argument := fact.stringArguments[_]
+has_visible_rating_string_argument(call) if {
+  argument := data.apple.hig.swift_syntax.string_literals(call)[_]
   indexof(argument, "Review") >= 0
 }

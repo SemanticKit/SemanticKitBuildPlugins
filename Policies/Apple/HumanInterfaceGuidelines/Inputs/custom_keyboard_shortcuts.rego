@@ -12,22 +12,15 @@ warnings := [warning |
   warning := custom_keyboard_shortcut_warning[_]
 ]
 
-custom_keyboard_shortcut_warning contains {
-  "rule_id": "apple.hig.inputs.review_custom_keyboard_shortcut",
-  "message": "Review custom keyboard shortcut; prefer standard shortcuts and define custom shortcuts only when necessary.",
-  "artifact": fact.artifact,
-  "line": fact.line,
-  "column": fact.column,
-  "severity": "warning",
-} if {
-  fact := input.swiftSourceFacts.callFacts[_]
-  keyboard_shortcut_call(fact)
+custom_keyboard_shortcut_warning contains data.apple.hig.swift_syntax.warning(call, "apple.hig.inputs.review_custom_keyboard_shortcut", "Review custom keyboard shortcut; prefer standard shortcuts and define custom shortcuts only when necessary.") if {
+  call := data.apple.hig.swift_syntax.function_calls[_]
+  keyboard_shortcut_call(call)
 }
 
-keyboard_shortcut_call(fact) if {
-  fact.baseName == "keyboardShortcut"
+keyboard_shortcut_call(call) if {
+  data.apple.hig.swift_syntax.call_named(call, "keyboardShortcut")
 }
 
-keyboard_shortcut_call(fact) if {
-  fact.memberName == "keyboardShortcut"
+keyboard_shortcut_call(call) if {
+  data.apple.hig.swift_syntax.call_named(call, "keyboardShortcut")
 }

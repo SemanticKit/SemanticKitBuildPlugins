@@ -1,23 +1,12 @@
 package apple.hig.navigation.generic_search_placeholder
 
 test_warns_for_text_field_search_placeholder if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/SearchView.swift",
-          "line": 14,
-          "column": 7,
-          "calledExpression": "TextField",
-          "baseName": "TextField",
-          "memberName": "",
-          "argumentLabels": ["_"],
-          "stringArguments": ["Search"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/SearchView.swift", [
+  data.swift.syntax.test.function_call(14, 7, [
+        data.swift.syntax.test.identifier("TextField"),
+        data.swift.syntax.test.string_segment("Search")
+      ])
+])
 
   count(result.warn) == 1
   result.warn[0].rule_id == "apple.hig.navigation.review_generic_search_placeholder"
@@ -29,23 +18,15 @@ test_warns_for_text_field_search_placeholder if {
 }
 
 test_warns_for_searchable_member_search_placeholder if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/LibraryView.swift",
-          "line": 31,
-          "column": 5,
-          "calledExpression": ".searchable",
-          "baseName": "",
-          "memberName": "searchable",
-          "argumentLabels": ["text", "placement", "prompt"],
-          "stringArguments": ["Search"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/LibraryView.swift", [
+  data.swift.syntax.test.function_call(31, 5, [
+        data.swift.syntax.test.identifier("searchable"),
+        data.swift.syntax.test.identifier("text"),
+        data.swift.syntax.test.identifier("placement"),
+        data.swift.syntax.test.identifier("prompt"),
+        data.swift.syntax.test.string_segment("Search")
+      ])
+])
 
   count(result.warn) == 1
   result.warn[0].rule_id == "apple.hig.navigation.review_generic_search_placeholder"
@@ -55,23 +36,14 @@ test_warns_for_searchable_member_search_placeholder if {
 }
 
 test_warns_for_searchable_base_search_prompt if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/LibraryView.swift",
-          "line": 37,
-          "column": 5,
-          "calledExpression": "searchable",
-          "baseName": "searchable",
-          "memberName": "",
-          "argumentLabels": ["text", "prompt"],
-          "stringArguments": ["Search"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/LibraryView.swift", [
+  data.swift.syntax.test.function_call(37, 5, [
+        data.swift.syntax.test.identifier("searchable"),
+        data.swift.syntax.test.identifier("text"),
+        data.swift.syntax.test.identifier("prompt"),
+        data.swift.syntax.test.string_segment("Search")
+      ])
+])
 
   count(result.warn) == 1
   result.warn[0].rule_id == "apple.hig.navigation.review_generic_search_placeholder"
@@ -81,67 +53,36 @@ test_warns_for_searchable_base_search_prompt if {
 }
 
 test_does_not_warn_for_descriptive_search_placeholder if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/SearchView.swift",
-          "line": 19,
-          "column": 7,
-          "calledExpression": "TextField",
-          "baseName": "TextField",
-          "memberName": "",
-          "argumentLabels": ["_"],
-          "stringArguments": ["Search messages"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/SearchView.swift", [
+  data.swift.syntax.test.function_call(19, 7, [
+        data.swift.syntax.test.identifier("TextField"),
+        data.swift.syntax.test.string_segment("Search messages")
+      ])
+])
 
   count(result.warn) == 0
 }
 
 test_does_not_warn_for_searchable_search_without_prompt_label if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/LibraryView.swift",
-          "line": 41,
-          "column": 5,
-          "calledExpression": ".searchable",
-          "baseName": "",
-          "memberName": "searchable",
-          "argumentLabels": ["text", "placement"],
-          "stringArguments": ["Search"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/LibraryView.swift", [
+  data.swift.syntax.test.function_call(41, 5, [
+        data.swift.syntax.test.identifier("searchable"),
+        data.swift.syntax.test.identifier("text"),
+        data.swift.syntax.test.identifier("placement"),
+        data.swift.syntax.test.string_segment("Search")
+      ])
+])
 
   count(result.warn) == 0
 }
 
 test_does_not_warn_for_generic_search_text_on_unrelated_call if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/SearchView.swift",
-          "line": 23,
-          "column": 9,
-          "calledExpression": "Button",
-          "baseName": "Button",
-          "memberName": "",
-          "argumentLabels": ["_"],
-          "stringArguments": ["Search"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/SearchView.swift", [
+  data.swift.syntax.test.function_call(23, 9, [
+        data.swift.syntax.test.identifier("Button"),
+        data.swift.syntax.test.string_segment("Search")
+      ])
+])
 
   count(result.warn) == 0
 }

@@ -12,30 +12,23 @@ warnings := [warning |
   warning := unhelpful_alert_title_warning[_]
 ]
 
-unhelpful_alert_title_warning contains {
-  "rule_id": "apple.hig.presentation.review_unhelpful_alert_title",
-  "message": "Review alert title; use direct, neutral, specific copy instead of generic error text.",
-  "artifact": fact.artifact,
-  "line": fact.line,
-  "column": fact.column,
-  "severity": "warning",
-} if {
-  fact := input.swiftSourceFacts.callFacts[_]
-  alert_title_surface_call(fact)
-  has_unhelpful_alert_title(fact)
+unhelpful_alert_title_warning contains data.apple.hig.swift_syntax.warning(call, "apple.hig.presentation.review_unhelpful_alert_title", "Review alert title; use direct, neutral, specific copy instead of generic error text.") if {
+  call := data.apple.hig.swift_syntax.function_calls[_]
+  alert_title_surface_call(call)
+  has_unhelpful_alert_title(call)
 }
 
 alert_title_surface_names := {"Alert", "Text", "Label", "Button"}
 
-alert_title_surface_call(fact) if {
-  alert_title_surface_names[fact.baseName]
+alert_title_surface_call(call) if {
+  data.apple.hig.swift_syntax.call_named_in(call, alert_title_surface_names)
 }
 
-alert_title_surface_call(fact) if {
-  alert_title_surface_names[fact.memberName]
+alert_title_surface_call(call) if {
+  data.apple.hig.swift_syntax.call_named_in(call, alert_title_surface_names)
 }
 
-has_unhelpful_alert_title(fact) if {
-  title := fact.stringArguments[_]
+has_unhelpful_alert_title(call) if {
+  title := data.apple.hig.swift_syntax.string_literals(call)[_]
   title == "Error"
 }

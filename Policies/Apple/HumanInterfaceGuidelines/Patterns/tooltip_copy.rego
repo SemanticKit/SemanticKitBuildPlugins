@@ -12,28 +12,21 @@ warnings := [warning |
   warning := tooltip_copy_warning[_]
 ]
 
-tooltip_copy_warning contains {
-  "rule_id": "apple.hig.patterns.review_tooltip_copy",
-  "message": "Review tooltip copy; describe the control directly and keep help text around 60 to 75 characters.",
-  "artifact": fact.artifact,
-  "line": fact.line,
-  "column": fact.column,
-  "severity": "warning",
-} if {
-  fact := input.swiftSourceFacts.callFacts[_]
-  help_call(fact)
-  has_long_string_argument(fact)
+tooltip_copy_warning contains data.apple.hig.swift_syntax.warning(call, "apple.hig.patterns.review_tooltip_copy", "Review tooltip copy; describe the control directly and keep help text around 60 to 75 characters.") if {
+  call := data.apple.hig.swift_syntax.function_calls[_]
+  help_call(call)
+  has_long_string_argument(call)
 }
 
-help_call(fact) if {
-  fact.baseName == "help"
+help_call(call) if {
+  data.apple.hig.swift_syntax.call_named(call, "help")
 }
 
-help_call(fact) if {
-  fact.memberName == "help"
+help_call(call) if {
+  data.apple.hig.swift_syntax.call_named(call, "help")
 }
 
-has_long_string_argument(fact) if {
-  argument := fact.stringArguments[_]
+has_long_string_argument(call) if {
+  argument := data.apple.hig.swift_syntax.string_literals(call)[_]
   count(argument) > 75
 }

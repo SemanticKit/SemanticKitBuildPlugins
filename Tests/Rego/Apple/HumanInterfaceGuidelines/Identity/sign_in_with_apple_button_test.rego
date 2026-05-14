@@ -1,23 +1,12 @@
 package apple.hig.identity.sign_in_with_apple_button
 
 test_warns_for_custom_button_with_sign_in_with_apple_text if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/LoginView.swift",
-          "line": 42,
-          "column": 13,
-          "calledExpression": "Button",
-          "baseName": "Button",
-          "memberName": "",
-          "argumentLabels": ["_"],
-          "stringArguments": ["Sign in with Apple"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/LoginView.swift", [
+  data.swift.syntax.test.function_call(42, 13, [
+        data.swift.syntax.test.identifier("Button"),
+        data.swift.syntax.test.string_segment("Sign in with Apple")
+      ])
+])
 
   count(result.warn) == 1
   result.warn[0].rule_id == "apple.hig.identity.review_custom_sign_in_with_apple_button"
@@ -29,23 +18,12 @@ test_warns_for_custom_button_with_sign_in_with_apple_text if {
 }
 
 test_does_not_warn_for_asauthorizationappleidbutton if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/LoginView.swift",
-          "line": 55,
-          "column": 9,
-          "calledExpression": "ASAuthorizationAppleIDButton",
-          "baseName": "ASAuthorizationAppleIDButton",
-          "memberName": "",
-          "argumentLabels": [],
-          "stringArguments": ["Sign in with Apple"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/LoginView.swift", [
+  data.swift.syntax.test.function_call(55, 9, [
+        data.swift.syntax.test.identifier("ASAuthorizationAppleIDButton"),
+        data.swift.syntax.test.string_segment("Sign in with Apple")
+      ])
+])
 
   count(result.warn) == 0
 }

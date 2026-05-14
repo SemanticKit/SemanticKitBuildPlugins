@@ -1,23 +1,11 @@
 package apple.hig.content.image_tap_gesture
 
 test_warns_for_on_tap_gesture if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/GalleryView.swift",
-          "line": 22,
-          "column": 15,
-          "calledExpression": ".onTapGesture",
-          "baseName": "onTapGesture",
-          "memberName": "onTapGesture",
-          "argumentLabels": [],
-          "stringArguments": [],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/GalleryView.swift", [
+  data.swift.syntax.test.function_call(22, 15, [
+        data.swift.syntax.test.identifier("onTapGesture")
+      ])
+])
 
   count(result.warn) == 1
   result.warn[0].rule_id == "apple.hig.content.review_tap_gesture_action"
@@ -29,23 +17,12 @@ test_warns_for_on_tap_gesture if {
 }
 
 test_does_not_warn_for_button_open if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/GalleryView.swift",
-          "line": 30,
-          "column": 9,
-          "calledExpression": "Button",
-          "baseName": "Button",
-          "memberName": "",
-          "argumentLabels": ["_"],
-          "stringArguments": ["Open"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/GalleryView.swift", [
+  data.swift.syntax.test.function_call(30, 9, [
+        data.swift.syntax.test.identifier("Button"),
+        data.swift.syntax.test.string_segment("Open")
+      ])
+])
 
   count(result.warn) == 0
 }

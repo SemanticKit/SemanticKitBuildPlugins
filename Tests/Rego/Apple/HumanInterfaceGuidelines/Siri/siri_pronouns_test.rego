@@ -1,23 +1,12 @@
 package apple.hig.siri.siri_pronouns
 
 test_warns_for_text_with_siri_pronoun_copy if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/ShortcutsView.swift",
-          "line": 24,
-          "column": 13,
-          "calledExpression": "Text",
-          "baseName": "Text",
-          "memberName": "",
-          "argumentLabels": ["_"],
-          "stringArguments": ["Ask Siri what she can do"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/ShortcutsView.swift", [
+  data.swift.syntax.test.function_call(24, 13, [
+        data.swift.syntax.test.identifier("Text"),
+        data.swift.syntax.test.string_segment("Ask Siri what she can do")
+      ])
+])
 
   count(result.warn) == 1
   result.warn[0].rule_id == "apple.hig.siri.review_siri_pronoun_copy"
@@ -29,122 +18,57 @@ test_warns_for_text_with_siri_pronoun_copy if {
 }
 
 test_warns_for_visible_string_call_names_with_siri_pronoun_copy if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/ShortcutsView.swift",
-          "line": 31,
-          "column": 9,
-          "calledExpression": "Label",
-          "baseName": "Label",
-          "memberName": "",
-          "argumentLabels": ["_"],
-          "stringArguments": ["Siri will remind her"],
-          "numericArguments": []
-        },
-        {
-          "artifact": "Sources/App/ShortcutsView.swift",
-          "line": 32,
-          "column": 9,
-          "calledExpression": "Button",
-          "baseName": "Button",
-          "memberName": "",
-          "argumentLabels": ["_"],
-          "stringArguments": ["Ask SIRI about HIM"],
-          "numericArguments": []
-        },
-        {
-          "artifact": "Sources/App/ShortcutsView.swift",
-          "line": 33,
-          "column": 9,
-          "calledExpression": "TextField",
-          "baseName": "TextField",
-          "memberName": "",
-          "argumentLabels": ["_"],
-          "stringArguments": ["Ask Siri what she can do"],
-          "numericArguments": []
-        },
-        {
-          "artifact": "Sources/App/ShortcutsView.swift",
-          "line": 34,
-          "column": 10,
-          "calledExpression": "view.help",
-          "baseName": "",
-          "memberName": "help",
-          "argumentLabels": ["_"],
-          "stringArguments": ["Siri will remind her"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/ShortcutsView.swift", [
+  data.swift.syntax.test.function_call(31, 9, [
+        data.swift.syntax.test.identifier("Label"),
+        data.swift.syntax.test.string_segment("Siri will remind her")
+      ]),
+  data.swift.syntax.test.function_call(32, 9, [
+        data.swift.syntax.test.identifier("Button"),
+        data.swift.syntax.test.string_segment("Ask SIRI about HIM")
+      ]),
+  data.swift.syntax.test.function_call(33, 9, [
+        data.swift.syntax.test.identifier("TextField"),
+        data.swift.syntax.test.string_segment("Ask Siri what she can do")
+      ]),
+  data.swift.syntax.test.function_call(34, 10, [
+        data.swift.syntax.test.identifier("help"),
+        data.swift.syntax.test.string_segment("Siri will remind her")
+      ])
+])
 
   count(result.warn) == 4
 }
 
 test_does_not_warn_for_supported_call_with_siri_named_directly if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/ShortcutsView.swift",
-          "line": 42,
-          "column": 13,
-          "calledExpression": "Text",
-          "baseName": "Text",
-          "memberName": "",
-          "argumentLabels": ["_"],
-          "stringArguments": ["Ask Siri what Siri can do"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/ShortcutsView.swift", [
+  data.swift.syntax.test.function_call(42, 13, [
+        data.swift.syntax.test.identifier("Text"),
+        data.swift.syntax.test.string_segment("Ask Siri what Siri can do")
+      ])
+])
 
   count(result.warn) == 0
 }
 
 test_does_not_warn_for_unsupported_call_with_siri_pronoun_copy if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/ShortcutsView.swift",
-          "line": 48,
-          "column": 9,
-          "calledExpression": "Image",
-          "baseName": "Image",
-          "memberName": "",
-          "argumentLabels": ["_"],
-          "stringArguments": ["Ask Siri to help him"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/ShortcutsView.swift", [
+  data.swift.syntax.test.function_call(48, 9, [
+        data.swift.syntax.test.identifier("Image"),
+        data.swift.syntax.test.string_segment("Ask Siri to help him")
+      ])
+])
 
   count(result.warn) == 0
 }
 
 test_warns_for_non_exact_siri_pronoun_copy if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/ShortcutsView.swift",
-          "line": 56,
-          "column": 13,
-          "calledExpression": "Text",
-          "baseName": "Text",
-          "memberName": "",
-          "argumentLabels": ["_"],
-          "stringArguments": ["Ask Siri what she can do today"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/ShortcutsView.swift", [
+  data.swift.syntax.test.function_call(56, 13, [
+        data.swift.syntax.test.identifier("Text"),
+        data.swift.syntax.test.string_segment("Ask Siri what she can do today")
+      ])
+])
 
   count(result.warn) == 1
 }

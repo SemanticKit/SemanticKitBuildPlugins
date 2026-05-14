@@ -12,22 +12,15 @@ warnings := [warning |
   warning := custom_font_warning[_]
 ]
 
-custom_font_warning contains {
-  "rule_id": "apple.hig.typography.review_custom_font",
-  "message": "Review custom font; prefer system fonts and verify legibility.",
-  "artifact": fact.artifact,
-  "line": fact.line,
-  "column": fact.column,
-  "severity": "warning",
-} if {
-  fact := input.swiftSourceFacts.callFacts[_]
-  custom_font_call(fact)
+custom_font_warning contains data.apple.hig.swift_syntax.warning(call, "apple.hig.typography.review_custom_font", "Review custom font; prefer system fonts and verify legibility.") if {
+  call := data.apple.hig.swift_syntax.function_calls[_]
+  custom_font_call(call)
 }
 
-custom_font_call(fact) if {
-  fact.baseName == "custom"
+custom_font_call(call) if {
+  data.apple.hig.swift_syntax.call_named(call, "custom")
 }
 
-custom_font_call(fact) if {
-  fact.memberName == "custom"
+custom_font_call(call) if {
+  data.apple.hig.swift_syntax.call_named(call, "custom")
 }

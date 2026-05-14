@@ -1,23 +1,12 @@
 package apple.hig.presentation.alert_ok_button
 
-test_warns_for_ok_button_call_fact if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/ContentView.swift",
-          "line": 28,
-          "column": 13,
-          "calledExpression": "Button",
-          "baseName": "Button",
-          "memberName": "",
-          "argumentLabels": [],
-          "stringArguments": ["OK"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+test_warns_for_ok_button_swift_syntax if {
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/ContentView.swift", [
+  data.swift.syntax.test.function_call(28, 13, [
+        data.swift.syntax.test.identifier("Button"),
+        data.swift.syntax.test.string_segment("OK")
+      ])
+])
 
   count(result.warn) == 1
   result.warn[0].rule_id == "apple.hig.presentation.review_alert_ok_button"
@@ -28,24 +17,13 @@ test_warns_for_ok_button_call_fact if {
   result.warn[0].severity == "warning"
 }
 
-test_does_not_warn_for_dismiss_button_call_fact if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/ContentView.swift",
-          "line": 28,
-          "column": 13,
-          "calledExpression": "Button",
-          "baseName": "Button",
-          "memberName": "",
-          "argumentLabels": [],
-          "stringArguments": ["Dismiss"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+test_does_not_warn_for_dismiss_button_swift_syntax if {
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/ContentView.swift", [
+  data.swift.syntax.test.function_call(28, 13, [
+        data.swift.syntax.test.identifier("Button"),
+        data.swift.syntax.test.string_segment("Dismiss")
+      ])
+])
 
   count(result.warn) == 0
 }

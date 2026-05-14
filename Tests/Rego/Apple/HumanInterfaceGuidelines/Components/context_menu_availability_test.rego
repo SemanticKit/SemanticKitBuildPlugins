@@ -1,23 +1,11 @@
 package apple.hig.components.context_menu_availability
 
-test_reviews_context_menu_base_name_call_fact if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/ContentView.swift",
-          "line": 18,
-          "column": 7,
-          "calledExpression": "contextMenu",
-          "baseName": "contextMenu",
-          "memberName": "",
-          "argumentLabels": [],
-          "stringArguments": [],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+test_reviews_context_menu_base_name_swift_syntax if {
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/ContentView.swift", [
+  data.swift.syntax.test.function_call(18, 7, [
+        data.swift.syntax.test.identifier("contextMenu")
+      ])
+])
 
   count(result.warn) == 1
   result.warn[0].rule_id == "apple.hig.components.review_context_menu_availability"
@@ -28,24 +16,12 @@ test_reviews_context_menu_base_name_call_fact if {
   result.warn[0].severity == "warning"
 }
 
-test_reviews_context_menu_member_name_call_fact if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/ContentView.swift",
-          "line": 42,
-          "column": 11,
-          "calledExpression": "Text(\"File\").contextMenu",
-          "baseName": "",
-          "memberName": "contextMenu",
-          "argumentLabels": [],
-          "stringArguments": [],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+test_reviews_context_menu_member_name_swift_syntax if {
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/ContentView.swift", [
+  data.swift.syntax.test.function_call(42, 11, [
+        data.swift.syntax.test.identifier("contextMenu")
+      ])
+])
 
   count(result.warn) == 1
   result.warn[0].rule_id == "apple.hig.components.review_context_menu_availability"
@@ -55,34 +31,18 @@ test_reviews_context_menu_member_name_call_fact if {
   result.warn[0].severity == "warning"
 }
 
-test_does_not_review_non_context_menu_call_fact if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/ContentView.swift",
-          "line": 18,
-          "column": 7,
-          "calledExpression": "Menu",
-          "baseName": "Menu",
-          "memberName": "",
-          "argumentLabels": [],
-          "stringArguments": [],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+test_does_not_review_non_context_menu_swift_syntax if {
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/ContentView.swift", [
+  data.swift.syntax.test.function_call(18, 7, [
+        data.swift.syntax.test.identifier("Menu")
+      ])
+])
 
   count(result.warn) == 0
 }
 
-test_does_not_review_context_menu_when_not_a_call_fact if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": []
-    }
-  }
+test_does_not_review_context_menu_when_not_a_swift_syntax if {
+  result := decision with input as data.swift.syntax.test.source_input(null, [])
 
   count(result.warn) == 0
 }

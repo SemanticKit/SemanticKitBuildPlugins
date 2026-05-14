@@ -1,23 +1,12 @@
 package apple.hig.components.help_button
 
 test_warns_for_button_help_text if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/RouteView.swift",
-          "line": 18,
-          "column": 9,
-          "calledExpression": "Button",
-          "baseName": "Button",
-          "memberName": "",
-          "argumentLabels": ["_"],
-          "stringArguments": ["Help"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/RouteView.swift", [
+  data.swift.syntax.test.function_call(18, 9, [
+        data.swift.syntax.test.identifier("Button"),
+        data.swift.syntax.test.string_segment("Help")
+      ])
+])
 
   count(result.warn) == 1
   result.warn[0].rule_id == "apple.hig.components.review_custom_help_button"
@@ -29,23 +18,12 @@ test_warns_for_button_help_text if {
 }
 
 test_does_not_warn_for_route_details_button_text if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/RouteView.swift",
-          "line": 24,
-          "column": 9,
-          "calledExpression": "Button",
-          "baseName": "Button",
-          "memberName": "",
-          "argumentLabels": ["_"],
-          "stringArguments": ["Route Details"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/RouteView.swift", [
+  data.swift.syntax.test.function_call(24, 9, [
+        data.swift.syntax.test.identifier("Button"),
+        data.swift.syntax.test.string_segment("Route Details")
+      ])
+])
 
   count(result.warn) == 0
 }

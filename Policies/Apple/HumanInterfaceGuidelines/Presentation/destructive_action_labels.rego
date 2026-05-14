@@ -12,32 +12,25 @@ warnings := [warning |
   warning := destructive_action_label_warning[_]
 ]
 
-destructive_action_label_warning contains {
-  "rule_id": "apple.hig.presentation.review_destructive_action_label",
-  "message": "Review destructive action; use destructive styling and provide a clear cancel path.",
-  "artifact": fact.artifact,
-  "line": fact.line,
-  "column": fact.column,
-  "severity": "warning",
-} if {
-  fact := input.swiftSourceFacts.callFacts[_]
-  visible_action_call(fact)
-  has_destructive_action_label(fact)
+destructive_action_label_warning contains data.apple.hig.swift_syntax.warning(call, "apple.hig.presentation.review_destructive_action_label", "Review destructive action; use destructive styling and provide a clear cancel path.") if {
+  call := data.apple.hig.swift_syntax.function_calls[_]
+  visible_action_call(call)
+  has_destructive_action_label(call)
 }
 
 visible_action_call_names := {"Button", "Link"}
 destructive_action_label_prefixes := ["Delete", "Remove", "Discard", "Erase", "Reset"]
 
-visible_action_call(fact) if {
-  visible_action_call_names[fact.baseName]
+visible_action_call(call) if {
+  data.apple.hig.swift_syntax.call_named_in(call, visible_action_call_names)
 }
 
-visible_action_call(fact) if {
-  visible_action_call_names[fact.memberName]
+visible_action_call(call) if {
+  data.apple.hig.swift_syntax.call_named_in(call, visible_action_call_names)
 }
 
-has_destructive_action_label(fact) if {
-  label := fact.stringArguments[_]
+has_destructive_action_label(call) if {
+  label := data.apple.hig.swift_syntax.string_literals(call)[_]
   prefix := destructive_action_label_prefixes[_]
   startswith(label, prefix)
 }

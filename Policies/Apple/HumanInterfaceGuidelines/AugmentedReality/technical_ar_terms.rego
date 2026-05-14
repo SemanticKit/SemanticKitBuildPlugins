@@ -12,32 +12,25 @@ warnings := [warning |
   warning := technical_ar_terms_warning[_]
 ]
 
-technical_ar_terms_warning contains {
-  "rule_id": "apple.hig.augmented_reality.review_technical_ar_terms",
-  "message": "Review AR instructional text; use approachable terms instead of technical AR terminology.",
-  "artifact": fact.artifact,
-  "line": fact.line,
-  "column": fact.column,
-  "severity": "warning",
-} if {
-  fact := input.swiftSourceFacts.callFacts[_]
-  visible_instructional_string_call(fact)
-  has_technical_ar_term(fact)
+technical_ar_terms_warning contains data.apple.hig.swift_syntax.warning(call, "apple.hig.augmented_reality.review_technical_ar_terms", "Review AR instructional text; use approachable terms instead of technical AR terminology.") if {
+  call := data.apple.hig.swift_syntax.function_calls[_]
+  visible_instructional_string_call(call)
+  has_technical_ar_term(call)
 }
 
 visible_string_call_names := {"Text", "Label", "Button", "TextField", "help"}
 technical_ar_terms := {"arkit", "world detection", "tracking"}
 
-visible_instructional_string_call(fact) if {
-  visible_string_call_names[fact.baseName]
+visible_instructional_string_call(call) if {
+  data.apple.hig.swift_syntax.call_named_in(call, visible_string_call_names)
 }
 
-visible_instructional_string_call(fact) if {
-  visible_string_call_names[fact.memberName]
+visible_instructional_string_call(call) if {
+  data.apple.hig.swift_syntax.call_named_in(call, visible_string_call_names)
 }
 
-has_technical_ar_term(fact) if {
-  argument := fact.stringArguments[_]
+has_technical_ar_term(call) if {
+  argument := data.apple.hig.swift_syntax.string_literals(call)[_]
   term := technical_ar_terms[_]
   contains(lower(argument), term)
 }

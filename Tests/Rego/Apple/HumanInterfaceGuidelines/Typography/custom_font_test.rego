@@ -1,23 +1,14 @@
 package apple.hig.typography.custom_font
 
-test_warns_for_custom_font_call_fact if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/ContentView.swift",
-          "line": 28,
-          "column": 19,
-          "calledExpression": ".custom",
-          "baseName": "custom",
-          "memberName": "custom",
-          "argumentLabels": ["_", "size"],
-          "stringArguments": ["Avenir"],
-          "numericArguments": ["14"]
-        }
-      ]
-    }
-  }
+test_warns_for_custom_font_swift_syntax if {
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/ContentView.swift", [
+  data.swift.syntax.test.function_call(28, 19, [
+        data.swift.syntax.test.identifier("custom"),
+        data.swift.syntax.test.identifier("size"),
+        data.swift.syntax.test.string_segment("Avenir"),
+        data.swift.syntax.test.integer_literal("14")
+      ])
+])
 
   count(result.warn) == 1
   result.warn[0].rule_id == "apple.hig.typography.review_custom_font"
@@ -28,24 +19,14 @@ test_warns_for_custom_font_call_fact if {
   result.warn[0].severity == "warning"
 }
 
-test_does_not_warn_for_system_font_call_fact if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/ContentView.swift",
-          "line": 28,
-          "column": 19,
-          "calledExpression": ".system",
-          "baseName": "system",
-          "memberName": "system",
-          "argumentLabels": ["size"],
-          "stringArguments": [],
-          "numericArguments": ["14"]
-        }
-      ]
-    }
-  }
+test_does_not_warn_for_system_font_swift_syntax if {
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/ContentView.swift", [
+  data.swift.syntax.test.function_call(28, 19, [
+        data.swift.syntax.test.identifier("system"),
+        data.swift.syntax.test.identifier("size"),
+        data.swift.syntax.test.integer_literal("14")
+      ])
+])
 
   count(result.warn) == 0
 }

@@ -1,23 +1,12 @@
 package apple.hig.patterns.share_button
 
 test_warns_for_custom_button_with_share_text if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/ContentView.swift",
-          "line": 18,
-          "column": 11,
-          "calledExpression": "Button",
-          "baseName": "Button",
-          "memberName": "",
-          "argumentLabels": ["_"],
-          "stringArguments": ["Share"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/ContentView.swift", [
+  data.swift.syntax.test.function_call(18, 11, [
+        data.swift.syntax.test.identifier("Button"),
+        data.swift.syntax.test.string_segment("Share")
+      ])
+])
 
   count(result.warn) == 1
   result.warn[0].rule_id == "apple.hig.patterns.review_custom_share_button"
@@ -29,23 +18,13 @@ test_warns_for_custom_button_with_share_text if {
 }
 
 test_does_not_warn_for_sharelink if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/ContentView.swift",
-          "line": 26,
-          "column": 9,
-          "calledExpression": "ShareLink",
-          "baseName": "ShareLink",
-          "memberName": "",
-          "argumentLabels": ["item"],
-          "stringArguments": ["Share"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/ContentView.swift", [
+  data.swift.syntax.test.function_call(26, 9, [
+        data.swift.syntax.test.identifier("ShareLink"),
+        data.swift.syntax.test.identifier("item"),
+        data.swift.syntax.test.string_segment("Share")
+      ])
+])
 
   count(result.warn) == 0
 }

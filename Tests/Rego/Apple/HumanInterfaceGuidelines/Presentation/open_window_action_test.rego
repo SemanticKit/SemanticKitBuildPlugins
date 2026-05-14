@@ -1,23 +1,13 @@
 package apple.hig.presentation.open_window_action
 
 test_reviews_base_open_window_usage_to_confirm_new_window_command_is_deliberate if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/Commands.swift",
-          "line": 19,
-          "column": 9,
-          "calledExpression": "openWindow",
-          "baseName": "openWindow",
-          "memberName": "",
-          "argumentLabels": ["id"],
-          "stringArguments": ["document"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/Commands.swift", [
+  data.swift.syntax.test.function_call(19, 9, [
+        data.swift.syntax.test.identifier("openWindow"),
+        data.swift.syntax.test.identifier("id"),
+        data.swift.syntax.test.string_segment("document")
+      ])
+])
 
   count(result.warn) == 1
   result.warn[0].rule_id == "apple.hig.presentation.review_open_window_action"
@@ -29,23 +19,15 @@ test_reviews_base_open_window_usage_to_confirm_new_window_command_is_deliberate 
 }
 
 test_reviews_member_open_window_action_usage_to_confirm_new_window_command_is_deliberate if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/DocumentView.swift",
-          "line": 42,
-          "column": 15,
-          "calledExpression": "environment.openWindow",
-          "baseName": "environment",
-          "memberName": "openWindow",
-          "argumentLabels": ["id", "value"],
-          "stringArguments": ["detail"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/DocumentView.swift", [
+  data.swift.syntax.test.function_call(42, 15, [
+        data.swift.syntax.test.identifier("environment"),
+        data.swift.syntax.test.identifier("openWindow"),
+        data.swift.syntax.test.identifier("id"),
+        data.swift.syntax.test.identifier("value"),
+        data.swift.syntax.test.string_segment("detail")
+      ])
+])
 
   count(result.warn) == 1
   result.warn[0].rule_id == "apple.hig.presentation.review_open_window_action"
@@ -55,46 +37,22 @@ test_reviews_member_open_window_action_usage_to_confirm_new_window_command_is_de
   result.warn[0].severity == "warning"
 }
 
-test_does_not_review_open_url_call_fact if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/Commands.swift",
-          "line": 31,
-          "column": 9,
-          "calledExpression": "openURL",
-          "baseName": "openURL",
-          "memberName": "",
-          "argumentLabels": [],
-          "stringArguments": [],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+test_does_not_review_open_url_swift_syntax if {
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/Commands.swift", [
+  data.swift.syntax.test.function_call(31, 9, [
+        data.swift.syntax.test.identifier("openURL")
+      ])
+])
 
   count(result.warn) == 0
 }
 
-test_does_not_review_open_window_action_without_open_window_call_fact if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/Commands.swift",
-          "line": 52,
-          "column": 13,
-          "calledExpression": "OpenWindowAction",
-          "baseName": "OpenWindowAction",
-          "memberName": "",
-          "argumentLabels": [],
-          "stringArguments": [],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+test_does_not_review_open_window_action_without_open_window_swift_syntax if {
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/Commands.swift", [
+  data.swift.syntax.test.function_call(52, 13, [
+        data.swift.syntax.test.identifier("OpenWindowAction")
+      ])
+])
 
   count(result.warn) == 0
 }

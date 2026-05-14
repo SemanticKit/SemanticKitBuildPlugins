@@ -1,23 +1,12 @@
 package apple.hig.platform_services.apple_pay_button
 
 test_warns_for_custom_button_with_apple_pay_text if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/CheckoutView.swift",
-          "line": 24,
-          "column": 13,
-          "calledExpression": "Button",
-          "baseName": "Button",
-          "memberName": "",
-          "argumentLabels": ["_"],
-          "stringArguments": ["Apple Pay"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/CheckoutView.swift", [
+  data.swift.syntax.test.function_call(24, 13, [
+        data.swift.syntax.test.identifier("Button"),
+        data.swift.syntax.test.string_segment("Apple Pay")
+      ])
+])
 
   count(result.warn) == 1
   result.warn[0].rule_id == "apple.hig.platform_services.review_custom_apple_pay_button"
@@ -29,23 +18,12 @@ test_warns_for_custom_button_with_apple_pay_text if {
 }
 
 test_does_not_warn_for_pkpaymentbutton if {
-  result := decision with input as {
-    "swiftSourceFacts": {
-      "callFacts": [
-        {
-          "artifact": "Sources/App/CheckoutView.swift",
-          "line": 31,
-          "column": 9,
-          "calledExpression": "PKPaymentButton",
-          "baseName": "PKPaymentButton",
-          "memberName": "",
-          "argumentLabels": [],
-          "stringArguments": ["Apple Pay"],
-          "numericArguments": []
-        }
-      ]
-    }
-  }
+  result := decision with input as data.swift.syntax.test.source_input("Sources/App/CheckoutView.swift", [
+  data.swift.syntax.test.function_call(31, 9, [
+        data.swift.syntax.test.identifier("PKPaymentButton"),
+        data.swift.syntax.test.string_segment("Apple Pay")
+      ])
+])
 
   count(result.warn) == 0
 }
