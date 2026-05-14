@@ -16,11 +16,44 @@ public struct SwiftBindingFact: Codable, Equatable, Sendable {
     }
 }
 
+public struct SwiftSafeAreaOptOutFact: Codable, Equatable, Sendable {
+    public var artifact: String
+    public var line: Int
+    public var column: Int
+    public var kind: String
+    public var apiName: String
+    public var memberName: String
+    public var argumentLabels: [String]
+
+    public init(
+        artifact: String,
+        line: Int,
+        column: Int,
+        kind: String,
+        apiName: String,
+        memberName: String,
+        argumentLabels: [String]
+    ) {
+        self.artifact = artifact
+        self.line = line
+        self.column = column
+        self.kind = kind
+        self.apiName = apiName
+        self.memberName = memberName
+        self.argumentLabels = argumentLabels
+    }
+}
+
 public struct SwiftSourceFacts: Codable, Equatable, Sendable {
     public var bindingConstructionFacts: [SwiftBindingFact]
+    public var safeAreaOptOutFacts: [SwiftSafeAreaOptOutFact]
 
-    public init(bindingConstructionFacts: [SwiftBindingFact] = []) {
+    public init(
+        bindingConstructionFacts: [SwiftBindingFact] = [],
+        safeAreaOptOutFacts: [SwiftSafeAreaOptOutFact] = []
+    ) {
         self.bindingConstructionFacts = bindingConstructionFacts
+        self.safeAreaOptOutFacts = safeAreaOptOutFacts
     }
 }
 
@@ -102,7 +135,8 @@ public struct SwiftSourceFactCollector {
             return SwiftSourceFacts()
         }
 
-        var facts: [SwiftBindingFact] = []
+        var bindingFacts: [SwiftBindingFact] = []
+        var safeAreaOptOutFacts: [SwiftSafeAreaOptOutFact] = []
         let enumerator = fileManager.enumerator(at: sourcesRoot, includingPropertiesForKeys: [.isRegularFileKey])
         while let fileURL = enumerator?.nextObject() as? URL {
             guard fileURL.pathExtension == "swift" else { continue }
@@ -110,10 +144,15 @@ public struct SwiftSourceFactCollector {
             let tree = Parser.parse(source: source)
             let converter = SourceLocationConverter(fileName: fileURL.path, tree: tree)
             let artifact = relativeArtifactPath(fileURL: fileURL, packageDirectory: packageDirectory)
-            let visitor = BindingVisitor(converter: converter, artifact: artifact)
-            facts.append(contentsOf: visitor.collect(from: tree))
+            let visitor = SwiftSourceFactVisitor(converter: converter, artifact: artifact)
+            let fileFacts = visitor.collect(from: tree)
+            bindingFacts.append(contentsOf: fileFacts.bindingConstructionFacts)
+            safeAreaOptOutFacts.append(contentsOf: fileFacts.safeAreaOptOutFacts)
         }
-        return SwiftSourceFacts(bindingConstructionFacts: facts.sorted { ($0.artifact, $0.line, $0.column) < ($1.artifact, $1.line, $1.column) })
+        return SwiftSourceFacts(
+            bindingConstructionFacts: bindingFacts.sorted { ($0.artifact, $0.line, $0.column) < ($1.artifact, $1.line, $1.column) },
+            safeAreaOptOutFacts: safeAreaOptOutFacts.sorted { ($0.artifact, $0.line, $0.column) < ($1.artifact, $1.line, $1.column) }
+        )
     }
 
     private func relativeArtifactPath(fileURL: URL, packageDirectory: URL) -> String {
@@ -219,10 +258,11 @@ public struct SwiftSourceFactCollector {
     }
 }
 
-private final class BindingVisitor: SyntaxVisitor {
+private final class SwiftSourceFactVisitor: SyntaxVisitor {
     private let converter: SourceLocationConverter
     private let artifact: String
-    private(set) var facts: [SwiftBindingFact] = []
+    private var bindingFacts: [SwiftBindingFact] = []
+    private var safeAreaOptOutFacts: [SwiftSafeAreaOptOutFact] = []
 
     init(converter: SourceLocationConverter, artifact: String) {
         self.converter = converter
@@ -230,12 +270,17 @@ private final class BindingVisitor: SyntaxVisitor {
         super.init(viewMode: .sourceAccurate)
     }
 
-    func collect(from tree: some SyntaxProtocol) -> [SwiftBindingFact] {
+    func collect(from tree: some SyntaxProtocol) -> SwiftSourceFacts {
         walk(Syntax(tree))
-        return facts
+        return SwiftSourceFacts(
+            bindingConstructionFacts: bindingFacts,
+            safeAreaOptOutFacts: safeAreaOptOutFacts
+        )
     }
 
     override func visit(_ node: FunctionCallExprSyntax) -> SyntaxVisitorContinueKind {
+        collectSafeAreaOptOutFact(from: node)
+
         let called = node.calledExpression.trimmedDescription.replacingOccurrences(of: " ", with: "")
         guard called == "Binding" || called == "Binding.init" else {
             return .visitChildren
@@ -247,7 +292,7 @@ private final class BindingVisitor: SyntaxVisitor {
         }
 
         let location = converter.location(for: node.positionAfterSkippingLeadingTrivia)
-        facts.append(
+        bindingFacts.append(
             SwiftBindingFact(
                 artifact: artifact,
                 line: location.line,
@@ -257,5 +302,35 @@ private final class BindingVisitor: SyntaxVisitor {
         )
 
         return .visitChildren
+    }
+
+    private func collectSafeAreaOptOutFact(from node: FunctionCallExprSyntax) {
+        guard let memberAccess = node.calledExpression.as(MemberAccessExprSyntax.self) else {
+            return
+        }
+
+        let memberName = memberAccess.declName.baseName.text
+        let kind: String
+        switch memberName {
+        case "ignoresSafeArea":
+            kind = "swiftui_ignores_safe_area"
+        case "edgesIgnoringSafeArea":
+            kind = "swiftui_edges_ignoring_safe_area"
+        default:
+            return
+        }
+
+        let location = converter.location(for: memberAccess.declName.baseName.positionAfterSkippingLeadingTrivia)
+        safeAreaOptOutFacts.append(
+            SwiftSafeAreaOptOutFact(
+                artifact: artifact,
+                line: location.line,
+                column: location.column,
+                kind: kind,
+                apiName: ".\(memberName)",
+                memberName: memberName,
+                argumentLabels: node.arguments.map { $0.label?.text ?? "_" }
+            )
+        )
     }
 }

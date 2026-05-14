@@ -4,7 +4,7 @@ default decision := {"deny": [], "warn": [], "note": []}
 
 decision := {
   "deny": array.concat(baseline_denials, swiftui_denials),
-  "warn": documentation_warnings,
+  "warn": array.concat(documentation_warnings, apple_hig_warnings),
   "note": []
 }
 
@@ -18,6 +18,10 @@ swiftui_denials := [d |
 
 documentation_warnings := [w |
   w := documentation_warning[_]
+]
+
+apple_hig_warnings := [w |
+  w := data.apple.hig.main.decision.warn[_]
 ]
 
 baseline_denial contains {

@@ -89,6 +89,60 @@ test_allows_when_docs_artifacts_present if {
   count(result.warn) == 0
 }
 
+test_warns_for_safe_area_opt_out_fact if {
+  result := decision with input as {
+    "repositoryConfiguration": {
+      "swiftVersion": "6.3",
+      "macOSDeploymentTarget": "26"
+    },
+    "workflowContainsScriptEntrypoints": false,
+    "swiftSourceFacts": {
+      "bindingConstructionFacts": [],
+      "safeAreaOptOutFacts": [
+        {
+          "artifact": "Sources/App/ContentView.swift",
+          "line": 18,
+          "column": 14
+        },
+        {
+          "artifact": "Sources/App/DetailView.swift",
+          "line": 42,
+          "column": 7
+        }
+      ]
+    },
+    "artifactCatalog": {"markdownFiles": ["README.md"], "doccCatalogs": ["Docs/Guide.docc"], "propertyLists": ["Config/Info.plist"]}
+  }
+
+  count(result.warn) == 2
+  result.warn[0].rule_id == "apple.hig.layout.review_safe_area_opt_out"
+  result.warn[0].artifact == "Sources/App/ContentView.swift"
+  result.warn[0].line == 18
+  result.warn[0].column == 14
+  result.warn[0].severity == "warning"
+  result.warn[1].rule_id == "apple.hig.layout.review_safe_area_opt_out"
+  result.warn[1].artifact == "Sources/App/DetailView.swift"
+  result.warn[1].line == 42
+  result.warn[1].column == 7
+  result.warn[1].severity == "warning"
+}
+
+test_does_not_warn_without_safe_area_opt_out_fact if {
+  result := decision with input as {
+    "repositoryConfiguration": {
+      "swiftVersion": "6.3",
+      "macOSDeploymentTarget": "26"
+    },
+    "workflowContainsScriptEntrypoints": false,
+    "swiftSourceFacts": {
+      "bindingConstructionFacts": [],
+      "safeAreaOptOutFacts": []
+    },
+    "artifactCatalog": {"markdownFiles": ["README.md"], "doccCatalogs": ["Docs/Guide.docc"], "propertyLists": ["Config/Info.plist"]}
+  }
+
+  count(result.warn) == 0
+}
 
 test_warns_when_metal_sources_missing_docc if {
   result := decision with input as {
