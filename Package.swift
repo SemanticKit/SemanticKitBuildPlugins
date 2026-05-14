@@ -19,17 +19,9 @@ let package = Package(
             name: "SemanticKitBuildPluginsCore"
         ),
         .target(
-            name: "SemanticKitBuildPluginsFacts",
-            dependencies: [
-                .product(name: "SwiftParser", package: "swift-syntax"),
-                .product(name: "SwiftSyntax", package: "swift-syntax"),
-            ]
-        ),
-        .target(
             name: "SemanticKitBuildPluginsPolicy",
             dependencies: [
                 "SemanticKitBuildPluginsCore",
-                "SemanticKitBuildPluginsFacts",
                 .product(name: "SwiftOPA", package: "swift-opa"),
             ]
         ),
@@ -38,7 +30,8 @@ let package = Package(
             dependencies: [
                 "SemanticKitBuildPluginsCore",
                 "SemanticKitBuildPluginsPolicy",
-                "SemanticKitBuildPluginsFacts",
+                .product(name: "SwiftParser", package: "swift-syntax"),
+                .product(name: "SwiftSyntax", package: "swift-syntax"),
             ]
         ),
         .executableTarget(
@@ -55,16 +48,9 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "SemanticKitBuildPluginsFactsTests",
-            dependencies: [
-                "SemanticKitBuildPluginsFacts",
-            ]
-        ),
-        .testTarget(
             name: "SemanticKitBuildPluginsPolicyTests",
             dependencies: [
                 "SemanticKitBuildPluginsPolicy",
-                "SemanticKitBuildPluginsFacts",
             ]
         ),
     ],

@@ -10,11 +10,9 @@ struct SemanticKitBuildPluginsBuildTool: BuildToolPlugin {
             isDirectory: true
         )
         let bundleArchive = outputDirectory.appendingPathComponent("opa-policy-bundle.tar.gz")
-        let outputFile = outputDirectory.appendingPathComponent("policy-validation.txt")
         let policyRoots = discoverPolicyRoots(package: context.package)
         let policyFiles = policyRoots.flatMap { discoverFiles(under: $0, matchingExtensions: ["rego"]) }
         let targetSwiftFiles = swiftFiles(for: target)
-        let projectInputFiles = discoverProjectInputFiles(context: context, target: target)
 
         var commands: [Command] = []
         if !policyFiles.isEmpty {
@@ -37,33 +35,29 @@ struct SemanticKitBuildPluginsBuildTool: BuildToolPlugin {
             )
         }
 
-        var evaluatorArguments = [
-            "--package-directory",
-            context.package.directoryURL.path,
-            "build-tool",
-            "--target",
-            target.name,
-            "--output-directory",
-            outputDirectory.path,
-        ]
         for sourceFile in targetSwiftFiles {
-            evaluatorArguments.append(contentsOf: ["--swift-source", sourceFile.path])
-        }
-        var evaluatorInputFiles = projectInputFiles
-        if !policyFiles.isEmpty {
-            evaluatorArguments.append(contentsOf: ["--policy-bundle", bundleArchive.path])
-            evaluatorInputFiles.append(bundleArchive)
-        }
+            var evaluatorArguments = [
+                "--package-directory",
+                context.package.directoryURL.path,
+                "--swift-source",
+                sourceFile.path,
+            ]
+            var evaluatorInputFiles = [sourceFile]
+            if !policyFiles.isEmpty {
+                evaluatorArguments.append(contentsOf: ["--policy-bundle", bundleArchive.path])
+                evaluatorInputFiles.append(bundleArchive)
+            }
 
-        commands.append(
-            .buildCommand(
-                displayName: "Evaluate Rego policies for \(target.name)",
-                executable: tool.url,
-                arguments: evaluatorArguments,
-                inputFiles: evaluatorInputFiles,
-                outputFiles: [outputFile]
+            commands.append(
+                .buildCommand(
+                    displayName: "Evaluate Rego policies for \(sourceFile.lastPathComponent)",
+                    executable: tool.url,
+                    arguments: evaluatorArguments,
+                    inputFiles: evaluatorInputFiles,
+                    outputFiles: []
+                )
             )
-        )
+        }
 
         return commands
     }
@@ -76,13 +70,6 @@ struct SemanticKitBuildPluginsBuildTool: BuildToolPlugin {
         return Array(Set(roots.map(\.standardizedFileURL)))
             .filter { FileManager.default.fileExists(atPath: $0.path) }
             .sorted { $0.path < $1.path }
-    }
-
-    private func discoverProjectInputFiles(context: PluginContext, target: Target) -> [URL] {
-        var files = [context.package.directoryURL.appendingPathComponent("Package.swift")]
-        files.append(contentsOf: swiftFiles(for: target))
-
-        return Array(Set(files.map(\.standardizedFileURL))).sorted { $0.path < $1.path }
     }
 
     private func swiftFiles(for target: Target) -> [URL] {

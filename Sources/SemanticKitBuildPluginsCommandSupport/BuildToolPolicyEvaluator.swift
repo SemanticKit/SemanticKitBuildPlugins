@@ -1,41 +1,34 @@
+import AST
 import Foundation
 import SemanticKitBuildPluginsCore
-import SemanticKitBuildPluginsFacts
 import SemanticKitBuildPluginsPolicy
 
 public struct BuildToolPolicyEvaluator {
     private let policyEngine = SwiftOPAPolicyEngine()
-    private let swiftFactCollector = SwiftSourceFactCollector()
 
     public init() {}
 
     public func evaluate(
         packageDirectory: URL,
-        sourceFiles: [URL] = [],
+        sourceFile: URL? = nil,
         policyBundleArchive: URL? = nil
     ) async -> CommandResult {
-        var report = ValidationReport()
-
-        var swiftFacts: SwiftSourceFacts
+        var diagnostics: [ValidationDiagnostic] = []
+        let policyInput: AST.RegoValue
         do {
-            swiftFacts = try swiftFactCollector.collect(
-                sourceFiles: sourceFiles,
-                packageDirectory: packageDirectory
-            )
+            let inputData = try SwiftSyntaxInput(packageDirectory: packageDirectory).jsonData(for: sourceFile)
+            policyInput = try AST.RegoValue(jsonData: inputData)
         } catch {
-            report.append(
+            diagnostics.append(
                 ValidationDiagnostic(
                     severity: .error,
-                    message: "Unable to collect Swift source facts: \(error)",
-                    location: sourceFiles.first.map { relativeArtifactPath(fileURL: $0, packageDirectory: packageDirectory) }
+                    message: "Unable to parse Swift source input: \(error)",
+                    location: sourceFile.map { relativeArtifactPath(fileURL: $0, packageDirectory: packageDirectory) } ?? "SwiftSyntax",
+                    ruleID: "semantickit.build_plugins.swift_source_input_failed"
                 )
             )
-            swiftFacts = SwiftSourceFacts()
+            policyInput = .null
         }
-
-        let policyInput = PolicyInput(
-            swiftSourceFacts: swiftFacts
-        )
 
         var preparedBundleDirectory: URL?
         do {
@@ -43,28 +36,30 @@ public struct BuildToolPolicyEvaluator {
                 preparedBundleDirectory = try extractPolicyBundleArchive(policyBundleArchive)
             }
         } catch {
-            report.append(
+            diagnostics.append(
                 ValidationDiagnostic(
                     severity: .error,
                     message: "Unable to prepare OPA bundle artifacts: \(error)",
-                    location: "Policies"
+                    location: "Policies",
+                    ruleID: "semantickit.build_plugins.policy_bundle_prepare_failed"
                 )
             )
         }
 
-        report.append(contentsOf: await policyEngine.evaluate(policyInput, preparedBundleDirectory: preparedBundleDirectory).diagnostics)
+        diagnostics.append(contentsOf: await policyEngine.evaluate(policyInput, preparedBundleDirectory: preparedBundleDirectory).diagnostics)
         if let preparedBundleDirectory {
             try? FileManager.default.removeItem(at: preparedBundleDirectory.deletingLastPathComponent())
         }
 
+        let hasErrors = diagnostics.contains { $0.severity == .error }
         let messages: [String]
-        if report.hasErrors {
+        if hasErrors {
             messages = ["Policy validation failed."]
         } else {
             messages = ["Policy validation passed."]
         }
 
-        return CommandResult(exitCode: report.hasErrors ? 1 : 0, messages: messages, diagnostics: report.diagnostics)
+        return CommandResult(exitCode: hasErrors ? 1 : 0, messages: messages, diagnostics: diagnostics)
     }
 
     private func relativeArtifactPath(fileURL: URL, packageDirectory: URL) -> String {

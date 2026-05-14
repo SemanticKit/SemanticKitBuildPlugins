@@ -1,33 +1,11 @@
+import AST
 import XCTest
 import SemanticKitBuildPluginsCore
-import SemanticKitBuildPluginsFacts
 @testable import SemanticKitBuildPluginsPolicy
 
 final class PolicyEngineTests: XCTestCase {
     func testPolicyEngineUsesSwiftOPABackendName() {
         XCTAssertEqual(SwiftOPAPolicyEngine().backendName, "SwiftOPA")
-    }
-
-    func testValidationDiagnosticBuildLogMessageUsesCompilerStyleLocationPrefix() {
-        let diagnostic = ValidationDiagnostic(
-            severity: .warning,
-            message: "Review visible safe-area opt-out against Apple HIG layout guidance.",
-            location: "Sources/App/Fixture.swift:8:4"
-        )
-
-        XCTAssertEqual(
-            diagnostic.buildLogMessage,
-            "Sources/App/Fixture.swift:8:4: warning: Review visible safe-area opt-out against Apple HIG layout guidance."
-        )
-    }
-
-    func testValidationDiagnosticBuildLogMessageKeepsUnlocatedMessagesReadable() {
-        let diagnostic = ValidationDiagnostic(
-            severity: .error,
-            message: "Unable to prepare OPA bundle artifacts."
-        )
-
-        XCTAssertEqual(diagnostic.buildLogMessage, "error: Unable to prepare OPA bundle artifacts.")
     }
 
     func testPolicyEngineDecodesStructuredPolicyDecision() async throws {
@@ -36,7 +14,7 @@ final class PolicyEngineTests: XCTestCase {
 
         decision := {
           "deny": [{
-            "id": "test.rule",
+            "rule_id": "test.rule",
             "severity": "error",
             "message": "Denied by fixture policy",
             "artifact": "Sources/App/Fixture.swift",
@@ -48,23 +26,21 @@ final class PolicyEngineTests: XCTestCase {
         }
         """)
 
-        let input = PolicyInput(
-            swiftSourceFacts: SwiftSourceFacts()
-        )
+        let input: AST.RegoValue = .null
 
         let bundleDirectory = try buildPlanBundleDirectory(from: packageDirectory.appendingPathComponent("Policies", isDirectory: true))
         defer { try? FileManager.default.removeItem(at: bundleDirectory.deletingLastPathComponent()) }
 
         let evaluation = await SwiftOPAPolicyEngine().evaluate(input, preparedBundleDirectory: bundleDirectory)
         let diagnostic = try XCTUnwrap(evaluation.diagnostics.first)
+        XCTAssertEqual(diagnostic.severity, .error)
         XCTAssertEqual(diagnostic.message, "Denied by fixture policy")
         XCTAssertEqual(diagnostic.location, "Sources/App/Fixture.swift:8:4")
+        XCTAssertEqual(diagnostic.ruleID, "test.rule")
     }
 
     func testPolicyEngineAllowsEmptyPolicyRoots() async throws {
-        let input = PolicyInput(
-            swiftSourceFacts: SwiftSourceFacts()
-        )
+        let input: AST.RegoValue = .null
 
         let evaluation = await SwiftOPAPolicyEngine().evaluate(input, preparedBundleDirectory: nil)
         XCTAssertTrue(evaluation.diagnostics.isEmpty)
