@@ -80,17 +80,7 @@ test_does_not_review_non_context_menu_call_fact if {
 test_does_not_review_context_menu_when_not_a_call_fact if {
   result := decision with input as {
     "swiftSourceFacts": {
-      "bindingConstructionFacts": [
-        {
-          "artifact": "Sources/App/ContentView.swift",
-          "line": 18,
-          "column": 7,
-          "typeName": "contextMenu",
-          "argumentLabels": [],
-          "stringArguments": [],
-          "numericArguments": []
-        }
-      ]
+      "callFacts": []
     }
   }
 

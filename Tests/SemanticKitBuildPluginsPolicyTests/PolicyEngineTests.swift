@@ -8,6 +8,28 @@ final class PolicyEngineTests: XCTestCase {
         XCTAssertEqual(SwiftOPAPolicyEngine().backendName, "SwiftOPA")
     }
 
+    func testValidationDiagnosticBuildLogMessageUsesCompilerStyleLocationPrefix() {
+        let diagnostic = ValidationDiagnostic(
+            severity: .warning,
+            message: "Review visible safe-area opt-out against Apple HIG layout guidance.",
+            location: "Sources/App/Fixture.swift:8:4"
+        )
+
+        XCTAssertEqual(
+            diagnostic.buildLogMessage,
+            "Sources/App/Fixture.swift:8:4: warning: Review visible safe-area opt-out against Apple HIG layout guidance."
+        )
+    }
+
+    func testValidationDiagnosticBuildLogMessageKeepsUnlocatedMessagesReadable() {
+        let diagnostic = ValidationDiagnostic(
+            severity: .error,
+            message: "Unable to prepare OPA bundle artifacts."
+        )
+
+        XCTAssertEqual(diagnostic.buildLogMessage, "error: Unable to prepare OPA bundle artifacts.")
+    }
+
     func testPolicyEngineDecodesStructuredPolicyDecision() async throws {
         let packageDirectory = try makeTemporaryPackageDirectory(regoSource: """
         package semantickit.main
@@ -27,10 +49,7 @@ final class PolicyEngineTests: XCTestCase {
         """)
 
         let input = PolicyInput(
-            repositoryConfiguration: RepositoryConfiguration(),
-            workflowContainsScriptEntrypoints: false,
-            swiftSourceFacts: SwiftSourceFacts(),
-            artifactCatalog: ArtifactCatalog(policyModuleRoots: [packageDirectory.appendingPathComponent("Policies").path])
+            swiftSourceFacts: SwiftSourceFacts()
         )
 
         let bundleDirectory = try buildPlanBundleDirectory(from: packageDirectory.appendingPathComponent("Policies", isDirectory: true))
@@ -43,12 +62,8 @@ final class PolicyEngineTests: XCTestCase {
     }
 
     func testPolicyEngineAllowsEmptyPolicyRoots() async throws {
-        let packageDirectory = try makeTemporaryPackageDirectory(regoSource: nil)
         let input = PolicyInput(
-            repositoryConfiguration: RepositoryConfiguration(),
-            workflowContainsScriptEntrypoints: false,
-            swiftSourceFacts: SwiftSourceFacts(),
-            artifactCatalog: ArtifactCatalog(policyModuleRoots: [packageDirectory.appendingPathComponent("Policies").path])
+            swiftSourceFacts: SwiftSourceFacts()
         )
 
         let evaluation = await SwiftOPAPolicyEngine().evaluate(input, preparedBundleDirectory: nil)

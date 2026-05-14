@@ -13,8 +13,7 @@ for message in result.messages {
 }
 
 for diagnostic in result.diagnostics {
-    let location = diagnostic.location.map { " [\($0)]" } ?? ""
-    print("\(diagnostic.severity.rawValue): \(diagnostic.message)\(location)")
+    print(diagnostic.buildLogMessage)
 }
 
 Foundation.exit(result.exitCode)

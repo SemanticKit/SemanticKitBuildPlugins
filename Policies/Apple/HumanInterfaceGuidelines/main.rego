@@ -17,6 +17,7 @@ warning_groups := [
   data.apple.hig.accessibility.accessibility_hidden.decision.warn,
   data.apple.hig.accessibility.fixed_font_size.decision.warn,
   data.apple.hig.accessibility.symbol_accessibility.decision.warn,
+  data.apple.hig.augmented_reality.technical_ar_terms.decision.warn,
   data.apple.hig.color.hardcoded_color.decision.warn,
   data.apple.hig.components.button_labels.decision.warn,
   data.apple.hig.components.context_menu_availability.decision.warn,
@@ -39,6 +40,10 @@ warning_groups := [
   data.apple.hig.presentation.destructive_action_labels.decision.warn,
   data.apple.hig.presentation.open_window_action.decision.warn,
   data.apple.hig.presentation.unhelpful_alert_title.decision.warn,
+  data.apple.hig.siri.hey_siri_phrase.decision.warn,
+  data.apple.hig.siri.siri_pronouns.decision.warn,
+  data.apple.hig.siri.voice_shortcut_terms.decision.warn,
+  data.apple.hig.status.vague_progress_description.decision.warn,
   data.apple.hig.typography.custom_font.decision.warn,
   data.apple.hig.typography.text_truncation.decision.warn,
 ]

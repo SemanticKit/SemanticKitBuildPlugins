@@ -2,7 +2,6 @@ import Foundation
 import SemanticKitBuildPluginsCore
 import SemanticKitBuildPluginsFacts
 import SemanticKitBuildPluginsPolicy
-import Yams
 
 public struct BuildToolPolicyEvaluator {
     private let policyEngine = SwiftOPAPolicyEngine()
@@ -12,43 +11,30 @@ public struct BuildToolPolicyEvaluator {
 
     public func evaluate(
         packageDirectory: URL,
-        policyBundleArchive: URL? = nil,
-        policyModuleRoots: [URL] = []
+        sourceFiles: [URL] = [],
+        policyBundleArchive: URL? = nil
     ) async -> CommandResult {
         var report = ValidationReport()
-        let configuration = loadConfiguration(packageDirectory: packageDirectory, report: &report)
-        let workflowScan = scanGeneratedWorkflow(packageDirectory: packageDirectory)
-        report.append(contentsOf: workflowScan.decodeDiagnostics)
-
-        let policyRoots = policyModuleRoots.isEmpty
-            ? discoverPolicyModuleRoots(packageDirectory: packageDirectory)
-            : Array(Set(policyModuleRoots.map(\.standardizedFileURL))).sorted { $0.path < $1.path }
 
         var swiftFacts: SwiftSourceFacts
-        var artifactCatalog: ArtifactCatalog
         do {
-            swiftFacts = try swiftFactCollector.collect(packageDirectory: packageDirectory)
-            artifactCatalog = try swiftFactCollector.collectArtifactCatalog(
-                packageDirectory: packageDirectory,
-                policyModuleRoots: policyRoots
+            swiftFacts = try swiftFactCollector.collect(
+                sourceFiles: sourceFiles,
+                packageDirectory: packageDirectory
             )
         } catch {
             report.append(
                 ValidationDiagnostic(
                     severity: .error,
-                    message: "Unable to collect project artifacts via SwiftSyntax/artifact discovery: \(error)",
-                    location: "Sources"
+                    message: "Unable to collect Swift source facts: \(error)",
+                    location: sourceFiles.first.map { relativeArtifactPath(fileURL: $0, packageDirectory: packageDirectory) }
                 )
             )
             swiftFacts = SwiftSourceFacts()
-            artifactCatalog = ArtifactCatalog(policyModuleRoots: policyRoots.map(\.path))
         }
 
         let policyInput = PolicyInput(
-            repositoryConfiguration: configuration,
-            workflowContainsScriptEntrypoints: workflowScan.containsScriptEntrypoints,
-            swiftSourceFacts: swiftFacts,
-            artifactCatalog: artifactCatalog
+            swiftSourceFacts: swiftFacts
         )
 
         var preparedBundleDirectory: URL?
@@ -73,65 +59,21 @@ public struct BuildToolPolicyEvaluator {
 
         let messages: [String]
         if report.hasErrors {
-            messages = ["SemanticKit CI/CD validation failed."]
+            messages = ["Policy validation failed."]
         } else {
-            messages = ["SemanticKit CI/CD validation passed."]
+            messages = ["Policy validation passed."]
         }
 
         return CommandResult(exitCode: report.hasErrors ? 1 : 0, messages: messages, diagnostics: report.diagnostics)
     }
 
-    private func loadConfiguration(packageDirectory: URL, report: inout ValidationReport) -> RepositoryConfiguration {
-        let url = packageDirectory.appendingPathComponent(".semantic-kit/ci.yml")
-        guard FileManager.default.fileExists(atPath: url.path) else {
-            return RepositoryConfiguration()
+    private func relativeArtifactPath(fileURL: URL, packageDirectory: URL) -> String {
+        let packagePath = packageDirectory.standardizedFileURL.path
+        let filePath = fileURL.standardizedFileURL.path
+        if filePath.hasPrefix(packagePath + "/") {
+            return String(filePath.dropFirst(packagePath.count + 1))
         }
-
-        do {
-            let data = try Data(contentsOf: url)
-            return try YAMLDecoder().decode(RepositoryConfiguration.self, from: data)
-        } catch {
-            report.append(
-                ValidationDiagnostic(
-                    severity: .error,
-                    message: "Unable to decode SemanticKit configuration: \(error)",
-                    location: ".semantic-kit/ci.yml"
-                )
-            )
-            return RepositoryConfiguration()
-        }
-    }
-
-    private func scanGeneratedWorkflow(packageDirectory: URL) -> WorkflowScanResult {
-        let url = packageDirectory.appendingPathComponent(".github/workflows/ci.yml")
-        guard FileManager.default.fileExists(atPath: url.path) else {
-            return WorkflowScanResult(decodeDiagnostics: [], containsScriptEntrypoints: false)
-        }
-
-        do {
-            let text = try String(contentsOf: url, encoding: .utf8)
-            _ = try YAMLDecoder().decode(GitHubWorkflow.self, from: text)
-
-            let hasScriptEntrypoints = text.contains("Scripts/") || text.contains(".sh")
-            return WorkflowScanResult(decodeDiagnostics: [], containsScriptEntrypoints: hasScriptEntrypoints)
-        } catch {
-            return WorkflowScanResult(
-                decodeDiagnostics: [
-                    ValidationDiagnostic(
-                        severity: .error,
-                        message: "Unable to decode generated CI workflow: \(error)",
-                        location: ".github/workflows/ci.yml"
-                    )
-                ],
-                containsScriptEntrypoints: false
-            )
-        }
-    }
-
-    private func discoverPolicyModuleRoots(packageDirectory: URL) -> [URL] {
-        let localRoot = packageDirectory.appendingPathComponent("Policies", isDirectory: true)
-        guard FileManager.default.fileExists(atPath: localRoot.path) else { return [] }
-        return [localRoot.standardizedFileURL]
+        return fileURL.lastPathComponent
     }
 
     private func extractPolicyBundleArchive(_ archiveURL: URL) throws -> URL {
@@ -170,9 +112,3 @@ public struct BuildToolPolicyEvaluator {
         }
     }
 }
-
-private struct WorkflowScanResult {
-    var decodeDiagnostics: [ValidationDiagnostic]
-    var containsScriptEntrypoints: Bool
-}
-

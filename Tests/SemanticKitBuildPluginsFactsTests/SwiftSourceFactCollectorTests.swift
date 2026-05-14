@@ -3,107 +3,60 @@ import XCTest
 @testable import SemanticKitBuildPluginsFacts
 
 final class SwiftSourceFactCollectorTests: XCTestCase {
-    func testCollectsManualBindingInitializerFacts() throws {
-        let root = try makeTempPackage()
-        let sourceDir = root.appendingPathComponent("Sources/App", isDirectory: true)
-        try FileManager.default.createDirectory(at: sourceDir, withIntermediateDirectories: true)
-        let source = """
+    func testCollectsFactsFromExplicitSourceFilesOnly() throws {
+        let packageDirectory = try makeTempPackage()
+        let sourceDirectory = packageDirectory.appendingPathComponent("Sources/App", isDirectory: true)
+        try FileManager.default.createDirectory(at: sourceDirectory, withIntermediateDirectories: true)
+
+        let includedFile = sourceDirectory.appendingPathComponent("Included.swift")
+        let ignoredFile = sourceDirectory.appendingPathComponent("Ignored.swift")
+        try """
         import SwiftUI
-        struct Demo: View {
+        struct IncludedView: View {
             var body: some View {
-                let value = Binding(get: { true }, set: { _ in })
-                return Toggle(\"X\", isOn: value)
+                Text("Included")
+                    .font(.system(size: 14))
             }
         }
-        """
-        try source.write(to: sourceDir.appendingPathComponent("Demo.swift"), atomically: true, encoding: .utf8)
-
-        let facts = try SwiftSourceFactCollector().collect(packageDirectory: root)
-        XCTAssertEqual(facts.bindingConstructionFacts.count, 1)
-        XCTAssertEqual(facts.bindingConstructionFacts.first?.artifact, "Sources/App/Demo.swift")
-    }
-
-    func testCollectArtifactCatalogDiscoversKinds() throws {
-        let root = try makeTempPackage()
-        try FileManager.default.createDirectory(at: root.appendingPathComponent("Policies"), withIntermediateDirectories: true)
-        try "package x".write(
-            to: root.appendingPathComponent("Policies/policy.rego"),
-            atomically: true,
-            encoding: .utf8
-        )
-        try FileManager.default.createDirectory(at: root.appendingPathComponent("Sources/App"), withIntermediateDirectories: true)
-        try "struct A {}".write(
-            to: root.appendingPathComponent("Sources/App/A.swift"),
-            atomically: true,
-            encoding: .utf8
-        )
-        try FileManager.default.createDirectory(at: root.appendingPathComponent(".github/workflows"), withIntermediateDirectories: true)
-        try "name: CI".write(
-            to: root.appendingPathComponent(".github/workflows/ci.yml"),
-            atomically: true,
-            encoding: .utf8
-        )
-        try "// swift-tools-version: 6.3\nimport PackageDescription\nlet package = Package(name: \"X\")\n".write(
-            to: root.appendingPathComponent("Package.swift"),
-            atomically: true,
-            encoding: .utf8
-        )
-        try "# Project".write(
-            to: root.appendingPathComponent("README.md"),
-            atomically: true,
-            encoding: .utf8
-        )
-        try FileManager.default.createDirectory(at: root.appendingPathComponent("Docs/Guide.docc"), withIntermediateDirectories: true)
-        try FileManager.default.createDirectory(at: root.appendingPathComponent("Config"), withIntermediateDirectories: true)
-        try FileManager.default.createDirectory(at: root.appendingPathComponent("Shaders"), withIntermediateDirectories: true)
-        try FileManager.default.createDirectory(at: root.appendingPathComponent("Sources/C"), withIntermediateDirectories: true)
-        try "<plist/>".write(
-            to: root.appendingPathComponent("Config/Info.plist"),
-            atomically: true,
-            encoding: .utf8
-        )
-        try "kernel void k() {}".write(
-            to: root.appendingPathComponent("Shaders/Compute.metal"),
-            atomically: true,
-            encoding: .utf8
-        )
-        try "int x;".write(
-            to: root.appendingPathComponent("Sources/C/include.h"),
-            atomically: true,
-            encoding: .utf8
-        )
-
-        let catalog = try SwiftSourceFactCollector().collectArtifactCatalog(
-            packageDirectory: root,
-            policyModuleRoots: [root.appendingPathComponent("Policies")]
-        )
-
-        XCTAssertEqual(catalog.regoModules, ["Policies/policy.rego"])
-        XCTAssertEqual(catalog.swiftSources, ["Sources/App/A.swift"])
-        XCTAssertEqual(catalog.packageManifest, ["Package.swift"])
-        XCTAssertEqual(catalog.workflowYAML, [".github/workflows/ci.yml"])
-        XCTAssertEqual(catalog.markdownFiles, ["README.md"])
-        XCTAssertEqual(catalog.doccCatalogs, ["Docs/Guide.docc"])
-        XCTAssertEqual(catalog.propertyLists, ["Config/Info.plist"])
-        XCTAssertEqual(catalog.metalSources, ["Shaders/Compute.metal"])
-        XCTAssertEqual(catalog.cFamilySources, ["Sources/C/include.h"])
-        XCTAssertEqual(catalog.policyModuleRoots, [root.appendingPathComponent("Policies").path])
-    }
-
-    func testIgnoresOtherCalls() throws {
-        let root = try makeTempPackage()
-        let sourceDir = root.appendingPathComponent("Sources/App", isDirectory: true)
-        try FileManager.default.createDirectory(at: sourceDir, withIntermediateDirectories: true)
-        let source = """
-        import Foundation
-        func demo() {
-            _ = max(1,2)
+        """.write(to: includedFile, atomically: true, encoding: .utf8)
+        try """
+        import SwiftUI
+        struct IgnoredView: View {
+            var body: some View {
+                Text("Ignored")
+                    .ignoresSafeArea()
+            }
         }
-        """
-        try source.write(to: sourceDir.appendingPathComponent("Demo.swift"), atomically: true, encoding: .utf8)
+        """.write(to: ignoredFile, atomically: true, encoding: .utf8)
 
-        let facts = try SwiftSourceFactCollector().collect(packageDirectory: root)
-        XCTAssertTrue(facts.bindingConstructionFacts.isEmpty)
+        let facts = try SwiftSourceFactCollector().collect(
+            sourceFiles: [includedFile],
+            packageDirectory: packageDirectory
+        )
+
+        XCTAssertTrue(facts.callFacts.contains { $0.artifact == "Sources/App/Included.swift" && $0.baseName == "Text" })
+        XCTAssertFalse(facts.callFacts.contains { $0.artifact == "Sources/App/Ignored.swift" })
+    }
+
+    func testCollectsStringLiteralsInsideArrayArguments() throws {
+        let packageDirectory = try makeTempPackage()
+        let sourceDirectory = packageDirectory.appendingPathComponent("Sources/App", isDirectory: true)
+        try FileManager.default.createDirectory(at: sourceDirectory, withIntermediateDirectories: true)
+        let sourceFile = sourceDirectory.appendingPathComponent("Shortcuts.swift")
+        try """
+        import AppIntents
+        let shortcut = AppShortcut(intent: OpenRoute(), phrases: ["Hey Siri, plan a route"])
+        """.write(to: sourceFile, atomically: true, encoding: .utf8)
+
+        let facts = try SwiftSourceFactCollector().collect(
+            sourceFiles: [sourceFile],
+            packageDirectory: packageDirectory
+        )
+
+        let shortcutFact = try XCTUnwrap(facts.callFacts.first { $0.baseName == "AppShortcut" })
+        XCTAssertEqual(shortcutFact.artifact, "Sources/App/Shortcuts.swift")
+        XCTAssertTrue(shortcutFact.argumentLabels.contains("phrases"))
+        XCTAssertEqual(shortcutFact.stringArguments, ["Hey Siri, plan a route"])
     }
 
     private func makeTempPackage() throws -> URL {

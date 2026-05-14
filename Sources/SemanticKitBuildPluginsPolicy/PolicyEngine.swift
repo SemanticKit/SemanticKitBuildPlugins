@@ -5,21 +5,12 @@ import SemanticKitBuildPluginsCore
 import SemanticKitBuildPluginsFacts
 
 public struct PolicyInput: Codable, Equatable, Sendable {
-    public var repositoryConfiguration: RepositoryConfiguration
-    public var workflowContainsScriptEntrypoints: Bool
     public var swiftSourceFacts: SwiftSourceFacts
-    public var artifactCatalog: ArtifactCatalog
 
     public init(
-        repositoryConfiguration: RepositoryConfiguration,
-        workflowContainsScriptEntrypoints: Bool,
-        swiftSourceFacts: SwiftSourceFacts,
-        artifactCatalog: ArtifactCatalog
+        swiftSourceFacts: SwiftSourceFacts
     ) {
-        self.repositoryConfiguration = repositoryConfiguration
-        self.workflowContainsScriptEntrypoints = workflowContainsScriptEntrypoints
         self.swiftSourceFacts = swiftSourceFacts
-        self.artifactCatalog = artifactCatalog
     }
 }
 
@@ -181,4 +172,3 @@ public struct SwiftOPAPolicyEngine {
     }
 
 }
-
