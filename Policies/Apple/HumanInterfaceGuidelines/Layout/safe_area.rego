@@ -20,5 +20,16 @@ safe_area_warning contains {
   "column": fact.column,
   "severity": "warning",
 } if {
-  fact := input.swiftSourceFacts.safeAreaOptOutFacts[_]
+  fact := input.swiftSourceFacts.callFacts[_]
+  safe_area_opt_out_call(fact)
+}
+
+safe_area_opt_out_names := {"ignoresSafeArea", "edgesIgnoringSafeArea"}
+
+safe_area_opt_out_call(fact) if {
+  safe_area_opt_out_names[fact.memberName]
+}
+
+safe_area_opt_out_call(fact) if {
+  safe_area_opt_out_names[fact.baseName]
 }

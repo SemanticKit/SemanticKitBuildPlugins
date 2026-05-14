@@ -16,44 +16,50 @@ public struct SwiftBindingFact: Codable, Equatable, Sendable {
     }
 }
 
-public struct SwiftSafeAreaOptOutFact: Codable, Equatable, Sendable {
+public struct SwiftCallFact: Codable, Equatable, Sendable {
     public var artifact: String
     public var line: Int
     public var column: Int
-    public var kind: String
-    public var apiName: String
+    public var calledExpression: String
+    public var baseName: String
     public var memberName: String
     public var argumentLabels: [String]
+    public var stringArguments: [String]
+    public var numericArguments: [String]
 
     public init(
         artifact: String,
         line: Int,
         column: Int,
-        kind: String,
-        apiName: String,
+        calledExpression: String,
+        baseName: String,
         memberName: String,
-        argumentLabels: [String]
+        argumentLabels: [String],
+        stringArguments: [String],
+        numericArguments: [String]
     ) {
         self.artifact = artifact
         self.line = line
         self.column = column
-        self.kind = kind
-        self.apiName = apiName
+        self.calledExpression = calledExpression
+        self.baseName = baseName
         self.memberName = memberName
         self.argumentLabels = argumentLabels
+        self.stringArguments = stringArguments
+        self.numericArguments = numericArguments
     }
 }
 
 public struct SwiftSourceFacts: Codable, Equatable, Sendable {
     public var bindingConstructionFacts: [SwiftBindingFact]
-    public var safeAreaOptOutFacts: [SwiftSafeAreaOptOutFact]
+    public var callFacts: [SwiftCallFact]
 
     public init(
         bindingConstructionFacts: [SwiftBindingFact] = [],
-        safeAreaOptOutFacts: [SwiftSafeAreaOptOutFact] = []
+        callFacts: [SwiftCallFact] = []
     ) {
         self.bindingConstructionFacts = bindingConstructionFacts
-        self.safeAreaOptOutFacts = safeAreaOptOutFacts
+        self.callFacts = callFacts
     }
 }
 
@@ -136,7 +142,7 @@ public struct SwiftSourceFactCollector {
         }
 
         var bindingFacts: [SwiftBindingFact] = []
-        var safeAreaOptOutFacts: [SwiftSafeAreaOptOutFact] = []
+        var callFacts: [SwiftCallFact] = []
         let enumerator = fileManager.enumerator(at: sourcesRoot, includingPropertiesForKeys: [.isRegularFileKey])
         while let fileURL = enumerator?.nextObject() as? URL {
             guard fileURL.pathExtension == "swift" else { continue }
@@ -147,11 +153,11 @@ public struct SwiftSourceFactCollector {
             let visitor = SwiftSourceFactVisitor(converter: converter, artifact: artifact)
             let fileFacts = visitor.collect(from: tree)
             bindingFacts.append(contentsOf: fileFacts.bindingConstructionFacts)
-            safeAreaOptOutFacts.append(contentsOf: fileFacts.safeAreaOptOutFacts)
+            callFacts.append(contentsOf: fileFacts.callFacts)
         }
         return SwiftSourceFacts(
             bindingConstructionFacts: bindingFacts.sorted { ($0.artifact, $0.line, $0.column) < ($1.artifact, $1.line, $1.column) },
-            safeAreaOptOutFacts: safeAreaOptOutFacts.sorted { ($0.artifact, $0.line, $0.column) < ($1.artifact, $1.line, $1.column) }
+            callFacts: callFacts.sorted { ($0.artifact, $0.line, $0.column) < ($1.artifact, $1.line, $1.column) }
         )
     }
 
@@ -262,7 +268,7 @@ private final class SwiftSourceFactVisitor: SyntaxVisitor {
     private let converter: SourceLocationConverter
     private let artifact: String
     private var bindingFacts: [SwiftBindingFact] = []
-    private var safeAreaOptOutFacts: [SwiftSafeAreaOptOutFact] = []
+    private var callFacts: [SwiftCallFact] = []
 
     init(converter: SourceLocationConverter, artifact: String) {
         self.converter = converter
@@ -274,12 +280,12 @@ private final class SwiftSourceFactVisitor: SyntaxVisitor {
         walk(Syntax(tree))
         return SwiftSourceFacts(
             bindingConstructionFacts: bindingFacts,
-            safeAreaOptOutFacts: safeAreaOptOutFacts
+            callFacts: callFacts
         )
     }
 
     override func visit(_ node: FunctionCallExprSyntax) -> SyntaxVisitorContinueKind {
-        collectSafeAreaOptOutFact(from: node)
+        collectCallFact(from: node)
 
         let called = node.calledExpression.trimmedDescription.replacingOccurrences(of: " ", with: "")
         guard called == "Binding" || called == "Binding.init" else {
@@ -304,33 +310,92 @@ private final class SwiftSourceFactVisitor: SyntaxVisitor {
         return .visitChildren
     }
 
-    private func collectSafeAreaOptOutFact(from node: FunctionCallExprSyntax) {
-        guard let memberAccess = node.calledExpression.as(MemberAccessExprSyntax.self) else {
-            return
-        }
-
-        let memberName = memberAccess.declName.baseName.text
-        let kind: String
-        switch memberName {
-        case "ignoresSafeArea":
-            kind = "swiftui_ignores_safe_area"
-        case "edgesIgnoringSafeArea":
-            kind = "swiftui_edges_ignoring_safe_area"
-        default:
-            return
-        }
-
-        let location = converter.location(for: memberAccess.declName.baseName.positionAfterSkippingLeadingTrivia)
-        safeAreaOptOutFacts.append(
-            SwiftSafeAreaOptOutFact(
+    private func collectCallFact(from node: FunctionCallExprSyntax) {
+        let location = converter.location(for: callLocationPosition(for: node.calledExpression))
+        callFacts.append(
+            SwiftCallFact(
                 artifact: artifact,
                 line: location.line,
                 column: location.column,
-                kind: kind,
-                apiName: ".\(memberName)",
-                memberName: memberName,
-                argumentLabels: node.arguments.map { $0.label?.text ?? "_" }
+                calledExpression: normalizedCalledExpression(node.calledExpression),
+                baseName: callBaseName(for: node.calledExpression),
+                memberName: callMemberName(for: node.calledExpression) ?? "",
+                argumentLabels: node.arguments.map { $0.label?.text ?? "_" },
+                stringArguments: node.arguments.compactMap { literalStringArgument(from: $0.expression) },
+                numericArguments: node.arguments.compactMap { literalNumericArgument(from: $0.expression) }
             )
         )
+    }
+
+    private func normalizedCalledExpression(_ expression: ExprSyntax) -> String {
+        expression.trimmedDescription.components(separatedBy: .whitespacesAndNewlines).joined()
+    }
+
+    private func callBaseName(for expression: ExprSyntax) -> String {
+        if let memberAccess = expression.as(MemberAccessExprSyntax.self) {
+            return memberAccess.declName.baseName.text
+        }
+        if let declReference = expression.as(DeclReferenceExprSyntax.self) {
+            return declReference.baseName.text
+        }
+        if let genericSpecialization = expression.as(GenericSpecializationExprSyntax.self) {
+            return callBaseName(for: genericSpecialization.expression)
+        }
+        return normalizedCalledExpression(expression)
+    }
+
+    private func callMemberName(for expression: ExprSyntax) -> String? {
+        if let memberAccess = expression.as(MemberAccessExprSyntax.self) {
+            return memberAccess.declName.baseName.text
+        }
+        if let genericSpecialization = expression.as(GenericSpecializationExprSyntax.self) {
+            return callMemberName(for: genericSpecialization.expression)
+        }
+        return nil
+    }
+
+    private func callLocationPosition(for expression: ExprSyntax) -> AbsolutePosition {
+        if let memberAccess = expression.as(MemberAccessExprSyntax.self) {
+            return memberAccess.declName.baseName.positionAfterSkippingLeadingTrivia
+        }
+        if let declReference = expression.as(DeclReferenceExprSyntax.self) {
+            return declReference.baseName.positionAfterSkippingLeadingTrivia
+        }
+        if let genericSpecialization = expression.as(GenericSpecializationExprSyntax.self) {
+            return callLocationPosition(for: genericSpecialization.expression)
+        }
+        return expression.positionAfterSkippingLeadingTrivia
+    }
+
+    private func literalStringArgument(from expression: ExprSyntax) -> String? {
+        guard let stringLiteral = expression.as(StringLiteralExprSyntax.self) else {
+            return nil
+        }
+
+        var value = ""
+        for segment in stringLiteral.segments {
+            guard let stringSegment = segment.as(StringSegmentSyntax.self) else {
+                return nil
+            }
+            value += stringSegment.content.text
+        }
+        return value
+    }
+
+    private func literalNumericArgument(from expression: ExprSyntax) -> String? {
+        if let integerLiteral = expression.as(IntegerLiteralExprSyntax.self) {
+            return integerLiteral.literal.text
+        }
+        if let floatLiteral = expression.as(FloatLiteralExprSyntax.self) {
+            return floatLiteral.literal.text
+        }
+        if let prefixOperator = expression.as(PrefixOperatorExprSyntax.self) {
+            let operatorText = prefixOperator.`operator`.text
+            guard operatorText == "-" || operatorText == "+" else {
+                return nil
+            }
+            return literalNumericArgument(from: prefixOperator.expression).map { operatorText + $0 }
+        }
+        return nil
     }
 }
