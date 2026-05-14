@@ -328,6 +328,43 @@ test_does_not_warn_for_semantic_color_call_facts if {
   count(result.warn) == 0
 }
 
+test_warns_for_context_menu_call_fact_with_baseline_denial if {
+  result := decision with input as {
+    "repositoryConfiguration": {
+      "swiftVersion": "6.2",
+      "macOSDeploymentTarget": "26"
+    },
+    "workflowContainsScriptEntrypoints": false,
+    "swiftSourceFacts": {
+      "bindingConstructionFacts": [],
+      "callFacts": [
+        {
+          "artifact": "Sources/App/ToolbarView.swift",
+          "line": 22,
+          "column": 13,
+          "calledExpression": ".contextMenu",
+          "baseName": "contextMenu",
+          "memberName": "contextMenu",
+          "argumentLabels": [],
+          "stringArguments": [],
+          "numericArguments": []
+        }
+      ]
+    },
+    "artifactCatalog": {"markdownFiles": ["README.md"], "doccCatalogs": ["Docs/Guide.docc"], "propertyLists": ["Config/Info.plist"]}
+  }
+
+  count(result.deny) == 1
+  result.deny[0].message == "Swift version baseline must remain 6.3."
+  count(result.warn) == 1
+  result.warn[0].rule_id == "apple.hig.components.review_context_menu_availability"
+  result.warn[0].message == "Review context-menu usage and confirm commands are also available from the main interface or menu bar."
+  result.warn[0].artifact == "Sources/App/ToolbarView.swift"
+  result.warn[0].line == 22
+  result.warn[0].column == 13
+  result.warn[0].severity == "warning"
+}
+
 test_warns_when_metal_sources_missing_docc if {
   result := decision with input as {
     "repositoryConfiguration": {
