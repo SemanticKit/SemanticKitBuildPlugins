@@ -15,21 +15,28 @@ warnings := [warning |
   warning := fixed_font_size_warning[_]
 ]
 
-fixed_font_size_warning contains data.swift.syntax.warning(call, "apple.hig.accessibility.review_fixed_font_size", "Review literal SwiftUI system font size use; support larger text sizes.") if {
-  call := data.swift.syntax.function_calls[_]
-  swiftui_system_size_call(call)
-}
+fixed_font_size_warning contains {
+  "rule_id": "apple.hig.accessibility.review_fixed_font_size",
+  "message": "Review literal SwiftUI system font size use; support larger text sizes.",
+  "artifact": input.sourceFile,
+  "line": call.range.start.line,
+  "column": call.range.start.column,
+  "severity": "warning",
+} if {
+  walk(input.swiftSyntax, [_, call])
+  call.type == "FunctionCallExprSyntax"
 
-swiftui_system_size_call(call) if {
-  data.swift.syntax.call_named(call, "system")
-  has_argument_label(call, "size")
-  has_numeric_argument(call)
-}
+  callee := call.children[0]
+  callee.type == "MemberAccessExprSyntax"
+  member := callee.children[count(callee.children) - 1]
+  member.type == "DeclReferenceExprSyntax"
+  member.children[0].token.text == "system"
 
-has_argument_label(call, label) if {
-  data.swift.syntax.argument_label(call, label)
-}
+  argument_list := call.children[_]
+  argument_list.type == "LabeledExprListSyntax"
+  argument := argument_list.children[_]
+  argument.children[0].token.text == "size"
 
-has_numeric_argument(call) if {
-  data.swift.syntax.has_numeric_argument(call)
+  literal := argument.children[_]
+  {"IntegerLiteralExprSyntax", "FloatLiteralExprSyntax"}[literal.type]
 }

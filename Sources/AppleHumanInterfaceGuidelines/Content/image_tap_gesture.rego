@@ -15,15 +15,20 @@ warnings := [warning |
   warning := tap_gesture_action_warning[_]
 ]
 
-tap_gesture_action_warning contains data.swift.syntax.warning(call, "apple.hig.content.review_tap_gesture_action", "Review tap gesture action; use a Button when visible content initiates an action.") if {
-  call := data.swift.syntax.function_calls[_]
-  tap_gesture_call(call)
-}
+tap_gesture_action_warning contains {
+  "rule_id": "apple.hig.content.review_tap_gesture_action",
+  "message": "Review tap gesture action; use a Button when visible content initiates an action.",
+  "artifact": input.sourceFile,
+  "line": call.range.start.line,
+  "column": call.range.start.column,
+  "severity": "warning",
+} if {
+  walk(input.swiftSyntax, [_, call])
+  call.type == "FunctionCallExprSyntax"
 
-tap_gesture_call(call) if {
-  data.swift.syntax.call_named(call, "onTapGesture")
-}
-
-tap_gesture_call(call) if {
-  data.swift.syntax.call_named(call, "onTapGesture")
+  callee := call.children[0]
+  callee.type == "MemberAccessExprSyntax"
+  member := callee.children[count(callee.children) - 1]
+  member.type == "DeclReferenceExprSyntax"
+  member.children[0].token.text == "onTapGesture"
 }

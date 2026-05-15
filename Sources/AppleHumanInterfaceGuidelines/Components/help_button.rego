@@ -15,22 +15,31 @@ warnings := [warning |
   warning := custom_help_button_warning[_]
 ]
 
-custom_help_button_warning contains data.swift.syntax.warning(call, "apple.hig.components.review_custom_help_button", "Review custom Help button; use the system help button for help documentation where appropriate.") if {
-  call := data.swift.syntax.function_calls[_]
-  help_text_call(call)
-  has_help_text(call)
+custom_help_button_warning contains {
+  "rule_id": "apple.hig.components.review_custom_help_button",
+  "message": "Review custom Help button; use the system help button for help documentation where appropriate.",
+  "artifact": input.sourceFile,
+  "line": call.range.start.line,
+  "column": call.range.start.column,
+  "severity": "warning",
+} if {
+  walk(input.swiftSyntax, [_, call])
+  call.type == "FunctionCallExprSyntax"
+
+  callee := call.children[0]
+  callee.type == "DeclReferenceExprSyntax"
+  help_text_call_names[callee.children[0].token.text]
+
+  argument_list := call.children[_]
+  argument_list.type == "LabeledExprListSyntax"
+  argument := argument_list.children[_]
+  literal := argument.children[_]
+  literal.type == "StringLiteralExprSyntax"
+  segment_list := literal.children[_]
+  segment_list.type == "StringLiteralSegmentListSyntax"
+  segment := segment_list.children[_]
+  segment.type == "StringSegmentSyntax"
+  segment.children[0].token.text == "Help"
 }
 
 help_text_call_names := {"Button", "Text", "Label", "Link"}
-
-help_text_call(call) if {
-  data.swift.syntax.call_named_in(call, help_text_call_names)
-}
-
-help_text_call(call) if {
-  data.swift.syntax.call_named_in(call, help_text_call_names)
-}
-
-has_help_text(call) if {
-  data.swift.syntax.string_argument(call, "Help")
-}

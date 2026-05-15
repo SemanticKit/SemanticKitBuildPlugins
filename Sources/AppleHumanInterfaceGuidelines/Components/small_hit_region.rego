@@ -15,28 +15,33 @@ warnings := [warning |
   warning := small_hit_region_warning[_]
 ]
 
-small_hit_region_warning contains data.swift.syntax.warning(call, "apple.hig.components.review_small_hit_region", "Review explicit small frame dimensions; width or height below 44 pt may affect interactive hit regions.") if {
-  call := data.swift.syntax.function_calls[_]
-  frame_call(call)
-  has_argument_label(call, "width")
-  has_argument_label(call, "height")
-  has_small_numeric_argument(call)
-}
+small_hit_region_warning contains {
+  "rule_id": "apple.hig.components.review_small_hit_region",
+  "message": "Review explicit small frame dimensions; width or height below 44 pt may affect interactive hit regions.",
+  "artifact": input.sourceFile,
+  "line": call.range.start.line,
+  "column": call.range.start.column,
+  "severity": "warning",
+} if {
+  walk(input.swiftSyntax, [_, call])
+  call.type == "FunctionCallExprSyntax"
 
-frame_call(call) if {
-  data.swift.syntax.call_named(call, "frame")
-}
+  callee := call.children[0]
+  callee.type == "MemberAccessExprSyntax"
+  member := callee.children[count(callee.children) - 1]
+  member.type == "DeclReferenceExprSyntax"
+  member.children[0].token.text == "frame"
 
-frame_call(call) if {
-  data.swift.syntax.call_named(call, "frame")
-}
+  argument_list := call.children[_]
+  argument_list.type == "LabeledExprListSyntax"
+  width_argument := argument_list.children[_]
+  width_argument.children[0].token.text == "width"
+  height_argument := argument_list.children[_]
+  height_argument.children[0].token.text == "height"
 
-has_argument_label(call, label) if {
-  data.swift.syntax.argument_label(call, label)
-}
-
-has_small_numeric_argument(call) if {
-  value := data.swift.syntax.numeric_literals(call)[_]
-  dimension := to_number(value)
+  numeric_argument := argument_list.children[_]
+  literal := numeric_argument.children[_]
+  {"IntegerLiteralExprSyntax", "FloatLiteralExprSyntax"}[literal.type]
+  dimension := to_number(literal.children[0].token.text)
   dimension < 44
 }

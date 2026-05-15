@@ -1,5 +1,5 @@
 {
-  "originHash" : "8a722d9dc3180b1898c3d4c1e95ba8e14b9a1b410cdb9aa8a7f11f0b8b530e13",
+  "originHash" : "c30a735e6a840969cf72e36a698864517572c80f9aa8a1e7083fcf83568abb13",
   "pins" : [
     {
       "identity" : "swift-argument-parser",
@@ -8,42 +8,6 @@
       "state" : {
         "revision" : "626b5b7b2f45e1b0b1c6f4a309296d1d21d7311b",
         "version" : "1.7.1"
-      }
-    },
-    {
-      "identity" : "swift-asn1",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-asn1.git",
-      "state" : {
-        "revision" : "eb50cbd14606a9161cbc5d452f18797c90ef0bab",
-        "version" : "1.7.0"
-      }
-    },
-    {
-      "identity" : "swift-crypto",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-crypto.git",
-      "state" : {
-        "revision" : "1b6b2e274e85105bfa155183145a1dcfd63331f1",
-        "version" : "4.5.0"
-      }
-    },
-    {
-      "identity" : "swift-opa",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/open-policy-agent/swift-opa.git",
-      "state" : {
-        "revision" : "3c4d9e45bea516cccd3b91d286b379d526b5755d",
-        "version" : "0.0.5"
-      }
-    },
-    {
-      "identity" : "swift-syntax",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/swiftlang/swift-syntax.git",
-      "state" : {
-        "revision" : "65b02a90ad2cc213e09309faeb7f6909e0a8577a",
-        "version" : "604.0.0-prerelease-2026-01-20"
       }
     }
   ],

@@ -15,25 +15,63 @@ warnings := [warning |
   warning := technical_ar_terms_warning[_]
 ]
 
-technical_ar_terms_warning contains data.swift.syntax.warning(call, "apple.hig.augmented_reality.review_technical_ar_terms", "Review AR instructional text; use approachable terms instead of technical AR terminology.") if {
-  call := data.swift.syntax.function_calls[_]
-  visible_instructional_string_call(call)
-  has_technical_ar_term(call)
+technical_ar_terms_warning contains {
+  "rule_id": "apple.hig.augmented_reality.review_technical_ar_terms",
+  "message": "Review AR instructional text; use approachable terms instead of technical AR terminology.",
+  "artifact": input.sourceFile,
+  "line": call.range.start.line,
+  "column": call.range.start.column,
+  "severity": "warning",
+} if {
+  walk(input.swiftSyntax, [_, call])
+  call.type == "FunctionCallExprSyntax"
+
+  callee := call.children[0]
+  callee.type == "DeclReferenceExprSyntax"
+  visible_string_call_names[callee.children[0].token.text]
+
+  argument_list := call.children[_]
+  argument_list.type == "LabeledExprListSyntax"
+  argument := argument_list.children[_]
+  literal := argument.children[_]
+  literal.type == "StringLiteralExprSyntax"
+  segment_list := literal.children[_]
+  segment_list.type == "StringLiteralSegmentListSyntax"
+  segment := segment_list.children[_]
+  segment.type == "StringSegmentSyntax"
+  term := technical_ar_terms[_]
+  contains(lower(segment.children[0].token.text), term)
+}
+
+technical_ar_terms_warning contains {
+  "rule_id": "apple.hig.augmented_reality.review_technical_ar_terms",
+  "message": "Review AR instructional text; use approachable terms instead of technical AR terminology.",
+  "artifact": input.sourceFile,
+  "line": call.range.start.line,
+  "column": call.range.start.column,
+  "severity": "warning",
+} if {
+  walk(input.swiftSyntax, [_, call])
+  call.type == "FunctionCallExprSyntax"
+
+  callee := call.children[0]
+  callee.type == "MemberAccessExprSyntax"
+  member := callee.children[count(callee.children) - 1]
+  member.type == "DeclReferenceExprSyntax"
+  visible_string_call_names[member.children[0].token.text]
+
+  argument_list := call.children[_]
+  argument_list.type == "LabeledExprListSyntax"
+  argument := argument_list.children[_]
+  literal := argument.children[_]
+  literal.type == "StringLiteralExprSyntax"
+  segment_list := literal.children[_]
+  segment_list.type == "StringLiteralSegmentListSyntax"
+  segment := segment_list.children[_]
+  segment.type == "StringSegmentSyntax"
+  term := technical_ar_terms[_]
+  contains(lower(segment.children[0].token.text), term)
 }
 
 visible_string_call_names := {"Text", "Label", "Button", "TextField", "help"}
 technical_ar_terms := {"arkit", "world detection", "tracking"}
-
-visible_instructional_string_call(call) if {
-  data.swift.syntax.call_named_in(call, visible_string_call_names)
-}
-
-visible_instructional_string_call(call) if {
-  data.swift.syntax.call_named_in(call, visible_string_call_names)
-}
-
-has_technical_ar_term(call) if {
-  argument := data.swift.syntax.string_literals(call)[_]
-  term := technical_ar_terms[_]
-  contains(lower(argument), term)
-}

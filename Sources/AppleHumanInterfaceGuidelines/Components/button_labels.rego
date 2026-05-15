@@ -15,21 +15,29 @@ warnings := [warning |
   warning := button_label_length_warning[_]
 ]
 
-button_label_length_warning contains data.swift.syntax.warning(call, "apple.hig.components.review_button_label_length", "Review long button label; keep button text short and clear.") if {
-  call := data.swift.syntax.function_calls[_]
-  button_call(call)
-  has_long_label(call)
-}
+button_label_length_warning contains {
+  "rule_id": "apple.hig.components.review_button_label_length",
+  "message": "Review long button label; keep button text short and clear.",
+  "artifact": input.sourceFile,
+  "line": call.range.start.line,
+  "column": call.range.start.column,
+  "severity": "warning",
+} if {
+  walk(input.swiftSyntax, [_, call])
+  call.type == "FunctionCallExprSyntax"
 
-button_call(call) if {
-  data.swift.syntax.call_named(call, "Button")
-}
+  callee := call.children[0]
+  callee.type == "DeclReferenceExprSyntax"
+  callee.children[0].token.text == "Button"
 
-button_call(call) if {
-  data.swift.syntax.call_named(call, "Button")
-}
-
-has_long_label(call) if {
-  label := data.swift.syntax.string_literals(call)[_]
-  count(label) > 32
+  argument_list := call.children[_]
+  argument_list.type == "LabeledExprListSyntax"
+  argument := argument_list.children[_]
+  literal := argument.children[_]
+  literal.type == "StringLiteralExprSyntax"
+  segment_list := literal.children[_]
+  segment_list.type == "StringLiteralSegmentListSyntax"
+  segment := segment_list.children[_]
+  segment.type == "StringSegmentSyntax"
+  count(segment.children[0].token.text) > 32
 }

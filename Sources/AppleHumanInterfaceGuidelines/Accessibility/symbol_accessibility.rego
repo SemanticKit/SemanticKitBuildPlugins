@@ -15,24 +15,23 @@ warnings := [warning |
   warning := symbol_accessibility_warning[_]
 ]
 
-symbol_accessibility_warning contains data.swift.syntax.warning(call, "apple.hig.accessibility.review_symbol_accessibility_label", "Review symbol image accessibility; provide alternative text for custom interface icons and symbols.") if {
-  call := data.swift.syntax.function_calls[_]
-  symbol_image_call(call)
-}
+symbol_accessibility_warning contains {
+  "rule_id": "apple.hig.accessibility.review_symbol_accessibility_label",
+  "message": "Review symbol image accessibility; provide alternative text for custom interface icons and symbols.",
+  "artifact": input.sourceFile,
+  "line": call.range.start.line,
+  "column": call.range.start.column,
+  "severity": "warning",
+} if {
+  walk(input.swiftSyntax, [_, call])
+  call.type == "FunctionCallExprSyntax"
 
-symbol_image_call(call) if {
-  image_call(call)
-  has_argument_label(call, "systemName")
-}
+  callee := call.children[0]
+  callee.type == "DeclReferenceExprSyntax"
+  callee.children[0].token.text == "Image"
 
-image_call(call) if {
-  data.swift.syntax.call_named(call, "Image")
-}
-
-image_call(call) if {
-  data.swift.syntax.call_named(call, "Image")
-}
-
-has_argument_label(call, label) if {
-  data.swift.syntax.argument_label(call, label)
+  argument_list := call.children[_]
+  argument_list.type == "LabeledExprListSyntax"
+  argument := argument_list.children[_]
+  argument.children[0].token.text == "systemName"
 }

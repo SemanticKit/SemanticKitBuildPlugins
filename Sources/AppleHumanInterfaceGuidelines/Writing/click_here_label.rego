@@ -15,23 +15,31 @@ warnings := [warning |
   warning := click_here_label_warning[_]
 ]
 
-click_here_label_warning contains data.swift.syntax.warning(call, "apple.hig.writing.review_click_here_label", "Review visible string literal containing Click here; use action-oriented button or link label copy.") if {
-  call := data.swift.syntax.function_calls[_]
-  visible_label_call(call)
-  has_click_here_string(call)
+click_here_label_warning contains {
+  "rule_id": "apple.hig.writing.review_click_here_label",
+  "message": "Review visible string literal containing Click here; use action-oriented button or link label copy.",
+  "artifact": input.sourceFile,
+  "line": call.range.start.line,
+  "column": call.range.start.column,
+  "severity": "warning",
+} if {
+  walk(input.swiftSyntax, [_, call])
+  call.type == "FunctionCallExprSyntax"
+
+  callee := call.children[0]
+  callee.type == "DeclReferenceExprSyntax"
+  visible_label_call_names[callee.children[0].token.text]
+
+  argument_list := call.children[_]
+  argument_list.type == "LabeledExprListSyntax"
+  argument := argument_list.children[_]
+  literal := argument.children[_]
+  literal.type == "StringLiteralExprSyntax"
+  segment_list := literal.children[_]
+  segment_list.type == "StringLiteralSegmentListSyntax"
+  segment := segment_list.children[_]
+  segment.type == "StringSegmentSyntax"
+  contains(lower(segment.children[0].token.text), "click here")
 }
 
 visible_label_call_names := {"Button", "Link"}
-
-visible_label_call(call) if {
-  data.swift.syntax.call_named_in(call, visible_label_call_names)
-}
-
-visible_label_call(call) if {
-  data.swift.syntax.call_named_in(call, visible_label_call_names)
-}
-
-has_click_here_string(call) if {
-  argument := data.swift.syntax.string_literals(call)[_]
-  contains(lower(argument), "click here")
-}

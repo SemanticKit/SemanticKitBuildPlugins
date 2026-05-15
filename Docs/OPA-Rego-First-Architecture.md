@@ -1,74 +1,96 @@
-# Current Policy Plugin Architecture
+# Current Plugin Architecture
 
-This is the active working contract for `SemanticKitBuildPlugins`.
+This is the active contract for `SemanticKitBuildPlugins`.
 
-## Immediate Priority
+## Package Shape
 
-- Do not reintroduce recursive directory scanning.
-- Do not discover `Policies/` roots from package or dependency directories.
-- Do not use `FileManager.default.enumerator` for policy or source discovery.
-- Do not rebuild an aggregate `semantickit/main/decision` entrypoint.
-- Do not use the old aggregate files `Policies/semantic_kit.rego`, `Policies/Apple/HumanInterfaceGuidelines/main.rego`, or `Policies/SemanticKitDesignGuidelines/main.rego`.
-- Do not commit, reset, stage, checkout, or otherwise mutate git state without a current explicit instruction.
+The package currently has one policy target and two build-tool plugins:
 
-## Plugin Split
-
-There are two new minimal build-tool plugin registrations:
-
+- `AppleHumanInterfaceGuidelines`
 - `RegoPolicyCompile`
 - `RegoPolicyEvaluate`
 
-The plugins are intentionally only registered right now. They must not grow hidden behavior before their target roles are implemented deliberately.
+`AppleHumanInterfaceGuidelines` owns the Rego policy files. It applies `RegoPolicyCompile`.
 
-## RegoPolicyCompile Role
+`RegoPolicyEvaluate` depends on the `swift-parser-cli` executable product from SwiftParserCLI. It does not depend on SwiftSyntax libraries directly.
 
-`RegoPolicyCompile` is for targets that own Rego policy files.
+There is no Swift policy engine target in this package. There is no SwiftOPA evaluation target. There is no SwiftSyntax Rego helper library.
 
-It must use SwiftPM's target file surface:
+## RegoPolicyCompile
+
+`RegoPolicyCompile` is the build-tool plugin for targets that contain `.rego` files.
+
+It uses SwiftPM's target file surface:
 
 ```swift
 sourceTarget.sourceFiles(withSuffix: ".rego")
 ```
 
-It must compile Rego policy files into OPA plan artifacts.
+If the target has no Rego files, it emits no commands.
 
-It must not walk package directories, dependency directories, or hardcoded `Policies/` roots.
+If the target has Rego files, it emits one build command:
 
-## RegoPolicyEvaluate Role
+```text
+opa build --output <plugin-work-directory>/<target-name>.tar.gz <rego-files>
+```
 
-`RegoPolicyEvaluate` is for Swift targets in any consumer project.
+The plugin does not:
 
-It must use SwiftPM's target file surface:
+- scan directories
+- inspect package dependencies
+- discover hardcoded policy roots
+- infer entrypoints
+- choose an OPA target mode
+- sanitize target names
+
+The Rego files are passed directly to `opa build`.
+
+## RegoPolicyEvaluate
+
+`RegoPolicyEvaluate` is the build-tool plugin for Swift targets.
+
+It uses SwiftPM's target file surface:
 
 ```swift
 sourceTarget.sourceFiles(withSuffix: ".swift")
 ```
 
-It evaluates SwiftSyntax input against supplied/generated policy plan artifacts.
+It gets SwiftParserCLI from SwiftPM:
 
-It must not discover Rego files itself.
+```swift
+try context.tool(named: "swift-parser-cli")
+```
 
-## SwiftPM Boundary
+For each Swift source file, it calls the parser CLI directly:
 
-SwiftPM is the build tool. Plugin code returns `Command.buildCommand` values with explicit inputs and outputs.
+```text
+swift-parser-cli print-tree <swift-file>
+```
 
-The executable invoked by a command should do the command's work. It should not become a replacement scheduler for target-wide plugin behavior.
+The plugin does not:
+
+- wrap the parser in `/bin/sh`
+- serialize SwiftSyntax itself
+- emit custom AST JSON
+- create a wrapper parser executable
+- scan source directories
+- discover Rego files
+
+SwiftParserCLI owns the syntax tree output shape.
 
 ## Rego Boundary
 
-Each real policy Rego file should own its package and `decision`.
+Policy logic belongs in Rego files.
 
-Shared helper modules, such as SwiftSyntax helpers, may exist without `decision`.
+The Swift plugins only connect SwiftPM targets to external tools:
 
-Policy semantics belong in Rego. Swift parses Swift source, encodes SwiftSyntax input, invokes policy artifacts, decodes diagnostics, and prints build-tool diagnostics.
+- `RegoPolicyCompile` connects Rego source files to `opa build`.
+- `RegoPolicyEvaluate` connects Swift source files to `swift-parser-cli print-tree`.
 
-## Current Known Problem
+Any future evaluator wiring should stay at this boundary unless a concrete SwiftPM requirement forces otherwise.
 
-The older `SemanticKitBuildPluginsBuildTool` code currently contains work that conflicts with this contract:
+## Apple HIG Policies
 
-- it discovers policy roots by scanning package and dependency directories
-- it recursively discovers `.rego` files
-- it creates policy plans from that scan
-- it currently has target-level evaluator batching that is not part of the plugin split contract
+Apple Human Interface Guidelines policy documentation is separate from this plugin architecture document.
 
-That code should not be treated as the model for the two new plugins.
+See `Docs/Apple-Human-Interface-Guidelines-Policies.md`.
