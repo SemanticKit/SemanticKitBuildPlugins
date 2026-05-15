@@ -8,13 +8,52 @@ public struct SwiftOPAPolicyEngine {
 
     public var backendName: String { "SwiftOPA" }
 
-    public func evaluate(_ input: AST.RegoValue, preparedBundleDirectory: URL?) async -> PolicyEvaluation {
+    public struct PreparedPolicyQuery: Sendable {
+        private var backendName: String
+        private var preparedQuery: OPA.Engine.PreparedQuery
+
+        fileprivate init(backendName: String, preparedQuery: OPA.Engine.PreparedQuery) {
+            self.backendName = backendName
+            self.preparedQuery = preparedQuery
+        }
+
+        public func evaluate(_ input: AST.RegoValue) async -> PolicyEvaluation {
+            do {
+                let resultSet = try await preparedQuery.evaluate(input: input)
+                return PolicyEvaluation(
+                    backendName: backendName,
+                    diagnostics: try SwiftOPAPolicyEngine.parseDiagnostics(from: resultSet)
+                )
+            } catch {
+                return PolicyEvaluation(
+                    backendName: backendName,
+                    diagnostics: [
+                        ValidationDiagnostic(
+                            severity: .error,
+                            message: "Policy evaluation failed: \(error)",
+                            location: "Policies",
+                            ruleID: "semantickit.build_plugins.policy_evaluation_failed"
+                        )
+                    ]
+                )
+            }
+        }
+    }
+
+    public func prepare(preparedBundleDirectory: URL, query: String) async throws -> PreparedPolicyQuery {
+        let bundle = try Self.loadBundleFromDirectory(preparedBundleDirectory)
+        var engine = OPA.Engine(bundles: ["policy": bundle])
+        let preparedQuery = try await engine.prepareForEvaluation(query: query)
+        return PreparedPolicyQuery(backendName: backendName, preparedQuery: preparedQuery)
+    }
+
+    public func evaluate(_ input: AST.RegoValue, preparedBundleDirectory: URL?, query: String) async -> PolicyEvaluation {
         do {
             guard let preparedBundleDirectory else {
                 return PolicyEvaluation(backendName: backendName, diagnostics: [])
             }
-            let diagnostics = try await Self.evaluateBundleAsync(bundleDirectory: preparedBundleDirectory, input: input)
-            return PolicyEvaluation(backendName: backendName, diagnostics: diagnostics)
+            let preparedPolicyQuery = try await prepare(preparedBundleDirectory: preparedBundleDirectory, query: query)
+            return await preparedPolicyQuery.evaluate(input)
         } catch {
             return PolicyEvaluation(
                 backendName: backendName,
@@ -28,16 +67,6 @@ public struct SwiftOPAPolicyEngine {
                 ]
             )
         }
-    }
-
-    private static func evaluateBundleAsync(bundleDirectory: URL, input: AST.RegoValue) async throws -> [ValidationDiagnostic] {
-        let bundle = try loadBundleFromDirectory(bundleDirectory)
-        var engine = OPA.Engine(bundles: ["semantic-kit": bundle])
-
-        let prepared = try await engine.prepareForEvaluation(query: "data.semantickit.main.decision")
-        let resultSet = try await prepared.evaluate(input: input)
-
-        return try parseDiagnostics(from: resultSet)
     }
 
     private static func loadBundleFromDirectory(_ directory: URL) throws -> OPA.Bundle {

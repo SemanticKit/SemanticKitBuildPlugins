@@ -10,44 +10,58 @@ public struct BuildToolPolicyEvaluator {
 
     public func evaluate(
         packageDirectory: URL,
-        sourceFile: URL? = nil,
-        policyBundleArchive: URL? = nil
+        sourceFiles: [URL] = [],
+        policyPlanArchives: [PolicyPlanArchive] = []
     ) async -> CommandResult {
         var diagnostics: [ValidationDiagnostic] = []
-        let policyInput: AST.RegoValue
-        do {
-            let inputData = try SwiftSyntaxInput(packageDirectory: packageDirectory).jsonData(for: sourceFile)
-            policyInput = try AST.RegoValue(jsonData: inputData)
-        } catch {
-            diagnostics.append(
-                ValidationDiagnostic(
-                    severity: .error,
-                    message: "Unable to parse Swift source input: \(error)",
-                    location: sourceFile.map { relativeArtifactPath(fileURL: $0, packageDirectory: packageDirectory) } ?? "SwiftSyntax",
-                    ruleID: "semantickit.build_plugins.swift_source_input_failed"
-                )
-            )
-            policyInput = .null
-        }
+        var preparedPolicyPlans: [SwiftOPAPolicyEngine.PreparedPolicyQuery] = []
+        var preparedBundleDirectories: [URL] = []
 
-        var preparedBundleDirectory: URL?
-        do {
-            if let policyBundleArchive {
-                preparedBundleDirectory = try extractPolicyBundleArchive(policyBundleArchive)
+        for policyPlanArchive in policyPlanArchives {
+            do {
+                let preparedBundleDirectory = try extractPolicyBundleArchive(policyPlanArchive.archive)
+                preparedBundleDirectories.append(preparedBundleDirectory)
+                let preparedPolicyPlan = try await policyEngine.prepare(
+                    preparedBundleDirectory: preparedBundleDirectory,
+                    query: policyPlanArchive.query
+                )
+                preparedPolicyPlans.append(preparedPolicyPlan)
+            } catch {
+                diagnostics.append(
+                    ValidationDiagnostic(
+                        severity: .error,
+                        message: "Unable to prepare OPA bundle artifacts: \(error)",
+                        location: "Policies",
+                        ruleID: "semantickit.build_plugins.policy_bundle_prepare_failed"
+                    )
+                )
             }
-        } catch {
-            diagnostics.append(
-                ValidationDiagnostic(
-                    severity: .error,
-                    message: "Unable to prepare OPA bundle artifacts: \(error)",
-                    location: "Policies",
-                    ruleID: "semantickit.build_plugins.policy_bundle_prepare_failed"
-                )
-            )
         }
 
-        diagnostics.append(contentsOf: await policyEngine.evaluate(policyInput, preparedBundleDirectory: preparedBundleDirectory).diagnostics)
-        if let preparedBundleDirectory {
+        let sourcesToEvaluate: [URL?] = sourceFiles.isEmpty ? [nil] : sourceFiles.map(Optional.some)
+        for sourceFile in sourcesToEvaluate {
+            let policyInput: AST.RegoValue
+            do {
+                let inputData = try SwiftSyntaxInput(packageDirectory: packageDirectory).jsonData(for: sourceFile)
+                policyInput = try AST.RegoValue(jsonData: inputData)
+            } catch {
+                diagnostics.append(
+                    ValidationDiagnostic(
+                        severity: .error,
+                        message: "Unable to parse Swift source input: \(error)",
+                        location: sourceFile.map { relativeArtifactPath(fileURL: $0, packageDirectory: packageDirectory) } ?? "SwiftSyntax",
+                        ruleID: "semantickit.build_plugins.swift_source_input_failed"
+                    )
+                )
+                policyInput = .null
+            }
+
+            for preparedPolicyPlan in preparedPolicyPlans {
+                diagnostics.append(contentsOf: await preparedPolicyPlan.evaluate(policyInput).diagnostics)
+            }
+        }
+
+        for preparedBundleDirectory in preparedBundleDirectories {
             try? FileManager.default.removeItem(at: preparedBundleDirectory.deletingLastPathComponent())
         }
 

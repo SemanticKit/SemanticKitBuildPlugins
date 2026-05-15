@@ -1,14 +1,17 @@
 import Foundation
+import SemanticKitBuildPluginsCommandSupport
 
 struct ToolInvocation {
     var packageDirectory: URL
-    var sourceFile: URL?
-    var policyBundleArchive: URL?
+    var sourceFiles: [URL]
+    var policyPlanArchives: [PolicyPlanArchive]
+    var argumentErrors: [String]
 
     init(commandLineArguments: [String]) {
         var packageDirectory = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
-        var sourceFile: URL?
-        var policyBundleArchive: URL?
+        var sourceFiles: [URL] = []
+        var policyPlanArchives: [PolicyPlanArchive] = []
+        var argumentErrors: [String] = []
         var index = 0
 
         while index < commandLineArguments.count {
@@ -19,12 +22,19 @@ struct ToolInvocation {
                 index += 2
                 continue
             case "--swift-source" where commandLineArguments.indices.contains(index + 1):
-                sourceFile = URL(fileURLWithPath: commandLineArguments[index + 1])
+                sourceFiles.append(URL(fileURLWithPath: commandLineArguments[index + 1]))
                 index += 2
                 continue
             case "--policy-bundle" where commandLineArguments.indices.contains(index + 1):
-                policyBundleArchive = URL(fileURLWithPath: commandLineArguments[index + 1])
-                index += 2
+                let archive = URL(fileURLWithPath: commandLineArguments[index + 1])
+                if commandLineArguments.indices.contains(index + 3),
+                   commandLineArguments[index + 2] == "--policy-query" {
+                    policyPlanArchives.append(PolicyPlanArchive(archive: archive, query: commandLineArguments[index + 3]))
+                    index += 4
+                } else {
+                    argumentErrors.append("--policy-bundle requires a following --policy-query argument.")
+                    index += 2
+                }
                 continue
             default:
                 index += 1
@@ -32,7 +42,8 @@ struct ToolInvocation {
         }
 
         self.packageDirectory = packageDirectory
-        self.sourceFile = sourceFile
-        self.policyBundleArchive = policyBundleArchive
+        self.sourceFiles = sourceFiles
+        self.policyPlanArchives = policyPlanArchives
+        self.argumentErrors = argumentErrors
     }
 }

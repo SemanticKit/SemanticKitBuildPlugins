@@ -1,4 +1,4 @@
-package apple.hig.platform_services.airplay_custom_controls
+package apple.hig.platform_services.airplay_term_noun
 
 test_warns_for_modified_airplay_term_swift_syntax if {
   result := decision with input as data.swift.syntax.test.source_input("Sources/App/PlayerView.swift", [

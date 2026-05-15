@@ -5,10 +5,17 @@ import SemanticKitBuildPluginsCommandSupport
 struct SemanticKitBuildPluginsTool {
     static func main() async {
         let invocation = ToolInvocation(commandLineArguments: Array(CommandLine.arguments.dropFirst()))
+        if !invocation.argumentErrors.isEmpty {
+            for error in invocation.argumentErrors {
+                print("error: \(error)")
+            }
+            Foundation.exit(1)
+        }
+
         let result = await BuildToolPolicyEvaluator().evaluate(
             packageDirectory: invocation.packageDirectory,
-            sourceFile: invocation.sourceFile,
-            policyBundleArchive: invocation.policyBundleArchive
+            sourceFiles: invocation.sourceFiles,
+            policyPlanArchives: invocation.policyPlanArchives
         )
 
         for message in result.messages {

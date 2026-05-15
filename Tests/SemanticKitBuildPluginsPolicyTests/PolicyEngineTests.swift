@@ -10,7 +10,7 @@ final class PolicyEngineTests: XCTestCase {
 
     func testPolicyEngineDecodesStructuredPolicyDecision() async throws {
         let packageDirectory = try makeTemporaryPackageDirectory(regoSource: """
-        package semantickit.main
+        package test.policy
 
         decision := {
           "deny": [{
@@ -28,10 +28,17 @@ final class PolicyEngineTests: XCTestCase {
 
         let input: AST.RegoValue = .null
 
-        let bundleDirectory = try buildPlanBundleDirectory(from: packageDirectory.appendingPathComponent("Policies", isDirectory: true))
+        let bundleDirectory = try buildPlanBundleDirectory(
+            from: packageDirectory.appendingPathComponent("Policies", isDirectory: true),
+            entrypoint: "test/policy/decision"
+        )
         defer { try? FileManager.default.removeItem(at: bundleDirectory.deletingLastPathComponent()) }
 
-        let evaluation = await SwiftOPAPolicyEngine().evaluate(input, preparedBundleDirectory: bundleDirectory)
+        let evaluation = await SwiftOPAPolicyEngine().evaluate(
+            input,
+            preparedBundleDirectory: bundleDirectory,
+            query: "data.test.policy.decision"
+        )
         let diagnostic = try XCTUnwrap(evaluation.diagnostics.first)
         XCTAssertEqual(diagnostic.severity, .error)
         XCTAssertEqual(diagnostic.message, "Denied by fixture policy")
@@ -42,7 +49,11 @@ final class PolicyEngineTests: XCTestCase {
     func testPolicyEngineAllowsEmptyPolicyRoots() async throws {
         let input: AST.RegoValue = .null
 
-        let evaluation = await SwiftOPAPolicyEngine().evaluate(input, preparedBundleDirectory: nil)
+        let evaluation = await SwiftOPAPolicyEngine().evaluate(
+            input,
+            preparedBundleDirectory: nil,
+            query: "data.test.policy.decision"
+        )
         XCTAssertTrue(evaluation.diagnostics.isEmpty)
     }
 
@@ -60,7 +71,7 @@ final class PolicyEngineTests: XCTestCase {
         return directory
     }
 
-    private func buildPlanBundleDirectory(from policiesDirectory: URL) throws -> URL {
+    private func buildPlanBundleDirectory(from policiesDirectory: URL, entrypoint: String) throws -> URL {
         let tempRoot = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
         let outputArchive = tempRoot.appendingPathComponent("bundle.tar.gz")
         let extractedBundle = tempRoot.appendingPathComponent("bundle", isDirectory: true)
@@ -68,7 +79,7 @@ final class PolicyEngineTests: XCTestCase {
         try FileManager.default.createDirectory(at: tempRoot, withIntermediateDirectories: true)
         try runCommand(
             "opa",
-            arguments: ["build", "--target", "plan", "--entrypoint", "semantickit/main/decision", "--output", outputArchive.path, policiesDirectory.path],
+            arguments: ["build", "--target", "plan", "--entrypoint", entrypoint, "--output", outputArchive.path, policiesDirectory.path],
             currentDirectory: tempRoot
         )
         try FileManager.default.createDirectory(at: extractedBundle, withIntermediateDirectories: true)

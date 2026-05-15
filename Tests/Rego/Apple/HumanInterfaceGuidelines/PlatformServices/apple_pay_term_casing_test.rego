@@ -1,4 +1,4 @@
-package apple.hig.platform_services.apple_pay_button
+package apple.hig.platform_services.apple_pay_term_casing
 
 test_warns_for_lowercase_apple_pay_term_swift_syntax if {
   result := decision with input as data.swift.syntax.test.source_input("Sources/App/CheckoutView.swift", [
