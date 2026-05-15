@@ -1,43 +1,74 @@
-# OPA/Rego-First Architecture (Authoritative)
+# Current Policy Plugin Architecture
 
-This document supersedes the original scaffold direction and is the authoritative architecture contract for `SemanticKitBuildPlugins`.
+This is the active working contract for `SemanticKitBuildPlugins`.
 
-## Core Rule
+## Immediate Priority
 
-Policy semantics are defined in Rego modules under `Policies/`. Swift code does **not** hardcode policy outcomes.
+- Do not reintroduce recursive directory scanning.
+- Do not discover `Policies/` roots from package or dependency directories.
+- Do not use `FileManager.default.enumerator` for policy or source discovery.
+- Do not rebuild an aggregate `semantickit/main/decision` entrypoint.
+- Do not use the old aggregate files `Policies/semantic_kit.rego`, `Policies/Apple/HumanInterfaceGuidelines/main.rego`, or `Policies/SemanticKitDesignGuidelines/main.rego`.
+- Do not commit, reset, stage, checkout, or otherwise mutate git state without a current explicit instruction.
 
-## Build Flow
+## Plugin Split
 
-1. Build-tool plugin discovers local and dependency `Policies/` roots from SwiftPM plugin context.
-2. Build-tool plugin invokes `opa build --target plan` as a build command and declares the OPA bundle archive as a build output.
-3. Build-tool plugin runs the internal evaluator executable as a separate build command that consumes the declared bundle output.
-4. SwiftSyntax/SwiftParser extract Swift facts into policy-neutral input facts.
-5. `swift-opa` evaluates `data.semantickit.main.decision` with the generated input.
-6. Decision diagnostics are rendered as build output; deny fails validation.
+There are two new minimal build-tool plugin registrations:
 
-## Artifact Root Conventions
+- `RegoPolicyCompile`
+- `RegoPolicyEvaluate`
 
-- Local policy root: `<package-root>/Policies`
-- Dependency policy root: `<dependency-root>/Policies`
+The plugins are intentionally only registered right now. They must not grow hidden behavior before their target roles are implemented deliberately.
 
-No custom policy manifest is required.
+## RegoPolicyCompile Role
 
-## Ownership Boundaries
+`RegoPolicyCompile` is for targets that own Rego policy files.
 
-Swift owns:
-- artifact discovery
-- fact extraction
-- bundle assembly/load and OPA invocation
-- decision decoding and diagnostic rendering
+It must use SwiftPM's target file surface:
 
-Rego owns:
-- allow/deny/warn policy semantics
+```swift
+sourceTarget.sourceFiles(withSuffix: ".rego")
+```
 
-## Dependency Discovery
+It must compile Rego policy files into OPA plan artifacts.
 
-Dependency policy roots are discovered from SwiftPM's plugin context (`Package.dependencies`) and must not be discovered by invoking nested `swift package` commands from a build-tool plugin.
+It must not walk package directories, dependency directories, or hardcoded `Policies/` roots.
 
-## Parser Constraint
+## RegoPolicyEvaluate Role
 
-Swift source facts are collected using official Swift parser tooling (`SwiftParser`/`SwiftSyntax`) only.
-No regex/custom parser fallback is allowed.
+`RegoPolicyEvaluate` is for Swift targets in any consumer project.
+
+It must use SwiftPM's target file surface:
+
+```swift
+sourceTarget.sourceFiles(withSuffix: ".swift")
+```
+
+It evaluates SwiftSyntax input against supplied/generated policy plan artifacts.
+
+It must not discover Rego files itself.
+
+## SwiftPM Boundary
+
+SwiftPM is the build tool. Plugin code returns `Command.buildCommand` values with explicit inputs and outputs.
+
+The executable invoked by a command should do the command's work. It should not become a replacement scheduler for target-wide plugin behavior.
+
+## Rego Boundary
+
+Each real policy Rego file should own its package and `decision`.
+
+Shared helper modules, such as SwiftSyntax helpers, may exist without `decision`.
+
+Policy semantics belong in Rego. Swift parses Swift source, encodes SwiftSyntax input, invokes policy artifacts, decodes diagnostics, and prints build-tool diagnostics.
+
+## Current Known Problem
+
+The older `SemanticKitBuildPluginsBuildTool` code currently contains work that conflicts with this contract:
+
+- it discovers policy roots by scanning package and dependency directories
+- it recursively discovers `.rego` files
+- it creates policy plans from that scan
+- it currently has target-level evaluator batching that is not part of the plugin split contract
+
+That code should not be treated as the model for the two new plugins.
