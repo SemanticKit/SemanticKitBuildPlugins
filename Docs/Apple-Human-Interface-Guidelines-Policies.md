@@ -8,7 +8,11 @@ The target stores policy files under:
 Sources/AppleHumanInterfaceGuidelines/
 ```
 
-Policy files are grouped by HIG topic, such as accessibility, components, content, identity, presentation, typography, and writing.
+Policy files are stored under the package namespace path:
+
+```text
+Sources/AppleHumanInterfaceGuidelines/apple/hig/
+```
 
 ## Target Contract
 
