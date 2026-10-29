@@ -40,6 +40,12 @@ Do not reintroduce:
 
 Each policy file should own the small amount of Rego needed for that rule.
 
+## Current Migration Work
+
+Some policy files still reference the deleted `data.swift.syntax.*` helper shape. Those files need to be migrated to the parser CLI syntax output shape.
+
+That migration is policy work. It should not add new Swift package targets, Swift evaluator abstractions, or SwiftSyntax serializers.
+
 ## Policy Shape
 
 Every policy matches the parser syntax node it receives as `input`; `Docs/BuildPlugins.md` describes the node and the `decision` contract. Each test in `Tests/Rego/Apple/HumanInterfaceGuidelines/` gives its policy the parser output for one line of Swift, written next to the test.
