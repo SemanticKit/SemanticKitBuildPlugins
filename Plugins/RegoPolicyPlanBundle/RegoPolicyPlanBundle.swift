@@ -1,31 +1,34 @@
 import Foundation
 import PackagePlugin
 
+/// Plans every policy of a target into one bundle, `<target>.tar.gz`, for
+/// code that evaluates the target's policies together at run time.
+///
+/// It merges the source bundles of `RegoPolicyManifest`
+/// (`*.bundle.tar.gz`), whose disjoint roots keep the merge valid; without
+/// them it plans the target's `.rego` files directly.
 @main
 struct RegoPolicyPlanBundle: BuildToolPlugin {
     func createBuildCommands(context: PluginContext, target: Target) async throws -> [Command] {
         guard let sourceTarget = target as? SourceModuleTarget else { return [] }
-        let bundles = sourceTarget.pluginGeneratedResources
-            .filter { $0.lastPathComponent.hasSuffix(".tar.gz") }
-        guard !bundles.isEmpty else { return [] }
+        let sourceBundles = sourceTarget.pluginGeneratedResources
+            .filter { $0.lastPathComponent.hasSuffix(".bundle.tar.gz") }
+        let regoFiles = sourceTarget.sourceFiles(withSuffix: ".rego").map(\.url)
+        guard !sourceBundles.isEmpty || !regoFiles.isEmpty else { return [] }
 
         let opa = try opaExecutable(context)
-
-        let outputArchive = context.pluginWorkDirectoryURL
-            .appendingPathComponent("\(target.name).tar.gz")
+        let outputArchive = context.pluginWorkDirectoryURL.appendingPathComponent("\(target.name).tar.gz")
+        let inputs = sourceBundles.isEmpty ? regoFiles : sourceBundles
+        let inputArguments = sourceBundles.isEmpty
+            ? regoFiles.map(\.path)
+            : sourceBundles.flatMap { ["--bundle", $0.path] }
 
         return [
             .buildCommand(
                 displayName: "Plan bundle Rego policies \(target.name)",
                 executable: opa,
-                arguments: [
-                    "build",
-                    "--target",
-                    "plan",
-                    "--output",
-                    outputArchive.path,
-                ] + bundles.flatMap { ["--bundle", $0.path] },
-                inputFiles: bundles,
+                arguments: ["build", "--target", "plan", "--output", outputArchive.path] + inputArguments,
+                inputFiles: inputs,
                 outputFiles: [outputArchive]
             ),
         ]

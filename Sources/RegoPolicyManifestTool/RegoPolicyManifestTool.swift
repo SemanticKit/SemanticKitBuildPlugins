@@ -1,69 +1,66 @@
 import Foundation
 import Rego
+import SWCompression
 
+/// Writes the source bundle for one policy: a `.tar.gz` holding the policy
+/// file and a `.manifest` whose single root is the policy's package path.
+///
+/// `opa build --bundle` reads the root from that manifest, so every compiled
+/// policy bundle owns its own root and `opa build --target plan` can merge
+/// the bundles of a target without overlapping roots.
 @main
 struct RegoPolicyManifestTool {
     static func main() throws {
-        try run()
-    }
-
-    private static func run() throws {
         var regoPath: String?
-        var outDirPath: String?
+        var root: String?
+        var outputPath: String?
 
-        var args = CommandLine.arguments.dropFirst().makeIterator()
-        while let arg = args.next() {
-            switch arg {
+        var arguments = CommandLine.arguments.dropFirst().makeIterator()
+        while let argument = arguments.next() {
+            switch argument {
             case "--rego":
-                guard let value = args.next(), !value.hasPrefix("--") else {
-                    throw UsageError("missing value for --rego")
-                }
-                regoPath = value
-            case "--out-dir":
-                guard let value = args.next(), !value.hasPrefix("--") else {
-                    throw UsageError("missing value for --out-dir")
-                }
-                outDirPath = value
+                regoPath = try value(after: argument, in: &arguments)
+            case "--root":
+                root = try value(after: argument, in: &arguments)
+            case "--output":
+                outputPath = try value(after: argument, in: &arguments)
             default:
-                throw UsageError("unknown argument: \(arg)")
+                throw UsageError("unknown argument: \(argument)")
             }
         }
 
-        guard let regoPath, let outDirPath else {
-            throw UsageError("missing required arguments")
+        guard let regoPath, let root, let outputPath else {
+            throw UsageError("usage: RegoPolicyManifestTool --rego <file.rego> --root <package/path> --output <bundle.tar.gz>")
         }
 
-        let regoURL = URL(fileURLWithPath: regoPath)
-        let rootPath = try deriveRootPath(fromRegoPath: regoURL)
-
-        let outDirURL = URL(fileURLWithPath: outDirPath, isDirectory: true)
-        try FileManager.default.createDirectory(at: outDirURL, withIntermediateDirectories: true, attributes: nil)
-
-        let manifest = OPA.Manifest(roots: [rootPath])
-        let manifestData = try JSONEncoder().encode(manifest)
-        try manifestData.write(to: outDirURL.appendingPathComponent(".manifest"), options: [.atomic])
+        let policy = try Data(contentsOf: URL(fileURLWithPath: regoPath))
+        let manifest = try JSONEncoder().encode(OPA.Manifest(roots: [root]))
+        let archive = TarContainer.create(from: [
+            entry(named: ".manifest", data: manifest),
+            entry(named: "\(root).rego", data: policy),
+        ])
+        let output = URL(fileURLWithPath: outputPath)
+        try FileManager.default.createDirectory(
+            at: output.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+        try GzipArchive.archive(data: archive).write(to: output, options: [.atomic])
     }
 
-    private static func deriveRootPath(fromRegoPath regoURL: URL) throws -> String {
-        // Expect policies under .../Sources/<TargetName>/.../<file>.rego
-        // Root path is the relative path under the target directory, minus extension.
-        let components = regoURL.pathComponents
-        guard let sourcesIdx = components.lastIndex(of: "Sources"),
-            components.count > sourcesIdx + 2
-        else {
-            throw UsageError("rego path is not under Sources/<TargetName>: \(regoURL.path)")
-        }
+    private static func entry(named name: String, data: Data) -> TarEntry {
+        var info = TarEntryInfo(name: name, type: .regular)
+        info.permissions = Permissions(rawValue: 0o644)
+        return TarEntry(info: info, data: data)
+    }
 
-        // Drop "Sources/<TargetName>"
-        let relativeComponents = Array(components[(sourcesIdx + 2)...])
-        guard let last = relativeComponents.last, last.hasSuffix(".rego") else {
-            throw UsageError("rego path does not end in .rego: \(regoURL.path)")
+    private static func value(
+        after argument: String,
+        in arguments: inout IndexingIterator<ArraySlice<String>>
+    ) throws -> String {
+        guard let value = arguments.next(), !value.hasPrefix("--") else {
+            throw UsageError("missing value for \(argument)")
         }
-
-        let stem = String(last.dropLast(".rego".count))
-        let dirParts = relativeComponents.dropLast()
-        let joined = (dirParts + [stem]).joined(separator: "/")
-        return joined
+        return value
     }
 }
 
