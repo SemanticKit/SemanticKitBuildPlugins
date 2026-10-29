@@ -24,5 +24,8 @@ open_window_action_warning contains {
   call := input
   call.type == "FunctionCallExprSyntax"
   callee := call.children[0]
-  callee.children[0].token.text == "openWindow"
+  # `name(...)` or the modifier form `base.name(...)`
+  reference := {callee, callee.children[count(callee.children) - 1]}[_]
+  reference.type == "DeclReferenceExprSyntax"
+  reference.children[0].token.text == "openWindow"
 }

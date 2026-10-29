@@ -24,8 +24,10 @@ healthkit_term_warning contains {
   call.type == "FunctionCallExprSyntax"
 
   callee := call.children[0]
-  callee.type == "DeclReferenceExprSyntax"
-  {"Text", "Button", "Label", "TextField", "Alert", "help"}[callee.children[0].token.text]
+  # `name(...)` or the modifier form `base.name(...)`
+  reference := {callee, callee.children[count(callee.children) - 1]}[_]
+  reference.type == "DeclReferenceExprSyntax"
+  {"Text", "Button", "Label", "TextField", "Alert", "help"}[reference.children[0].token.text]
 
   argument_list := call.children[_]
   argument_list.type == "LabeledExprListSyntax"
@@ -52,8 +54,10 @@ healthkit_term_warning contains {
   call.type == "FunctionCallExprSyntax"
 
   callee := call.children[0]
-  callee.type == "DeclReferenceExprSyntax"
-  {"Text", "Button", "Label", "TextField", "Alert", "help"}[callee.children[0].token.text]
+  # `name(...)` or the modifier form `base.name(...)`
+  reference := {callee, callee.children[count(callee.children) - 1]}[_]
+  reference.type == "DeclReferenceExprSyntax"
+  {"Text", "Button", "Label", "TextField", "Alert", "help"}[reference.children[0].token.text]
 
   argument_list := call.children[_]
   argument_list.type == "LabeledExprListSyntax"

@@ -24,8 +24,8 @@ context_menu_availability_warning contains {
   call.type == "FunctionCallExprSyntax"
 
   callee := call.children[0]
-  callee.type == "MemberAccessExprSyntax"
-  member := callee.children[count(callee.children) - 1]
-  member.type == "DeclReferenceExprSyntax"
-  member.children[0].token.text == "contextMenu"
+  # `name(...)` or the modifier form `base.name(...)`
+  reference := {callee, callee.children[count(callee.children) - 1]}[_]
+  reference.type == "DeclReferenceExprSyntax"
+  reference.children[0].token.text == "contextMenu"
 }

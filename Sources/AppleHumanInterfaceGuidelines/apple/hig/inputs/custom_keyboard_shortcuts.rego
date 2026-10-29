@@ -14,8 +14,10 @@ warnings := [warning |
   call.type == "FunctionCallExprSyntax"
 
   callee := call.children[0]
-  callee.type == "DeclReferenceExprSyntax"
-  callee.children[0].token.text == "keyboardShortcut"
+  # `name(...)` or the modifier form `base.name(...)`
+  reference := {callee, callee.children[count(callee.children) - 1]}[_]
+  reference.type == "DeclReferenceExprSyntax"
+  reference.children[0].token.text == "keyboardShortcut"
 
   warning := {
     "rule_id": "apple.hig.inputs.review_custom_keyboard_shortcut",

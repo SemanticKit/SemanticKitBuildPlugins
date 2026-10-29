@@ -14,7 +14,10 @@ warnings := [warning |
   call.type == "FunctionCallExprSyntax"
 
   callee := call.children[0]
-  callee_name := callee.children[0].token.text
+  # `name(...)` or the modifier form `base.name(...)`
+  reference := {callee, callee.children[count(callee.children) - 1]}[_]
+  reference.type == "DeclReferenceExprSyntax"
+  callee_name := reference.children[0].token.text
   {"ignoresSafeArea", "edgesIgnoringSafeArea"}[callee_name]
 
   warning := {

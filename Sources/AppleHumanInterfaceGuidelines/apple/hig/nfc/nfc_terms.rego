@@ -36,8 +36,10 @@ nfc_term_warning contains {
   call := input
   call.type == "FunctionCallExprSyntax"
   callee := call.children[0]
-  callee.type == "DeclReferenceExprSyntax"
-  visible_string_call_names[callee.children[0].token.text]
+  # `name(...)` or the modifier form `base.name(...)`
+  reference := {callee, callee.children[count(callee.children) - 1]}[_]
+  reference.type == "DeclReferenceExprSyntax"
+  visible_string_call_names[reference.children[0].token.text]
   argument_list := call.children[_]
   argument_list.type == "LabeledExprListSyntax"
   labeled_argument := argument_list.children[_]
@@ -62,8 +64,10 @@ nfc_term_warning contains {
   call := input
   call.type == "FunctionCallExprSyntax"
   callee := call.children[0]
-  callee.type == "DeclReferenceExprSyntax"
-  visible_string_call_names[callee.children[0].token.text]
+  # `name(...)` or the modifier form `base.name(...)`
+  reference := {callee, callee.children[count(callee.children) - 1]}[_]
+  reference.type == "DeclReferenceExprSyntax"
+  visible_string_call_names[reference.children[0].token.text]
   argument_list := call.children[_]
   argument_list.type == "LabeledExprListSyntax"
   labeled_argument := argument_list.children[_]

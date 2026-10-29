@@ -23,8 +23,10 @@ tooltip_copy_warning contains {
   call := input
   call.type == "FunctionCallExprSyntax"
   callee := call.children[0]
-  callee.type == "DeclReferenceExprSyntax"
-  callee.children[0].token.text == "help"
+  # `name(...)` or the modifier form `base.name(...)`
+  reference := {callee, callee.children[count(callee.children) - 1]}[_]
+  reference.type == "DeclReferenceExprSyntax"
+  reference.children[0].token.text == "help"
   argument_list := call.children[_]
   argument_list.type == "LabeledExprListSyntax"
   labeled_argument := argument_list.children[_]

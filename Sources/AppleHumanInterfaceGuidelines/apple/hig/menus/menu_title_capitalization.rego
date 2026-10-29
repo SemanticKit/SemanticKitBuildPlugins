@@ -1,4 +1,5 @@
 package apple.hig.menus.menu_title_capitalization
+
 default decision := {"deny": [], "warn": [], "note": []}
 
 # METADATA
@@ -9,54 +10,62 @@ decision := {
 	"note": [],
 }
 
-warnings contains {
-	"rule_id": "apple.hig.menus.review_command_menu_title_capitalization",
-	"message": "Review CommandMenu title; multiword menu titles should use title-style capitalization.",
-	"line": call.range.start,
-	"column": 0,
+warnings := [warning |
+	warning := menu_title_capitalization_warning[_]
+]
+
+menu_title_rules := {
+	"CommandMenu": {
+		"rule_id": "apple.hig.menus.review_command_menu_title_capitalization",
+		"message": "Review CommandMenu title; multiword menu titles should use title-style capitalization.",
+	},
+	"Menu": {
+		"rule_id": "apple.hig.menus.review_menu_title_capitalization",
+		"message": "Review Menu title; multiword menu titles should use title-style capitalization.",
+	},
+}
+
+menu_title_capitalization_warning contains {
+	"rule_id": rule.rule_id,
+	"message": rule.message,
+	"line": call.range.start.line,
+	"column": call.range.start.column,
 	"severity": "warning",
 } if {
-	walk(input, [_, call])
-	call._kind == "call_expr"
-	call.fn._kind == "unresolved_decl_ref_expr"
-	call.fn.name == "CommandMenu"
-	argument := call.args.args[_]
-	argument.expr._kind == "string_literal_expr"
-	title := argument.expr.value
+	call := input
+	call.type == "FunctionCallExprSyntax"
+	callee := call.children[0]
+	callee.type == "DeclReferenceExprSyntax"
+	rule := menu_title_rules[callee.children[0].token.text]
+	argument_list := call.children[_]
+	argument_list.type == "LabeledExprListSyntax"
+	labeled_argument := argument_list.children[_]
+	literal := labeled_argument.children[_]
+	literal.type == "StringLiteralExprSyntax"
+	segment_list := literal.children[_]
+	segment_list.type == "StringLiteralSegmentListSyntax"
+	segment := segment_list.children[_]
+	segment.type == "StringSegmentSyntax"
 	words := [word |
-		word := split(title, " ")[_]
+		word := split(segment.children[0].token.text, " ")[_]
 		word != ""
 	]
 	count(words) > 1
 	some index
 	word := words[index]
+	not lowercase_minor_word_allowed(words, index)
 	first := substring(word, 0, 1)
 	first == lower(first)
 	first != upper(first)
 }
 
-warnings contains {
-	"rule_id": "apple.hig.menus.review_menu_title_capitalization",
-	"message": "Review Menu title; multiword menu titles should use title-style capitalization.",
-	"line": call.range.start,
-	"column": 0,
-	"severity": "warning",
-} if {
-	walk(input, [_, call])
-	call._kind == "call_expr"
-	call.fn._kind == "unresolved_decl_ref_expr"
-	call.fn.name == "Menu"
-	argument := call.args.args[_]
-	argument.expr._kind == "string_literal_expr"
-	title := argument.expr.value
-	words := [word |
-		word := split(title, " ")[_]
-		word != ""
-	]
-	count(words) > 1
-	some index
-	word := words[index]
-	first := substring(word, 0, 1)
-	first == lower(first)
-	first != upper(first)
+lowercase_minor_word_allowed(words, index) if {
+	index > 0
+	index < count(words) - 1
+	lowercase_minor_words[lower(words[index])]
+}
+
+lowercase_minor_words := {
+	"a", "an", "and", "as", "at", "but", "by", "for", "from", "in", "into", "nor",
+	"of", "off", "on", "onto", "or", "out", "the", "to", "up", "via", "with",
 }
