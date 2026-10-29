@@ -22,7 +22,11 @@ let package = Package(
         .target(
             name: "AppleHumanInterfaceGuidelines",
             plugins: [
-                .plugin(name: "RegoPolicyManifest"),
+                // Each per-policy `.manifest` becomes a target resource with the same
+                // name, so more than one policy fails the build ("Multiple commands
+                // produce .../.manifest"). Re-attach once the manifests feed the
+                // bundle step instead of the resource bundle.
+//                .plugin(name: "RegoPolicyManifest"),
                 .plugin(name: "RegoPolicyCompile"),
 //                .plugin(name: "RegoPolicyPlanBundle"),
             ]
