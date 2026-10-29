@@ -40,11 +40,11 @@ Do not reintroduce:
 
 Each policy file should own the small amount of Rego needed for that rule.
 
-## Current Migration Work
+## How Policies Run in the Build
 
-Some policy files still reference the deleted `data.swift.syntax.*` helper shape. Those files need to be migrated to the parser CLI syntax output shape.
+Every policy matches the parser syntax node shape; none reference the old `data.swift.syntax.*` helpers.
 
-That migration is policy work. It should not add new Swift package targets, Swift evaluator abstractions, or SwiftSyntax serializers.
+`RegoPolicyEvaluateTool` is the one place Swift takes part: it writes each Swift file's SwiftParser nodes as policy input (`SyntaxInput`) and evaluates the planned policies inside the build, so a rule can fail `swift build` by name. A new rule is policy work. It adds a Rego file and its test, not Swift package targets, evaluator abstractions or serializers.
 
 ## Policy Shape
 
