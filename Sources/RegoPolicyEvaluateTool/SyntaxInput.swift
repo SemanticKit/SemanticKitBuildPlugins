@@ -9,8 +9,9 @@ import SwiftSyntax
 /// Every node is the parser's own node, written as
 /// `{"type", "range": {"start", "end"}, "token"?, "children"}`: `type` is the
 /// SwiftSyntax node type (`FunctionCallExprSyntax`), `range` holds 1-based
-/// line and column positions without trivia, `token` (`kind`, `text`) is
-/// present on tokens only, and `children` are the node's children in source
+/// line and column positions without trivia, `token` is present on tokens
+/// only and holds the token kind's case name (`identifier`, `stringSegment`,
+/// `leftParen`, ...) and the token's text, and `children` are the node's children in source
 /// order, as `Syntax.children(viewMode: .all)` lists them.
 struct SyntaxInput {
     /// Every node of the tree in pre-order, root first.
@@ -44,7 +45,7 @@ struct SyntaxInput {
         ]
         if let token = node.as(TokenSyntax.self) {
             object["token"] = [
-                "kind": .string(String(describing: token.tokenKind)),
+                "kind": .string(Self.caseName(of: token.tokenKind)),
                 "text": .string(token.text),
             ]
         }
@@ -52,6 +53,11 @@ struct SyntaxInput {
         let value = AST.RegoValue.object(object)
         nodes[index] = value
         return value
+    }
+
+    /// `identifier` for `.identifier("Button")`, `leftParen` for `.leftParen`.
+    private static func caseName(of kind: TokenKind) -> String {
+        Mirror(reflecting: kind).children.first?.label ?? String(describing: kind)
     }
 
     private static func position(_ location: SourceLocation) -> AST.RegoValue {
