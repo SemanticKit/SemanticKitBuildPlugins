@@ -1,9 +1,8 @@
-# METADATA
-# scope: package
-# entrypoint: true
 package apple.hig.platform_services.game_center_terms
 default decision := {"deny": [], "warn": [], "note": []}
 
+# METADATA
+# entrypoint: true
 decision := {
   "deny": [],
   "warn": warnings,

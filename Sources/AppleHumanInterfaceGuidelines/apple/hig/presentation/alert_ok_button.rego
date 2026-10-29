@@ -1,9 +1,8 @@
-# METADATA
-# scope: package
-# entrypoint: true
 package apple.hig.presentation.alert_ok_button
 default decision := {"deny": [], "warn": [], "note": []}
 
+# METADATA
+# entrypoint: true
 decision := {
   "deny": [],
   "warn": warnings,

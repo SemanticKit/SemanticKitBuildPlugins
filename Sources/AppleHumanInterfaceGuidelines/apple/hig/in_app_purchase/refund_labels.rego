@@ -1,9 +1,8 @@
-# METADATA
-# scope: package
-# entrypoint: true
 package apple.hig.in_app_purchase.refund_labels
 default decision := {"deny": [], "warn": [], "note": []}
 
+# METADATA
+# entrypoint: true
 decision := {
   "deny": [],
   "warn": warnings,

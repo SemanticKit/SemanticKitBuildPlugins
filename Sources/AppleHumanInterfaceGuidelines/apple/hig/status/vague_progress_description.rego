@@ -1,9 +1,8 @@
-# METADATA
-# scope: package
-# entrypoint: true
 package apple.hig.status.vague_progress_description
 default decision := {"deny": [], "warn": [], "note": []}
 
+# METADATA
+# entrypoint: true
 decision := {
   "deny": [],
   "warn": warnings,

@@ -1,9 +1,8 @@
-# METADATA
-# scope: package
-# entrypoint: true
 package apple.hig.content.image_tap_gesture
 default decision := {"deny": [], "warn": [], "note": []}
 
+# METADATA
+# entrypoint: true
 decision := {
   "deny": [],
   "warn": warnings,

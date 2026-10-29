@@ -1,10 +1,9 @@
 package apple.hig.presentation.window_sizing
 
-# Policy metadata
-# scope: package
-# entrypoint: true
 default decision := {"deny": [], "warn": [], "note": []}
 
+# METADATA
+# entrypoint: true
 decision := {
   "deny": [],
   "warn": warnings,
