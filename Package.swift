@@ -73,6 +73,13 @@ let package = Package(
                 .product(name: "SWCompression", package: "SWCompression"),
             ]
         ),
+        .testTarget(
+            name: "RegoPolicyEvaluateToolTests",
+            dependencies: [
+                "RegoPolicyEvaluateTool",
+                .product(name: "SwiftOPA", package: "swift-opa"),
+            ]
+        ),
         .executableTarget(
             name: "RegoPolicyManifestTool",
             dependencies: [
