@@ -14,3 +14,103 @@ The plugin is the captured workflow. It should remove discretion from future run
 - no invented per-session process
 
 The doc should explain that purpose first. Then it should document the plugin contracts as automation boundaries, not as shell recipes or stale architecture inventory.
+
+## Plugins
+
+| Plugin | Applied to | Inputs | Command | Declared output |
+| --- | --- | --- | --- | --- |
+| `RegoPolicyManifest` | a policy target | each `.rego` source file of the target | `RegoPolicyManifestTool --rego <file> --root <root> --output <out>` | `<root with dots>.bundle.tar.gz`: the policy and a `.manifest` whose only root is `<root>` |
+| `RegoPolicyCompile` | a policy target, after `RegoPolicyManifest` | each `*.bundle.tar.gz` (or each `.rego` file when the manifest plugin is not applied) | `opa build --target plan --bundle <source bundle>` | `<root with dots>.plan.tar.gz` |
+| `RegoPolicyPlanBundle` | a policy target, after `RegoPolicyManifest` | all `*.bundle.tar.gz` of the target (or its `.rego` files) | `opa build --target plan --bundle ...` | `<target>.tar.gz` |
+| `RegoPolicyEvaluate` | any Swift target | the target's `.swift` files and the `.rego` files of the target and of every target it depends on | `RegoPolicyEvaluateTool --opa <opa> --plans <dir> --record <file> --policy ... --source ...` | `RegoPolicyFindings.swift`, a comment line |
+
+`<root>` is the policy's path under its target directory without `.rego`: `Sources/AppleHumanInterfaceGuidelines/apple/hig/color/hardcoded_color.rego` has the root `apple/hig/color/hardcoded_color` and must declare `package apple.hig.color.hardcoded_color`. Unique roots keep the per-policy files apart in the target's resource bundle and let `opa build` merge the bundles of a target.
+
+The outputs of the first three plugins are resources of the policy target. `RegoPolicyEvaluate` declares only a Swift file holding a comment, so it adds no resources to the target it checks: SwiftPM shows a plugin none of the files that other plugins generate for other targets, so the evaluate command plans the policies it needs itself, under its plugin work directory.
+
+`opa` is the OPA CLI. The plugins use the `opa` tool SwiftPM provides, then the first `opa` on `PATH`, then `~/.local/bin/opa`, and stop the build with `opa not found` when there is none.
+
+## Policy contract
+
+A policy file declares one package, a `default decision`, and a `decision` rule annotated as the plan entrypoint:
+
+```rego
+package apple.hig.presentation.alert_ok_button
+
+default decision := {"deny": [], "warn": [], "note": []}
+
+# METADATA
+# entrypoint: true
+decision := {"deny": [], "warn": warnings, "note": []}
+```
+
+Each entry of `deny`, `warn` and `note` has `rule_id`, `message`, `line`, `column` and `severity`.
+
+`input` is one syntax node. `RegoPolicyEvaluate` gives every node of every Swift file to every policy in turn, so a policy states the node it matches:
+
+```rego
+call := input
+call.type == "FunctionCallExprSyntax"
+```
+
+A node is the SwiftParser node, written as JSON:
+
+| Field | Value |
+| --- | --- |
+| `type` | the SwiftSyntax node type, such as `FunctionCallExprSyntax`, `MemberAccessExprSyntax`, `TokenSyntax` |
+| `range` | `{"start": {"line", "column"}, "end": {"line", "column"}}`, 1-based, without trivia |
+| `token` | on tokens only: `kind` (the token kind's case name, such as `identifier`, `stringSegment`, `leftParen`) and `text` |
+| `children` | the node's children in source order (`Syntax.children(viewMode: .all)`) |
+
+A modifier call such as `view.help("…")` is a `FunctionCallExprSyntax` whose first child is a `MemberAccessExprSyntax`; its last child is the `DeclReferenceExprSyntax` of the name. A plain call such as `Button("OK")` has the `DeclReferenceExprSyntax` as its first child. The code in `#if` blocks is part of the tree whether or not it is compiled.
+
+## Diagnostics
+
+Each finding prints as
+
+```text
+<file>:<line>:<column>: warning: <message> [<rule_id>]
+```
+
+with `error` for `deny` entries, `warning` for `warn` entries and `note` for `note` entries. A `deny` entry fails the build.
+
+## Attaching the plugins
+
+A policy target holds `.rego` files and applies the three policy plugins:
+
+```swift
+.target(
+    name: "AppleHumanInterfaceGuidelines",
+    plugins: [
+        .plugin(name: "RegoPolicyManifest"),
+        .plugin(name: "RegoPolicyCompile"),
+        .plugin(name: "RegoPolicyPlanBundle"),
+    ]
+)
+```
+
+A package that wants its Swift checked depends on the policy libraries and applies `RegoPolicyEvaluate`:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/SemanticKit/SemanticKitBuildPlugins", branch: "main"),
+],
+targets: [
+    .target(
+        name: "App",
+        dependencies: [
+            .product(name: "AppleHumanInterfaceGuidelines", package: "SemanticKitBuildPlugins"),
+            .product(name: "SemanticKitDesignGuidelines", package: "SemanticKitBuildPlugins"),
+        ],
+        plugins: [
+            .plugin(name: "RegoPolicyEvaluate", package: "SemanticKitBuildPlugins"),
+        ]
+    ),
+]
+```
+
+`Tests/PolicyConsumer` is such a package. `swift build` in that directory reports every rule of both libraries from `PolicyTriggers.swift`.
+
+## Tests
+
+`opa test Sources Tests/Rego` runs the policy tests. Each test's `input` is the parser output for the line of Swift in the comment above it.
