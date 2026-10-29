@@ -1,29 +1,32 @@
 import AST
-import Foundation
 
 /// A policy's `decision` document: `{"deny": [...], "warn": [...], "note": [...]}`.
-struct PolicyDecision: Decodable {
+///
+/// A key the decision leaves out counts as an empty list.
+struct PolicyDecision {
     let deny: [Entry]
     let warn: [Entry]
     let note: [Entry]
 
-    init(deny: [Entry], warn: [Entry], note: [Entry]) {
-        self.deny = deny
-        self.warn = warn
-        self.note = note
-    }
-
-    struct Entry: Decodable {
+    struct Entry {
         let ruleID: String
         let message: String
         let line: Int
         let column: Int
 
-        enum CodingKeys: String, CodingKey {
-            case ruleID = "rule_id"
-            case message
-            case line
-            case column
+        init(_ value: AST.RegoValue) throws {
+            guard case .object(let entry) = value,
+                  case .string(let ruleID)? = entry["rule_id"],
+                  case .string(let message)? = entry["message"],
+                  case .number(let line)? = entry["line"],
+                  case .number(let column)? = entry["column"]
+            else {
+                throw UnexpectedResult(result: value)
+            }
+            self.ruleID = ruleID
+            self.message = message
+            self.line = line.intValue
+            self.column = column.intValue
         }
     }
 
@@ -32,14 +35,21 @@ struct PolicyDecision: Decodable {
         guard case .object(let bindings) = result, case .object(let decision)? = bindings["result"] else {
             throw UnexpectedResult(result: result)
         }
-        let isEmpty = ["deny", "warn", "note"].allSatisfy { key in
-            if case .array(let entries)? = decision[.string(key)] { return entries.isEmpty }
-            return decision[.string(key)] == nil
-        }
-        if isEmpty {
-            self.init(deny: [], warn: [], note: [])
-        } else {
-            self = try JSONDecoder().decode(Self.self, from: JSONEncoder().encode(AST.RegoValue.object(decision)))
+        self.deny = try Self.entries(decision["deny"])
+        self.warn = try Self.entries(decision["warn"])
+        self.note = try Self.entries(decision["note"])
+    }
+
+    private static func entries(_ value: AST.RegoValue?) throws -> [Entry] {
+        switch value {
+        case nil, .undefined?:
+            return []
+        case .array(let entries)?:
+            return try entries.map(Entry.init)
+        case .set(let entries)?:
+            return try entries.map(Entry.init)
+        case let value?:
+            throw UnexpectedResult(result: value)
         }
     }
 
@@ -54,6 +64,6 @@ private struct UnexpectedResult: Error, CustomStringConvertible {
     let result: AST.RegoValue
 
     var description: String {
-        "policy decision is not a {\"result\": decision} object: \(result)"
+        "policy decision is not a {\"result\": {\"deny\", \"warn\", \"note\"}} object of {rule_id, message, line, column} entries: \(result)"
     }
 }

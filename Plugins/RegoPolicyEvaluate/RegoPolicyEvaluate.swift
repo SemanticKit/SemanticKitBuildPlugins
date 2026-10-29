@@ -7,8 +7,13 @@ import PackagePlugin
 ///
 /// The policies come from each target's `.rego` source files. SwiftPM does
 /// not show a plugin the files other plugins generate for other targets, so
-/// the command plans the policies itself (`opa build --target plan`) before
-/// it evaluates them; nothing it plans becomes a resource of the target.
+/// one command plans the policies itself (`opa build --target plan`) into
+/// the plugin work directory; it runs again only when a `.rego` file
+/// changes. Each Swift file then gets its own evaluate command, which runs
+/// again only when that file or the plans change.
+///
+/// Each command's declared output is a Swift file holding one comment line,
+/// so SwiftPM runs the commands and the target gets no resources from them.
 ///
 /// Findings print as `file:line:column: warning|error|note: message [rule]`.
 /// A `deny` finding fails the build.
@@ -23,22 +28,38 @@ struct RegoPolicyEvaluate: BuildToolPlugin {
 
         let tool = try context.tool(named: "RegoPolicyEvaluateTool")
         let opa = try opaExecutable(context)
-        // The command's declared output is a Swift file holding only a
-        // comment, so SwiftPM runs the command whenever an input changes.
-        let record = context.pluginWorkDirectoryURL.appendingPathComponent("RegoPolicyFindings.swift")
-        let plans = context.pluginWorkDirectoryURL.appendingPathComponent("plans", isDirectory: true)
+        let work = context.pluginWorkDirectoryURL
+        let plans = work.appendingPathComponent("plans", isDirectory: true)
+        let plansRecord = work.appendingPathComponent("RegoPolicyPlans.swift")
+        let targetComponents = sourceTarget.directoryURL.standardizedFileURL.pathComponents
 
-        return [
-            .buildCommand(
-                displayName: "Evaluate Rego policies \(target.name)",
+        let plan = Command.buildCommand(
+            displayName: "Plan Rego policies for \(target.name)",
+            executable: tool.url,
+            arguments: ["plan", "--opa", opa.path, "--plans", plans.path, "--record", plansRecord.path]
+                + policies.flatMap { ["--policy", $0.path] },
+            inputFiles: policies,
+            outputFiles: [plansRecord]
+        )
+
+        let evaluations = swiftFiles.map { swiftFile in
+            // Named after the file's path in the target, so no two records
+            // share a file name in the module.
+            let fileComponents = swiftFile.standardizedFileURL.pathComponents
+            let relative = fileComponents.starts(with: targetComponents)
+                ? fileComponents.dropFirst(targetComponents.count)
+                : [swiftFile.lastPathComponent]
+            let record = work.appendingPathComponent("findings", isDirectory: true)
+                .appendingPathComponent("RegoPolicyFindings.\(relative.joined(separator: "."))")
+            return Command.buildCommand(
+                displayName: "Evaluate Rego policies \(swiftFile.lastPathComponent)",
                 executable: tool.url,
-                arguments: ["--opa", opa.path, "--plans", plans.path, "--record", record.path]
-                    + policies.flatMap { ["--policy", $0.path] }
-                    + swiftFiles.flatMap { ["--source", $0.path] },
-                inputFiles: swiftFiles + policies,
+                arguments: ["evaluate", "--plans", plans.path, "--record", record.path, "--source", swiftFile.path],
+                inputFiles: [swiftFile, plansRecord],
                 outputFiles: [record]
-            ),
-        ]
+            )
+        }
+        return [plan] + evaluations
     }
 }
 

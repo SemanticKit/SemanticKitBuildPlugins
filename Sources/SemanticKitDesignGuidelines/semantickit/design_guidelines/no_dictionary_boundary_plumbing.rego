@@ -23,31 +23,31 @@ dictionary_boundary_warning contains {
 } if {
   call := input
   call.type == "FunctionCallExprSyntax"
-  not explicit_boundary_decode_call(call)
-  dictionary_plumbing_call(call)
+  texts := token_texts(call)
+  not texts["decode"]
+  dictionary_plumbing(texts)
 }
 
-dictionary_plumbing_call(call) if {
+# The text of every token in the call, read in one walk of its subtree.
+token_texts(call) := {text |
   walk(call, [_, node])
   is_object(node)
-  name := node.token.text
-  is_string(name)
+  text := node.token.text
+  is_string(text)
+}
+
+dictionary_plumbing(texts) if {
+  some name in texts
   dictionary_call_names[name]
 }
 
-dictionary_plumbing_call(call) if {
-  walk(call, [_, node])
-  is_object(node)
-  text := node.token.text
-  is_string(text)
+dictionary_plumbing(texts) if {
+  some text in texts
   contains(lower(text), "dictionary")
 }
 
-dictionary_plumbing_call(call) if {
-  walk(call, [_, node])
-  is_object(node)
-  text := node.token.text
-  is_string(text)
+dictionary_plumbing(texts) if {
+  some text in texts
   dictionary_key_string(text)
 }
 
@@ -72,10 +72,4 @@ dictionary_key_string(value) if {
 dictionary_key_string(value) if {
   lower(value) == value
   contains(value, "message")
-}
-
-explicit_boundary_decode_call(call) if {
-  walk(call, [_, node])
-  is_object(node)
-  node.token.text == "decode"
 }
