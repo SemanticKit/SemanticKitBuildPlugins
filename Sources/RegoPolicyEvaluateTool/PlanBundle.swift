@@ -38,12 +38,30 @@ struct PlanBundle {
         self.bundle = try OPA.Bundle(manifest: manifest, planFiles: planFiles, data: data)
     }
 
-    /// The `decision` query of each policy root the bundle declares.
+    /// The query of each plan whose entrypoint is a policy's `decision`
+    /// rule, such as `data.apple.hig.color.hardcoded_color.decision`.
     var decisionQueries: [String] {
-        bundle.manifest.roots
-            .filter { !$0.isEmpty }
-            .map { "data.\($0.replacingOccurrences(of: "/", with: ".")).decision" }
+        get throws {
+            try bundle.planFiles.flatMap { file in
+                try JSONDecoder().decode(PlanNames.self, from: file.data).plans.plans.map(\.name)
+            }
+            .filter { $0 == "decision" || $0.hasSuffix("/decision") }
+            .map { "data.\($0.replacingOccurrences(of: "/", with: "."))" }
+        }
     }
+}
+
+/// The plan names in a `plan.json`: `{"plans": {"plans": [{"name": ...}]}}`.
+private struct PlanNames: Decodable {
+    struct Plans: Decodable {
+        struct Plan: Decodable {
+            let name: String
+        }
+
+        let plans: [Plan]
+    }
+
+    let plans: Plans
 }
 
 private struct NotAPlanBundle: Error, CustomStringConvertible {

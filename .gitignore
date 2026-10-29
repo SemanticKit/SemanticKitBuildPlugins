@@ -60,3 +60,7 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+
+# The policy consumer fixture package builds in its own .build
+Tests/PolicyConsumer/.build/
+Tests/PolicyConsumer/Package.resolved

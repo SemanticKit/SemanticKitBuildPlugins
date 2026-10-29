@@ -2,57 +2,73 @@ import AST
 import Foundation
 import Rego
 
-/// Evaluates one Swift source file against policy plan bundles.
+/// Evaluates Swift source files against Rego policies.
 ///
-/// Each syntax node of the file is the `input` of every policy's `decision`
-/// in turn, so a policy matches the node it describes (`input.type ==
-/// "FunctionCallExprSyntax"`, `input.children[0]`, ...). Each finding prints
-/// as a build diagnostic. A `deny` finding exits with status 1.
+/// Each policy is planned on its own with `opa build --target plan`. Each
+/// syntax node of each file is then the `input` of every policy's
+/// `decision` in turn, so a policy matches the node it describes
+/// (`input.type == "FunctionCallExprSyntax"`, `input.children[0]`, ...).
+/// Each finding prints as a build diagnostic; a `deny` finding exits with
+/// status 1.
 @main
 struct RegoPolicyEvaluateTool {
     static func main() async {
-        var source: String?
+        var opa: String?
+        var plansDirectory: String?
         var record: String?
-        var bundles: [String] = []
+        var policies: [String] = []
+        var sources: [String] = []
         var arguments = CommandLine.arguments.dropFirst().makeIterator()
 
         while let argument = arguments.next() {
-            guard ["--source", "--record", "--bundle"].contains(argument) else {
+            guard ["--opa", "--plans", "--record", "--policy", "--source"].contains(argument) else {
                 fail("unknown argument: \(argument)", status: 2)
             }
             guard let value = arguments.next(), !value.hasPrefix("--") else {
                 fail("missing value for \(argument)", status: 2)
             }
             switch argument {
-            case "--source": source = value
+            case "--opa": opa = value
+            case "--plans": plansDirectory = value
             case "--record": record = value
-            default: bundles.append(value)
+            case "--policy": policies.append(value)
+            default: sources.append(value)
             }
         }
 
-        guard let source else {
-            fail("usage: RegoPolicyEvaluateTool --source <file.swift> [--record <file.swift>] --bundle <plan.tar.gz>...", status: 2)
+        guard let opa, let plansDirectory else {
+            fail(
+                "usage: RegoPolicyEvaluateTool --opa <opa> --plans <dir> [--record <file.swift>] --policy <file.rego>... --source <file.swift>...",
+                status: 2
+            )
         }
 
         do {
-            let sourceURL = URL(fileURLWithPath: source)
-            let nodes = try SyntaxInput(contentsOf: sourceURL).nodes
-            let findings = try await PolicyEvaluation(
-                bundles: bundles.map { try PlanBundle(contentsOf: URL(fileURLWithPath: $0)) }
-            ).findings(for: nodes)
+            let bundles = try await PolicyPlanner(
+                opa: URL(fileURLWithPath: opa),
+                directory: URL(fileURLWithPath: plansDirectory, isDirectory: true)
+            ).plan(policies.map { URL(fileURLWithPath: $0) })
+            let evaluation = try await PolicyEvaluation(bundles: bundles)
 
-            for finding in findings {
-                print("\(source):\(finding.line):\(finding.column): \(finding.level.rawValue): \(finding.message) [\(finding.ruleID)]")
+            var findingCount = 0
+            var denied = false
+            for source in sources {
+                let nodes = try SyntaxInput(contentsOf: URL(fileURLWithPath: source)).nodes
+                for finding in try await evaluation.findings(for: nodes) {
+                    print("\(source):\(finding.line):\(finding.column): \(finding.level.rawValue): \(finding.message) [\(finding.ruleID)]")
+                    findingCount += 1
+                    denied = denied || finding.level == .error
+                }
             }
             if let record {
-                let summary = "// \(findings.count) Rego policy finding(s) in \(sourceURL.lastPathComponent)\n"
+                let summary = "// \(findingCount) Rego policy finding(s) in \(sources.count) file(s)\n"
                 try Data(summary.utf8).write(to: URL(fileURLWithPath: record), options: [.atomic])
             }
-            if findings.contains(where: { $0.level == .error }) {
+            if denied {
                 exit(1)
             }
         } catch {
-            fail("\(source): error: \(error)", status: 1)
+            fail("error: \(error)", status: 1)
         }
     }
 

@@ -14,7 +14,7 @@ struct PolicyEvaluation {
         var queries: [OPA.Engine.PreparedQuery] = []
         for bundle in bundles {
             var engine = OPA.Engine(bundles: [bundle.name: bundle.bundle])
-            for query in bundle.decisionQueries {
+            for query in try bundle.decisionQueries {
                 queries.append(try await engine.prepareForEvaluation(query: query))
             }
         }
