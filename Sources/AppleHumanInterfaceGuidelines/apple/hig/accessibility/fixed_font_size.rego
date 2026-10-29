@@ -1,0 +1,39 @@
+package apple.hig.accessibility.fixed_font_size
+default decision := {"deny": [], "warn": [], "note": []}
+
+# METADATA
+# entrypoint: true
+decision := {
+  "deny": [],
+  "warn": warnings,
+  "note": [],
+}
+
+warnings := [warning |
+  warning := fixed_font_size_warning[_]
+]
+
+fixed_font_size_warning contains {
+  "rule_id": "apple.hig.accessibility.review_fixed_font_size",
+  "message": "Review literal SwiftUI system font size use; support larger text sizes.",
+  "line": call.range.start.line,
+  "column": call.range.start.column,
+  "severity": "warning",
+} if {
+  call := input
+  call.type == "FunctionCallExprSyntax"
+
+  callee := call.children[0]
+  callee.type == "MemberAccessExprSyntax"
+  member := callee.children[count(callee.children) - 1]
+  member.type == "DeclReferenceExprSyntax"
+  member.children[0].token.text == "system"
+
+  argument_list := call.children[_]
+  argument_list.type == "LabeledExprListSyntax"
+  argument := argument_list.children[_]
+  argument.children[0].token.text == "size"
+
+  literal := argument.children[_]
+  {"IntegerLiteralExprSyntax", "FloatLiteralExprSyntax"}[literal.type]
+}
