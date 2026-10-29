@@ -114,10 +114,27 @@ targets: [
 ]
 ```
 
-`Tests/PolicyConsumer` is such a package. `swift build` in that directory reports every rule of both libraries from `PolicyTriggers.swift`.
+`Tests/PolicyConsumer` is such a package. `swift build` in that directory reports every `warn` and `note` rule of both libraries from `PolicyTriggers.swift`. The `deny` rules of `SemanticKitDesignGuidelines` fail a build, so they are proved by `InvariantPolicyTests` instead (see [Tests](#tests)).
+
+## SemanticKit invariants
+
+`SemanticKitDesignGuidelines` holds the SemanticKit invariants as `deny` rules: each one fails the build of a target that depends on the library and applies `RegoPolicyEvaluate`, with the rule's id in the diagnostic. They hold the identity rule: inside the Swift runtime the type is the term's identity, and an IRI is read only at the boundary. A boundary target (a format decoder or encoder, a translator into SHACL or SPARQL, the HTTP layer) does not depend on the library, so the rules do not run there.
+
+| Rule | Fails on | Instead |
+| --- | --- | --- |
+| `no_static_term_enum` | an enum with a static property or a case with a string raw value: `enum Foaf { static let knows = … }`, `enum Fauna: String { case animal = "Animal" }` | declare the term in the ontology, so that it is its own type |
+| `no_static_iri_constant` | a static property typed `IRI` or set to `IRI(…)`: `static let agentClass = IRI("…")` | the type is the identity; its IRI is a projection computed from the namespace |
+| `no_term_registry` | a dictionary keyed by `IRI` or `String` (`[IRI: Term]`, `Dictionary<String, Term>`, `[String: Term]()`), or a type named `…Registry` | refer to the term by its type |
+| `no_interpolated_identity` | `IRI(…)` built from an interpolated or concatenated string: `IRI(rawValue: "\(namespace)\(name)")` | the IRI is computed from the namespace at the boundary |
+| `no_individual_graph` | any use or declaration of `IndividualGraph` | individuals live in the RDFCore graph |
+| `no_values_of_lookup` | a `values(of:)` call or declaration: `Cert.key.values(of: alice)` | read the property on the individual's type |
+| `no_add_modifier_on_declaration` | an `add…` or `isDeclaredBy` modifier on a declaration: `Class("Foo").addLabel(…).addComment(…)` | declare `Label`, `Comment` and the rest in the declaration's content; `deprecated()` stays a modifier |
+| `no_term_reference_by_name` | `Domain`, `Range`, `SubClassOf`, `SubPropertyOf`, `EquivalentClass`, `EquivalentProperty`, `InverseOf` or `DisjointWith` given a string, an `IRI(…)`, a `.self` metatype or explicit generic arguments | the natural spelling `Domain(Fauna.Animal)` |
+
+The library also holds `no_dictionary_boundary_plumbing`, a `warn` rule.
 
 ## Tests
 
 `opa test Sources Tests/Rego` runs the policy tests. Each test's `input` is the parser output for the line of Swift in the comment above it.
 
-`swift test` runs the evaluator's tests in `Tests/RegoPolicyEvaluateToolTests`, with `opa` on `PATH` or in `~/.local/bin`. They parse the Swift in every fixture comment and check that the fixture is the node the evaluator writes for it, so the Rego tests keep testing what policies see at build time. They also plan and evaluate a `deny` policy and check the diagnostic and the exit status, check which node types each library policy is given, and check how decisions decode.
+`swift test` runs the evaluator's tests in `Tests/RegoPolicyEvaluateToolTests`, with `opa` on `PATH` or in `~/.local/bin`. They parse the Swift in every fixture comment and check that the fixture is the node the evaluator writes for it, so the Rego tests keep testing what policies see at build time. They also plan and evaluate a `deny` policy and check the diagnostic and the exit status, run the `SemanticKitDesignGuidelines` policies over a Swift file with one banned shape per line (each fails with its rule, the tool exits 1) and over the same file with the intended shapes (the tool exits 0), check which node types each library policy is given, and check how decisions decode.

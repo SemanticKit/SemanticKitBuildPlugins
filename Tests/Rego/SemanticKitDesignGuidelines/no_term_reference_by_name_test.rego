@@ -1,0 +1,218 @@
+package semantickit.design_guidelines.no_term_reference_by_name
+
+test_denies_domain_by_string if {
+  result := decision with input as domain_by_string_node
+
+  count(result.deny) == 1
+  result.deny[0].rule_id == "semantickit.design_guidelines.no_term_reference_by_name"
+  result.deny[0].line == 4
+  result.deny[0].column == 13
+  result.deny[0].severity == "error"
+  count(result.warn) == 0
+}
+
+test_denies_range_by_iri if {
+  result := decision with input as range_by_iri_node
+
+  count(result.deny) == 1
+  result.deny[0].rule_id == "semantickit.design_guidelines.no_term_reference_by_name"
+  result.deny[0].line == 7
+  result.deny[0].column == 13
+  result.deny[0].severity == "error"
+  count(result.warn) == 0
+}
+
+test_denies_subclass_by_metatype if {
+  result := decision with input as subclass_by_metatype_node
+
+  count(result.deny) == 1
+  result.deny[0].rule_id == "semantickit.design_guidelines.no_term_reference_by_name"
+  result.deny[0].line == 10
+  result.deny[0].column == 13
+  result.deny[0].severity == "error"
+  count(result.warn) == 0
+}
+
+test_denies_domain_by_generic_argument if {
+  result := decision with input as domain_by_generic_argument_node
+
+  count(result.deny) == 1
+  result.deny[0].rule_id == "semantickit.design_guidelines.no_term_reference_by_name"
+  result.deny[0].line == 13
+  result.deny[0].column == 13
+  result.deny[0].severity == "error"
+  count(result.warn) == 0
+}
+
+test_allows_domain_by_type if {
+  result := decision with input as domain_by_type_node
+
+  count(result.deny) == 0
+}
+
+test_allows_subclass_by_type if {
+  result := decision with input as subclass_by_type_node
+
+  count(result.deny) == 0
+}
+
+# Parser output for `Domain("Animal")` at 4:13.
+domain_by_string_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 4, "column": 13}, "end": {"line": 4, "column": 29}}, "children": [
+  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 4, "column": 13}, "end": {"line": 4, "column": 19}}, "children": [
+    {"type": "TokenSyntax", "range": {"start": {"line": 4, "column": 13}, "end": {"line": 4, "column": 19}}, "token": {"kind": "identifier", "text": "Domain"}, "children": []},
+  ]},
+  {"type": "TokenSyntax", "range": {"start": {"line": 4, "column": 19}, "end": {"line": 4, "column": 20}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
+  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 4, "column": 20}, "end": {"line": 4, "column": 28}}, "children": [
+    {"type": "LabeledExprSyntax", "range": {"start": {"line": 4, "column": 20}, "end": {"line": 4, "column": 28}}, "children": [
+      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 4, "column": 20}, "end": {"line": 4, "column": 28}}, "children": [
+        {"type": "TokenSyntax", "range": {"start": {"line": 4, "column": 20}, "end": {"line": 4, "column": 21}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
+        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 4, "column": 21}, "end": {"line": 4, "column": 27}}, "children": [
+          {"type": "StringSegmentSyntax", "range": {"start": {"line": 4, "column": 21}, "end": {"line": 4, "column": 27}}, "children": [
+            {"type": "TokenSyntax", "range": {"start": {"line": 4, "column": 21}, "end": {"line": 4, "column": 27}}, "token": {"kind": "stringSegment", "text": "Animal"}, "children": []},
+          ]},
+        ]},
+        {"type": "TokenSyntax", "range": {"start": {"line": 4, "column": 27}, "end": {"line": 4, "column": 28}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
+      ]},
+    ]},
+  ]},
+  {"type": "TokenSyntax", "range": {"start": {"line": 4, "column": 28}, "end": {"line": 4, "column": 29}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
+  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 4, "column": 29}, "end": {"line": 4, "column": 29}}, "children": []},
+]}
+
+# Parser output for `Range(IRI("http://example.org/fauna#Habitat"))` at 7:13.
+range_by_iri_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 7, "column": 13}, "end": {"line": 7, "column": 59}}, "children": [
+  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 7, "column": 13}, "end": {"line": 7, "column": 18}}, "children": [
+    {"type": "TokenSyntax", "range": {"start": {"line": 7, "column": 13}, "end": {"line": 7, "column": 18}}, "token": {"kind": "identifier", "text": "Range"}, "children": []},
+  ]},
+  {"type": "TokenSyntax", "range": {"start": {"line": 7, "column": 18}, "end": {"line": 7, "column": 19}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
+  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 7, "column": 19}, "end": {"line": 7, "column": 58}}, "children": [
+    {"type": "LabeledExprSyntax", "range": {"start": {"line": 7, "column": 19}, "end": {"line": 7, "column": 58}}, "children": [
+      {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 7, "column": 19}, "end": {"line": 7, "column": 58}}, "children": [
+        {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 7, "column": 19}, "end": {"line": 7, "column": 22}}, "children": [
+          {"type": "TokenSyntax", "range": {"start": {"line": 7, "column": 19}, "end": {"line": 7, "column": 22}}, "token": {"kind": "identifier", "text": "IRI"}, "children": []},
+        ]},
+        {"type": "TokenSyntax", "range": {"start": {"line": 7, "column": 22}, "end": {"line": 7, "column": 23}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
+        {"type": "LabeledExprListSyntax", "range": {"start": {"line": 7, "column": 23}, "end": {"line": 7, "column": 57}}, "children": [
+          {"type": "LabeledExprSyntax", "range": {"start": {"line": 7, "column": 23}, "end": {"line": 7, "column": 57}}, "children": [
+            {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 7, "column": 23}, "end": {"line": 7, "column": 57}}, "children": [
+              {"type": "TokenSyntax", "range": {"start": {"line": 7, "column": 23}, "end": {"line": 7, "column": 24}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
+              {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 7, "column": 24}, "end": {"line": 7, "column": 56}}, "children": [
+                {"type": "StringSegmentSyntax", "range": {"start": {"line": 7, "column": 24}, "end": {"line": 7, "column": 56}}, "children": [
+                  {"type": "TokenSyntax", "range": {"start": {"line": 7, "column": 24}, "end": {"line": 7, "column": 56}}, "token": {"kind": "stringSegment", "text": "http:\/\/example.org\/fauna#Habitat"}, "children": []},
+                ]},
+              ]},
+              {"type": "TokenSyntax", "range": {"start": {"line": 7, "column": 56}, "end": {"line": 7, "column": 57}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
+            ]},
+          ]},
+        ]},
+        {"type": "TokenSyntax", "range": {"start": {"line": 7, "column": 57}, "end": {"line": 7, "column": 58}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
+        {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 7, "column": 58}, "end": {"line": 7, "column": 58}}, "children": []},
+      ]},
+    ]},
+  ]},
+  {"type": "TokenSyntax", "range": {"start": {"line": 7, "column": 58}, "end": {"line": 7, "column": 59}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
+  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 7, "column": 59}, "end": {"line": 7, "column": 59}}, "children": []},
+]}
+
+# Parser output for `SubClassOf(Fauna.Animal.self)` at 10:13.
+subclass_by_metatype_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 10, "column": 13}, "end": {"line": 10, "column": 42}}, "children": [
+  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 10, "column": 13}, "end": {"line": 10, "column": 23}}, "children": [
+    {"type": "TokenSyntax", "range": {"start": {"line": 10, "column": 13}, "end": {"line": 10, "column": 23}}, "token": {"kind": "identifier", "text": "SubClassOf"}, "children": []},
+  ]},
+  {"type": "TokenSyntax", "range": {"start": {"line": 10, "column": 23}, "end": {"line": 10, "column": 24}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
+  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 10, "column": 24}, "end": {"line": 10, "column": 41}}, "children": [
+    {"type": "LabeledExprSyntax", "range": {"start": {"line": 10, "column": 24}, "end": {"line": 10, "column": 41}}, "children": [
+      {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 10, "column": 24}, "end": {"line": 10, "column": 41}}, "children": [
+        {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 10, "column": 24}, "end": {"line": 10, "column": 36}}, "children": [
+          {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 10, "column": 24}, "end": {"line": 10, "column": 29}}, "children": [
+            {"type": "TokenSyntax", "range": {"start": {"line": 10, "column": 24}, "end": {"line": 10, "column": 29}}, "token": {"kind": "identifier", "text": "Fauna"}, "children": []},
+          ]},
+          {"type": "TokenSyntax", "range": {"start": {"line": 10, "column": 29}, "end": {"line": 10, "column": 30}}, "token": {"kind": "period", "text": "."}, "children": []},
+          {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 10, "column": 30}, "end": {"line": 10, "column": 36}}, "children": [
+            {"type": "TokenSyntax", "range": {"start": {"line": 10, "column": 30}, "end": {"line": 10, "column": 36}}, "token": {"kind": "identifier", "text": "Animal"}, "children": []},
+          ]},
+        ]},
+        {"type": "TokenSyntax", "range": {"start": {"line": 10, "column": 36}, "end": {"line": 10, "column": 37}}, "token": {"kind": "period", "text": "."}, "children": []},
+        {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 10, "column": 37}, "end": {"line": 10, "column": 41}}, "children": [
+          {"type": "TokenSyntax", "range": {"start": {"line": 10, "column": 37}, "end": {"line": 10, "column": 41}}, "token": {"kind": "keyword", "text": "self"}, "children": []},
+        ]},
+      ]},
+    ]},
+  ]},
+  {"type": "TokenSyntax", "range": {"start": {"line": 10, "column": 41}, "end": {"line": 10, "column": 42}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
+  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 10, "column": 42}, "end": {"line": 10, "column": 42}}, "children": []},
+]}
+
+# Parser output for `Domain<Fauna.Animal>()` at 13:13.
+domain_by_generic_argument_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 13, "column": 13}, "end": {"line": 13, "column": 35}}, "children": [
+  {"type": "GenericSpecializationExprSyntax", "range": {"start": {"line": 13, "column": 13}, "end": {"line": 13, "column": 33}}, "children": [
+    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 13, "column": 13}, "end": {"line": 13, "column": 19}}, "children": [
+      {"type": "TokenSyntax", "range": {"start": {"line": 13, "column": 13}, "end": {"line": 13, "column": 19}}, "token": {"kind": "identifier", "text": "Domain"}, "children": []},
+    ]},
+    {"type": "GenericArgumentClauseSyntax", "range": {"start": {"line": 13, "column": 19}, "end": {"line": 13, "column": 33}}, "children": [
+      {"type": "TokenSyntax", "range": {"start": {"line": 13, "column": 19}, "end": {"line": 13, "column": 20}}, "token": {"kind": "leftAngle", "text": "<"}, "children": []},
+      {"type": "GenericArgumentListSyntax", "range": {"start": {"line": 13, "column": 20}, "end": {"line": 13, "column": 32}}, "children": [
+        {"type": "GenericArgumentSyntax", "range": {"start": {"line": 13, "column": 20}, "end": {"line": 13, "column": 32}}, "children": [
+          {"type": "MemberTypeSyntax", "range": {"start": {"line": 13, "column": 20}, "end": {"line": 13, "column": 32}}, "children": [
+            {"type": "IdentifierTypeSyntax", "range": {"start": {"line": 13, "column": 20}, "end": {"line": 13, "column": 25}}, "children": [
+              {"type": "TokenSyntax", "range": {"start": {"line": 13, "column": 20}, "end": {"line": 13, "column": 25}}, "token": {"kind": "identifier", "text": "Fauna"}, "children": []},
+            ]},
+            {"type": "TokenSyntax", "range": {"start": {"line": 13, "column": 25}, "end": {"line": 13, "column": 26}}, "token": {"kind": "period", "text": "."}, "children": []},
+            {"type": "TokenSyntax", "range": {"start": {"line": 13, "column": 26}, "end": {"line": 13, "column": 32}}, "token": {"kind": "identifier", "text": "Animal"}, "children": []},
+          ]},
+        ]},
+      ]},
+      {"type": "TokenSyntax", "range": {"start": {"line": 13, "column": 32}, "end": {"line": 13, "column": 33}}, "token": {"kind": "rightAngle", "text": ">"}, "children": []},
+    ]},
+  ]},
+  {"type": "TokenSyntax", "range": {"start": {"line": 13, "column": 33}, "end": {"line": 13, "column": 34}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
+  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 13, "column": 34}, "end": {"line": 13, "column": 34}}, "children": []},
+  {"type": "TokenSyntax", "range": {"start": {"line": 13, "column": 34}, "end": {"line": 13, "column": 35}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
+  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 13, "column": 35}, "end": {"line": 13, "column": 35}}, "children": []},
+]}
+
+# Parser output for `Domain(Fauna.Animal)` at 16:13.
+domain_by_type_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 16, "column": 13}, "end": {"line": 16, "column": 33}}, "children": [
+  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 16, "column": 13}, "end": {"line": 16, "column": 19}}, "children": [
+    {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 13}, "end": {"line": 16, "column": 19}}, "token": {"kind": "identifier", "text": "Domain"}, "children": []},
+  ]},
+  {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 19}, "end": {"line": 16, "column": 20}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
+  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 16, "column": 20}, "end": {"line": 16, "column": 32}}, "children": [
+    {"type": "LabeledExprSyntax", "range": {"start": {"line": 16, "column": 20}, "end": {"line": 16, "column": 32}}, "children": [
+      {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 16, "column": 20}, "end": {"line": 16, "column": 32}}, "children": [
+        {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 16, "column": 20}, "end": {"line": 16, "column": 25}}, "children": [
+          {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 20}, "end": {"line": 16, "column": 25}}, "token": {"kind": "identifier", "text": "Fauna"}, "children": []},
+        ]},
+        {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 25}, "end": {"line": 16, "column": 26}}, "token": {"kind": "period", "text": "."}, "children": []},
+        {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 16, "column": 26}, "end": {"line": 16, "column": 32}}, "children": [
+          {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 26}, "end": {"line": 16, "column": 32}}, "token": {"kind": "identifier", "text": "Animal"}, "children": []},
+        ]},
+      ]},
+    ]},
+  ]},
+  {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 32}, "end": {"line": 16, "column": 33}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
+  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 16, "column": 33}, "end": {"line": 16, "column": 33}}, "children": []},
+]}
+
+# Parser output for `SubClassOf(RDFS.Resource)` at 19:13.
+subclass_by_type_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 19, "column": 13}, "end": {"line": 19, "column": 38}}, "children": [
+  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 19, "column": 13}, "end": {"line": 19, "column": 23}}, "children": [
+    {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 13}, "end": {"line": 19, "column": 23}}, "token": {"kind": "identifier", "text": "SubClassOf"}, "children": []},
+  ]},
+  {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 23}, "end": {"line": 19, "column": 24}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
+  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 19, "column": 24}, "end": {"line": 19, "column": 37}}, "children": [
+    {"type": "LabeledExprSyntax", "range": {"start": {"line": 19, "column": 24}, "end": {"line": 19, "column": 37}}, "children": [
+      {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 19, "column": 24}, "end": {"line": 19, "column": 37}}, "children": [
+        {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 19, "column": 24}, "end": {"line": 19, "column": 28}}, "children": [
+          {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 24}, "end": {"line": 19, "column": 28}}, "token": {"kind": "identifier", "text": "RDFS"}, "children": []},
+        ]},
+        {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 28}, "end": {"line": 19, "column": 29}}, "token": {"kind": "period", "text": "."}, "children": []},
+        {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 19, "column": 29}, "end": {"line": 19, "column": 37}}, "children": [
+          {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 29}, "end": {"line": 19, "column": 37}}, "token": {"kind": "identifier", "text": "Resource"}, "children": []},
+        ]},
+      ]},
+    ]},
+  ]},
+  {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 37}, "end": {"line": 19, "column": 38}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
+  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 19, "column": 38}, "end": {"line": 19, "column": 38}}, "children": []},
+]}

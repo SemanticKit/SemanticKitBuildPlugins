@@ -110,6 +110,19 @@ struct PolicyEvaluationTests {
         #expect(findings.map(\.column) == [1, 11])
     }
 
+    /// The node types of the library policies that match nodes other than
+    /// calls; every other library policy matches `FunctionCallExprSyntax`.
+    static let libraryNodeTypes: [String: Set<String>] = [
+        "no_static_term_enum": ["EnumDeclSyntax"],
+        "no_static_iri_constant": ["VariableDeclSyntax"],
+        "no_term_registry": [
+            "DictionaryTypeSyntax", "IdentifierTypeSyntax", "FunctionCallExprSyntax",
+            "ClassDeclSyntax", "StructDeclSyntax", "EnumDeclSyntax", "ActorDeclSyntax", "ProtocolDeclSyntax",
+        ],
+        "no_individual_graph": ["TokenSyntax"],
+        "no_values_of_lookup": ["FunctionCallExprSyntax", "FunctionDeclSyntax"],
+    ]
+
     @Test("Every policy in the libraries is planned, loads, and tests the node type it matches")
     func libraryPolicies() async throws {
         let directory = try Repository.temporaryDirectory()
@@ -124,7 +137,8 @@ struct PolicyEvaluationTests {
         let evaluation = try await PolicyEvaluation(bundles: bundles)
         #expect(evaluation.policies.count == policies.count)
         for (policy, scoped) in zip(policies, evaluation.policies) {
-            #expect(scoped.nodeTypes == ["FunctionCallExprSyntax"], "\(policy.lastPathComponent)")
+            let name = policy.deletingPathExtension().lastPathComponent
+            #expect(scoped.nodeTypes == Self.libraryNodeTypes[name, default: ["FunctionCallExprSyntax"]], "\(name)")
         }
     }
 }
