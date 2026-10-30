@@ -23,16 +23,13 @@ struct PolicyEvaluationTests {
           "column": call.range.start.column,
           "severity": "error",
         } if {
-          call := input
-          call.type == "FunctionCallExprSyntax"
-          callee := call.children[0]
-          callee.type == "DeclReferenceExprSyntax"
-          callee.children[0].token.text == "forbidden"
+          some call in input.functionCallExprs
+          call.calledExpression.declReferenceExpr.baseName == "forbidden"
         }
         """
 
-    /// A policy that reads `input` without testing its type first.
-    static let unscopedPolicy = """
+    /// A policy that notes every reference to `todo`.
+    static let notePolicy = """
         package example.any_token
 
         default decision := {"deny": [], "warn": [], "note": []}
@@ -46,11 +43,12 @@ struct PolicyEvaluationTests {
         note_set contains {
           "rule_id": "example.any_token",
           "message": "Found todo.",
-          "line": input.range.start.line,
-          "column": input.range.start.column,
+          "line": reference.range.start.line,
+          "column": reference.range.start.column,
           "severity": "note",
         } if {
-          input.token.text == "todo"
+          some reference in input.declReferenceExprs
+          reference.baseName == "todo"
         }
         """
 
@@ -91,46 +89,26 @@ struct PolicyEvaluationTests {
         #expect(passed.diagnostics.isEmpty)
     }
 
-    @Test("A policy that tests input.type sees only nodes of that type; one that does not sees every node")
-    func scopes() async throws {
+    @Test("Every policy reads the whole file, and findings come in file order")
+    func policiesReadTheFile() async throws {
         let directory = try Repository.temporaryDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
         let policies = try [
             write(Self.denyPolicy, "forbidden_call.rego", in: directory),
-            write(Self.unscopedPolicy, "any_token.rego", in: directory),
+            write(Self.notePolicy, "any_token.rego", in: directory),
         ]
         let bundles = try await PolicyPlanner(opa: Repository.opa, directory: directory.appendingPathComponent("plans")).plan(policies)
         let evaluation = try await PolicyEvaluation(bundles: bundles)
+        #expect(evaluation.policies.count == 2)
 
-        #expect(evaluation.policies.map(\.nodeTypes) == [["FunctionCallExprSyntax"], nil])
-
-        let findings = try await evaluation.findings(in: SyntaxInput(source: "forbidden(todo)", fileName: "Mixed.swift"))
-        #expect(findings.map(\.ruleID) == ["example.forbidden_call", "example.any_token"])
-        #expect(findings.map(\.level) == [.error, .note])
-        #expect(findings.map(\.column) == [1, 11])
+        let findings = try await evaluation.findings(in: SyntaxInput(source: "forbidden(todo)\nlet a = todo", fileName: "Mixed.swift"))
+        #expect(findings.map(\.ruleID) == ["example.forbidden_call", "example.any_token", "example.any_token"])
+        #expect(findings.map(\.level) == [.error, .note, .note])
+        #expect(findings.map(\.line) == [1, 1, 2])
+        #expect(findings.map(\.column) == [1, 11, 9])
     }
 
-    /// The node types of the library policies that match nodes other than
-    /// calls; every other library policy matches `FunctionCallExprSyntax`.
-    static let libraryNodeTypes: [String: Set<String>] = [
-        "no_static_term_enum": ["EnumDeclSyntax", "ExtensionDeclSyntax", "StructDeclSyntax", "ClassDeclSyntax", "ActorDeclSyntax"],
-        "no_static_iri_constant": ["VariableDeclSyntax"],
-        "no_term_registry": [
-            "DictionaryTypeSyntax", "IdentifierTypeSyntax", "MemberTypeSyntax", "FunctionCallExprSyntax", "DictionaryExprSyntax",
-            "ClassDeclSyntax", "StructDeclSyntax", "EnumDeclSyntax", "ActorDeclSyntax", "ProtocolDeclSyntax",
-            "DeclReferenceExprSyntax",
-        ],
-        "no_interpolated_identity": ["SourceFileSyntax"],
-        "no_content_function": [
-            "FunctionDeclSyntax", "StructDeclSyntax", "ClassDeclSyntax", "EnumDeclSyntax", "ActorDeclSyntax", "ExtensionDeclSyntax",
-        ],
-        "no_individual_graph": ["TokenSyntax"],
-        "no_class_value_constant": ["MemberAccessExprSyntax"],
-        "no_values_of_lookup": ["FunctionCallExprSyntax", "FunctionDeclSyntax"],
-        "no_mode_flag_helper": ["FunctionDeclSyntax", "CodeBlockItemSyntax"],
-    ]
-
-    @Test("Every policy in the libraries is planned, loads, and tests the node type it matches")
+    @Test("Every policy in the libraries is planned and loads")
     func libraryPolicies() async throws {
         let directory = try Repository.temporaryDirectory()
         defer { try? FileManager.default.removeItem(at: directory) }
@@ -143,9 +121,5 @@ struct PolicyEvaluationTests {
         let bundles = try await PolicyPlanner(opa: Repository.opa, directory: directory).plan(policies)
         let evaluation = try await PolicyEvaluation(bundles: bundles)
         #expect(evaluation.policies.count == policies.count)
-        for (policy, scoped) in zip(policies, evaluation.policies) {
-            let name = policy.deletingPathExtension().lastPathComponent
-            #expect(scoped.nodeTypes == Self.libraryNodeTypes[name, default: ["FunctionCallExprSyntax"]], "\(name)")
-        }
     }
 }

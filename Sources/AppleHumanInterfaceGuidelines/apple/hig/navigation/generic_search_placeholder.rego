@@ -22,23 +22,14 @@ generic_search_placeholder_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
-  callee := call.children[0]
+  some call in input.functionCallExprs
   # `name(...)` or the modifier form `base.name(...)`
-  reference := {callee, callee.children[count(callee.children) - 1]}[_]
-  reference.type == "DeclReferenceExprSyntax"
-  search_field_call_names[reference.children[0].token.text]
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  labeled_argument := argument_list.children[_]
-  literal := labeled_argument.children[_]
-  literal.type == "StringLiteralExprSyntax"
-  segment_list := literal.children[_]
-  segment_list.type == "StringLiteralSegmentListSyntax"
-  segment := segment_list.children[_]
-  segment.type == "StringSegmentSyntax"
-  placeholder := segment.children[0].token.text
+  reference := called_reference(call)
+  search_field_call_names[reference.baseName]
+  some labeled_argument in call.arguments
+  literal := labeled_argument.expression.stringLiteralExpr
+  segment := literal.segments[_].stringSegment
+  placeholder := segment.content
   placeholder == "Search"
 }
 
@@ -49,23 +40,19 @@ generic_search_placeholder_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
-  callee := call.children[0]
+  some call in input.functionCallExprs
   # `name(...)` or the modifier form `base.name(...)`
-  reference := {callee, callee.children[count(callee.children) - 1]}[_]
-  reference.type == "DeclReferenceExprSyntax"
-  reference.children[0].token.text == "searchable"
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  labeled_argument := argument_list.children[_]
-  labeled_argument.children[0].token.text == "prompt"
-  literal := labeled_argument.children[_]
-  literal.type == "StringLiteralExprSyntax"
-  segment_list := literal.children[_]
-  segment_list.type == "StringLiteralSegmentListSyntax"
-  segment := segment_list.children[_]
-  segment.type == "StringSegmentSyntax"
-  placeholder := segment.children[0].token.text
+  reference := called_reference(call)
+  reference.baseName == "searchable"
+  some labeled_argument in call.arguments
+  labeled_argument.label == "prompt"
+  literal := labeled_argument.expression.stringLiteralExpr
+  segment := literal.segments[_].stringSegment
+  placeholder := segment.content
   placeholder == "Search"
 }
+
+# The name a call calls: `Text` in `Text("…")`, `help` in `.help("…")`.
+called_reference(call) := call.calledExpression.declReferenceExpr
+
+called_reference(call) := call.calledExpression.memberAccessExpr.declName

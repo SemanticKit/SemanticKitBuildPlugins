@@ -10,14 +10,11 @@ decision := {
 }
 
 warnings := [warning |
-  call := input
-  call.type == "FunctionCallExprSyntax"
+  some call in input.functionCallExprs
 
-  callee := call.children[0]
   # `name(...)` or the modifier form `base.name(...)`
-  reference := {callee, callee.children[count(callee.children) - 1]}[_]
-  reference.type == "DeclReferenceExprSyntax"
-  reference.children[0].token.text == "keyboardShortcut"
+  reference := called_reference(call)
+  reference.baseName == "keyboardShortcut"
 
   warning := {
     "rule_id": "apple.hig.inputs.review_custom_keyboard_shortcut",
@@ -27,3 +24,8 @@ warnings := [warning |
     "severity": "warning",
   }
 ]
+
+# The name a call calls: `Text` in `Text("…")`, `help` in `.help("…")`.
+called_reference(call) := call.calledExpression.declReferenceExpr
+
+called_reference(call) := call.calledExpression.memberAccessExpr.declName

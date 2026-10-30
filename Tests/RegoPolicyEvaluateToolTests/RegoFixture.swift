@@ -1,14 +1,15 @@
 import AST
 import Foundation
 
-/// A node, or list of nodes, that a Rego test gives its policy as `input`,
-/// with the Swift it was parsed from.
+/// The `input`, or list of inputs, that a Rego test gives its policy, with
+/// the Swift each was parsed from.
 ///
-/// Each fixture in `Tests/Rego` follows one comment per node:
+/// Each fixture in `Tests/Rego` follows one comment per input, the Swift
+/// placed at a line and column of an otherwise empty file:
 ///
 /// ```rego
 /// # Parser output for `Button("OK")` at 22:9.
-/// some_test_node := {"type": "FunctionCallExprSyntax", ...}
+/// some_test_node := {"functionCallExprs": [...], ...}
 /// ```
 struct RegoFixture: CustomStringConvertible {
     struct Origin {

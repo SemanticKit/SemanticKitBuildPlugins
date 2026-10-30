@@ -5,16 +5,19 @@ import Foundation
 /// ```text
 /// RegoPolicyEvaluateTool plan --opa <opa> --plans <dir> --record <file.swift> --policy <file.rego>...
 /// RegoPolicyEvaluateTool evaluate --plans <dir> --record <file.swift> --source <file.swift>...
+/// RegoPolicyEvaluateTool input --source <file.swift>
 /// ```
 ///
 /// `plan` plans each policy on its own with `opa build --target plan` into
-/// `<dir>`. `evaluate` gives each syntax node of each source file, as
-/// `input`, to the `decision` of every planned policy that can match a node
-/// of its type, so a policy matches the node it describes
-/// (`input.type == "FunctionCallExprSyntax"`, `input.children[0]`, ...).
-/// Each finding prints as a build diagnostic; a `deny` finding exits with
-/// status 1. `--record` names a Swift file that gets a one-line comment, the
-/// output SwiftPM tracks; it is rewritten only when the line changes.
+/// `<dir>`. `evaluate` gives each source file, as ``SyntaxInput``, to the
+/// `decision` of every planned policy, which reads the nodes it describes by
+/// their swift-syntax properties (`some call in input.functionCallExprs`,
+/// `call.calledExpression.declReferenceExpr.baseName`, ...). Each finding
+/// prints as a build diagnostic; a `deny` finding exits with status 1.
+/// `--record` names a Swift file that gets a one-line comment, the output
+/// SwiftPM tracks; it is rewritten only when the line changes. `input`
+/// prints the `input` a policy gets for a file as JSON, for writing policies
+/// and their tests.
 @main
 struct RegoPolicyEvaluateTool {
     static func main() async {
@@ -38,13 +41,18 @@ struct RegoPolicyEvaluateTool {
         let usage = """
             usage: RegoPolicyEvaluateTool plan --opa <opa> --plans <dir> --record <file.swift> --policy <file.rego>...
                    RegoPolicyEvaluateTool evaluate --plans <dir> --record <file.swift> --source <file.swift>...
+                   RegoPolicyEvaluateTool input --source <file.swift>
             """
-        guard let command = arguments.first, ["plan", "evaluate"].contains(command) else {
+        guard let command = arguments.first, ["plan", "evaluate", "input"].contains(command) else {
             return failure(usage, status: 2)
         }
         var options: [String: [String]] = [:]
         var remaining = arguments.dropFirst().makeIterator()
-        let names = command == "plan" ? ["--opa", "--plans", "--record", "--policy"] : ["--plans", "--record", "--source"]
+        let names = switch command {
+        case "plan": ["--opa", "--plans", "--record", "--policy"]
+        case "evaluate": ["--plans", "--record", "--source"]
+        default: ["--source"]
+        }
         while let name = remaining.next() {
             guard names.contains(name) else {
                 return failure("unknown argument: \(name)\n\(usage)", status: 2)
@@ -53,6 +61,18 @@ struct RegoPolicyEvaluateTool {
                 return failure("missing value for \(name)", status: 2)
             }
             options[name, default: []].append(value)
+        }
+        if command == "input" {
+            guard let source = options["--source"]?.last else { return failure(usage, status: 2) }
+            do {
+                let encoder = JSONEncoder()
+                encoder.outputFormatting = [.sortedKeys, .withoutEscapingSlashes]
+                let input = try SyntaxInput(contentsOf: URL(fileURLWithPath: source)).value
+                output(String(decoding: try encoder.encode(input), as: UTF8.self))
+                return 0
+            } catch {
+                return failure("error: \(error)", status: 1)
+            }
         }
         guard let plans = options["--plans"]?.last.map({ URL(fileURLWithPath: $0, isDirectory: true) }),
               let record = options["--record"]?.last.map({ URL(fileURLWithPath: $0) })

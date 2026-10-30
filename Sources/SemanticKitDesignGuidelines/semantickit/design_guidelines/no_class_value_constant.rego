@@ -21,17 +21,12 @@ denial_set contains {
   "column": access.range.start.column,
   "severity": "error",
 } if {
-  access := input
-  access.type == "MemberAccessExprSyntax"
-  regex.match(`^[A-Z]`, reference_name(access.children[0]))
-  name := access.children[count(access.children) - 1]
-  name.type == "DeclReferenceExprSyntax"
-  regex.match(`^[a-z][A-Za-z0-9]*Class$`, name.children[0].token.text)
+  some access in input.memberAccessExprs
+  regex.match(`^[A-Z]`, reference_name(access.base))
+  regex.match(`^[a-z][A-Za-z0-9]*Class$`, access.declName.baseName)
 }
 
 # `Foaf`, `Vocabularies.Foaf`
-reference_name(reference) := reference.children[0].token.text if reference.type == "DeclReferenceExprSyntax"
+reference_name(expression) := expression.declReferenceExpr.baseName
 
-reference_name(reference) := reference.children[count(reference.children) - 1].children[0].token.text if {
-  reference.type == "MemberAccessExprSyntax"
-}
+reference_name(expression) := expression.memberAccessExpr.declName.baseName

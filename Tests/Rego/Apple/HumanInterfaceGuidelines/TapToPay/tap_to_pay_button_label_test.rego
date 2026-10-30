@@ -49,211 +49,23 @@ test_does_not_warn_for_unrelated_button_string_swift_syntax if {
 }
 
 # Parser output for `Button("Start Tap to Pay", action: acceptPayment)` at 24:9.
-warns_for_nonstandard_tap_to_pay_button_label_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 24, "column": 9}, "end": {"line": 24, "column": 58}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 24, "column": 9}, "end": {"line": 24, "column": 15}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 9}, "end": {"line": 24, "column": 15}}, "token": {"kind": "identifier", "text": "Button"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 15}, "end": {"line": 24, "column": 16}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 24, "column": 16}, "end": {"line": 24, "column": 57}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 24, "column": 16}, "end": {"line": 24, "column": 35}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 24, "column": 16}, "end": {"line": 24, "column": 34}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 16}, "end": {"line": 24, "column": 17}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 24, "column": 17}, "end": {"line": 24, "column": 33}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 24, "column": 17}, "end": {"line": 24, "column": 33}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 17}, "end": {"line": 24, "column": 33}}, "token": {"kind": "stringSegment", "text": "Start Tap to Pay"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 33}, "end": {"line": 24, "column": 34}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 34}, "end": {"line": 24, "column": 35}}, "token": {"kind": "comma", "text": ","}, "children": []},
-    ]},
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 24, "column": 36}, "end": {"line": 24, "column": 57}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 36}, "end": {"line": 24, "column": 42}}, "token": {"kind": "identifier", "text": "action"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 42}, "end": {"line": 24, "column": 43}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 24, "column": 44}, "end": {"line": 24, "column": 57}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 44}, "end": {"line": 24, "column": 57}}, "token": {"kind": "identifier", "text": "acceptPayment"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 57}, "end": {"line": 24, "column": 58}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 24, "column": 58}, "end": {"line": 24, "column": 58}}, "children": []},
-]}
+warns_for_nonstandard_tap_to_pay_button_label_swift_syntax_node := {"declReferenceExprs": [{"baseName": "Button", "range": {"end": {"column": 15, "line": 24}, "start": {"column": 9, "line": 24}}}, {"baseName": "acceptPayment", "range": {"end": {"column": 57, "line": 24}, "start": {"column": 44, "line": 24}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 34, "line": 24}, "start": {"column": 16, "line": 24}}, "segments": [{"stringSegment": {"content": "Start Tap to Pay", "range": {"end": {"column": 33, "line": 24}, "start": {"column": 17, "line": 24}}}}]}}, "range": {"end": {"column": 35, "line": 24}, "start": {"column": 16, "line": 24}}}, {"expression": {"declReferenceExpr": {"baseName": "acceptPayment", "range": {"end": {"column": 57, "line": 24}, "start": {"column": 44, "line": 24}}}}, "label": "action", "range": {"end": {"column": 57, "line": 24}, "start": {"column": 36, "line": 24}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Button", "range": {"end": {"column": 15, "line": 24}, "start": {"column": 9, "line": 24}}}}, "range": {"end": {"column": 58, "line": 24}, "start": {"column": 9, "line": 24}}}], "stringLiteralExprs": [{"range": {"end": {"column": 34, "line": 24}, "start": {"column": 16, "line": 24}}, "segments": [{"stringSegment": {"content": "Start Tap to Pay", "range": {"end": {"column": 33, "line": 24}, "start": {"column": 17, "line": 24}}}}]}]}
 
 # Parser output for `Button("Tap to pay on iPhone", action: acceptPayment)` at 31:9.
-warns_for_tap_to_pay_case_variant_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 31, "column": 9}, "end": {"line": 31, "column": 62}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 31, "column": 9}, "end": {"line": 31, "column": 15}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 9}, "end": {"line": 31, "column": 15}}, "token": {"kind": "identifier", "text": "Button"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 15}, "end": {"line": 31, "column": 16}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 31, "column": 16}, "end": {"line": 31, "column": 61}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 31, "column": 16}, "end": {"line": 31, "column": 39}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 31, "column": 16}, "end": {"line": 31, "column": 38}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 16}, "end": {"line": 31, "column": 17}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 31, "column": 17}, "end": {"line": 31, "column": 37}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 31, "column": 17}, "end": {"line": 31, "column": 37}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 17}, "end": {"line": 31, "column": 37}}, "token": {"kind": "stringSegment", "text": "Tap to pay on iPhone"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 37}, "end": {"line": 31, "column": 38}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 38}, "end": {"line": 31, "column": 39}}, "token": {"kind": "comma", "text": ","}, "children": []},
-    ]},
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 31, "column": 40}, "end": {"line": 31, "column": 61}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 40}, "end": {"line": 31, "column": 46}}, "token": {"kind": "identifier", "text": "action"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 46}, "end": {"line": 31, "column": 47}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 31, "column": 48}, "end": {"line": 31, "column": 61}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 48}, "end": {"line": 31, "column": 61}}, "token": {"kind": "identifier", "text": "acceptPayment"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 61}, "end": {"line": 31, "column": 62}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 31, "column": 62}, "end": {"line": 31, "column": 62}}, "children": []},
-]}
+warns_for_tap_to_pay_case_variant_swift_syntax_node := {"declReferenceExprs": [{"baseName": "Button", "range": {"end": {"column": 15, "line": 31}, "start": {"column": 9, "line": 31}}}, {"baseName": "acceptPayment", "range": {"end": {"column": 61, "line": 31}, "start": {"column": 48, "line": 31}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 38, "line": 31}, "start": {"column": 16, "line": 31}}, "segments": [{"stringSegment": {"content": "Tap to pay on iPhone", "range": {"end": {"column": 37, "line": 31}, "start": {"column": 17, "line": 31}}}}]}}, "range": {"end": {"column": 39, "line": 31}, "start": {"column": 16, "line": 31}}}, {"expression": {"declReferenceExpr": {"baseName": "acceptPayment", "range": {"end": {"column": 61, "line": 31}, "start": {"column": 48, "line": 31}}}}, "label": "action", "range": {"end": {"column": 61, "line": 31}, "start": {"column": 40, "line": 31}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Button", "range": {"end": {"column": 15, "line": 31}, "start": {"column": 9, "line": 31}}}}, "range": {"end": {"column": 62, "line": 31}, "start": {"column": 9, "line": 31}}}], "stringLiteralExprs": [{"range": {"end": {"column": 38, "line": 31}, "start": {"column": 16, "line": 31}}, "segments": [{"stringSegment": {"content": "Tap to pay on iPhone", "range": {"end": {"column": 37, "line": 31}, "start": {"column": 17, "line": 31}}}}]}]}
 
 # Parser output for `Button("Apple Tap to Pay", action: acceptPayment)` at 36:9.
-warns_for_apple_tap_to_pay_label_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 36, "column": 9}, "end": {"line": 36, "column": 58}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 36, "column": 9}, "end": {"line": 36, "column": 15}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 36, "column": 9}, "end": {"line": 36, "column": 15}}, "token": {"kind": "identifier", "text": "Button"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 36, "column": 15}, "end": {"line": 36, "column": 16}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 36, "column": 16}, "end": {"line": 36, "column": 57}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 36, "column": 16}, "end": {"line": 36, "column": 35}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 36, "column": 16}, "end": {"line": 36, "column": 34}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 36, "column": 16}, "end": {"line": 36, "column": 17}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 36, "column": 17}, "end": {"line": 36, "column": 33}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 36, "column": 17}, "end": {"line": 36, "column": 33}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 36, "column": 17}, "end": {"line": 36, "column": 33}}, "token": {"kind": "stringSegment", "text": "Apple Tap to Pay"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 36, "column": 33}, "end": {"line": 36, "column": 34}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 36, "column": 34}, "end": {"line": 36, "column": 35}}, "token": {"kind": "comma", "text": ","}, "children": []},
-    ]},
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 36, "column": 36}, "end": {"line": 36, "column": 57}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 36, "column": 36}, "end": {"line": 36, "column": 42}}, "token": {"kind": "identifier", "text": "action"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 36, "column": 42}, "end": {"line": 36, "column": 43}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 36, "column": 44}, "end": {"line": 36, "column": 57}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 36, "column": 44}, "end": {"line": 36, "column": 57}}, "token": {"kind": "identifier", "text": "acceptPayment"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 36, "column": 57}, "end": {"line": 36, "column": 58}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 36, "column": 58}, "end": {"line": 36, "column": 58}}, "children": []},
-]}
+warns_for_apple_tap_to_pay_label_swift_syntax_node := {"declReferenceExprs": [{"baseName": "Button", "range": {"end": {"column": 15, "line": 36}, "start": {"column": 9, "line": 36}}}, {"baseName": "acceptPayment", "range": {"end": {"column": 57, "line": 36}, "start": {"column": 44, "line": 36}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 34, "line": 36}, "start": {"column": 16, "line": 36}}, "segments": [{"stringSegment": {"content": "Apple Tap to Pay", "range": {"end": {"column": 33, "line": 36}, "start": {"column": 17, "line": 36}}}}]}}, "range": {"end": {"column": 35, "line": 36}, "start": {"column": 16, "line": 36}}}, {"expression": {"declReferenceExpr": {"baseName": "acceptPayment", "range": {"end": {"column": 57, "line": 36}, "start": {"column": 44, "line": 36}}}}, "label": "action", "range": {"end": {"column": 57, "line": 36}, "start": {"column": 36, "line": 36}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Button", "range": {"end": {"column": 15, "line": 36}, "start": {"column": 9, "line": 36}}}}, "range": {"end": {"column": 58, "line": 36}, "start": {"column": 9, "line": 36}}}], "stringLiteralExprs": [{"range": {"end": {"column": 34, "line": 36}, "start": {"column": 16, "line": 36}}, "segments": [{"stringSegment": {"content": "Apple Tap to Pay", "range": {"end": {"column": 33, "line": 36}, "start": {"column": 17, "line": 36}}}}]}]}
 
 # Parser output for `Button("Tap to Pay", action: acceptPayment)` at 39:9.
 # Parser output for `Button("Tap to Pay on iPhone", action: acceptPayment)` at 40:9.
 does_not_warn_for_hig_tap_to_pay_button_labels_nodes := [
-  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 39, "column": 9}, "end": {"line": 39, "column": 52}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 39, "column": 9}, "end": {"line": 39, "column": 15}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 39, "column": 9}, "end": {"line": 39, "column": 15}}, "token": {"kind": "identifier", "text": "Button"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 39, "column": 15}, "end": {"line": 39, "column": 16}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 39, "column": 16}, "end": {"line": 39, "column": 51}}, "children": [
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 39, "column": 16}, "end": {"line": 39, "column": 29}}, "children": [
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 39, "column": 16}, "end": {"line": 39, "column": 28}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 39, "column": 16}, "end": {"line": 39, "column": 17}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 39, "column": 17}, "end": {"line": 39, "column": 27}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 39, "column": 17}, "end": {"line": 39, "column": 27}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 39, "column": 17}, "end": {"line": 39, "column": 27}}, "token": {"kind": "stringSegment", "text": "Tap to Pay"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 39, "column": 27}, "end": {"line": 39, "column": 28}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 39, "column": 28}, "end": {"line": 39, "column": 29}}, "token": {"kind": "comma", "text": ","}, "children": []},
-      ]},
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 39, "column": 30}, "end": {"line": 39, "column": 51}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 39, "column": 30}, "end": {"line": 39, "column": 36}}, "token": {"kind": "identifier", "text": "action"}, "children": []},
-        {"type": "TokenSyntax", "range": {"start": {"line": 39, "column": 36}, "end": {"line": 39, "column": 37}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-        {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 39, "column": 38}, "end": {"line": 39, "column": 51}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 39, "column": 38}, "end": {"line": 39, "column": 51}}, "token": {"kind": "identifier", "text": "acceptPayment"}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 39, "column": 51}, "end": {"line": 39, "column": 52}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 39, "column": 52}, "end": {"line": 39, "column": 52}}, "children": []},
-  ]},
-  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 40, "column": 9}, "end": {"line": 40, "column": 62}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 40, "column": 9}, "end": {"line": 40, "column": 15}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 40, "column": 9}, "end": {"line": 40, "column": 15}}, "token": {"kind": "identifier", "text": "Button"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 40, "column": 15}, "end": {"line": 40, "column": 16}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 40, "column": 16}, "end": {"line": 40, "column": 61}}, "children": [
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 40, "column": 16}, "end": {"line": 40, "column": 39}}, "children": [
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 40, "column": 16}, "end": {"line": 40, "column": 38}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 40, "column": 16}, "end": {"line": 40, "column": 17}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 40, "column": 17}, "end": {"line": 40, "column": 37}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 40, "column": 17}, "end": {"line": 40, "column": 37}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 40, "column": 17}, "end": {"line": 40, "column": 37}}, "token": {"kind": "stringSegment", "text": "Tap to Pay on iPhone"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 40, "column": 37}, "end": {"line": 40, "column": 38}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 40, "column": 38}, "end": {"line": 40, "column": 39}}, "token": {"kind": "comma", "text": ","}, "children": []},
-      ]},
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 40, "column": 40}, "end": {"line": 40, "column": 61}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 40, "column": 40}, "end": {"line": 40, "column": 46}}, "token": {"kind": "identifier", "text": "action"}, "children": []},
-        {"type": "TokenSyntax", "range": {"start": {"line": 40, "column": 46}, "end": {"line": 40, "column": 47}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-        {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 40, "column": 48}, "end": {"line": 40, "column": 61}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 40, "column": 48}, "end": {"line": 40, "column": 61}}, "token": {"kind": "identifier", "text": "acceptPayment"}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 40, "column": 61}, "end": {"line": 40, "column": 62}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 40, "column": 62}, "end": {"line": 40, "column": 62}}, "children": []},
-  ]},
+  {"declReferenceExprs": [{"baseName": "Button", "range": {"end": {"column": 15, "line": 39}, "start": {"column": 9, "line": 39}}}, {"baseName": "acceptPayment", "range": {"end": {"column": 51, "line": 39}, "start": {"column": 38, "line": 39}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 28, "line": 39}, "start": {"column": 16, "line": 39}}, "segments": [{"stringSegment": {"content": "Tap to Pay", "range": {"end": {"column": 27, "line": 39}, "start": {"column": 17, "line": 39}}}}]}}, "range": {"end": {"column": 29, "line": 39}, "start": {"column": 16, "line": 39}}}, {"expression": {"declReferenceExpr": {"baseName": "acceptPayment", "range": {"end": {"column": 51, "line": 39}, "start": {"column": 38, "line": 39}}}}, "label": "action", "range": {"end": {"column": 51, "line": 39}, "start": {"column": 30, "line": 39}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Button", "range": {"end": {"column": 15, "line": 39}, "start": {"column": 9, "line": 39}}}}, "range": {"end": {"column": 52, "line": 39}, "start": {"column": 9, "line": 39}}}], "stringLiteralExprs": [{"range": {"end": {"column": 28, "line": 39}, "start": {"column": 16, "line": 39}}, "segments": [{"stringSegment": {"content": "Tap to Pay", "range": {"end": {"column": 27, "line": 39}, "start": {"column": 17, "line": 39}}}}]}]},
+  {"declReferenceExprs": [{"baseName": "Button", "range": {"end": {"column": 15, "line": 40}, "start": {"column": 9, "line": 40}}}, {"baseName": "acceptPayment", "range": {"end": {"column": 61, "line": 40}, "start": {"column": 48, "line": 40}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 38, "line": 40}, "start": {"column": 16, "line": 40}}, "segments": [{"stringSegment": {"content": "Tap to Pay on iPhone", "range": {"end": {"column": 37, "line": 40}, "start": {"column": 17, "line": 40}}}}]}}, "range": {"end": {"column": 39, "line": 40}, "start": {"column": 16, "line": 40}}}, {"expression": {"declReferenceExpr": {"baseName": "acceptPayment", "range": {"end": {"column": 61, "line": 40}, "start": {"column": 48, "line": 40}}}}, "label": "action", "range": {"end": {"column": 61, "line": 40}, "start": {"column": 40, "line": 40}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Button", "range": {"end": {"column": 15, "line": 40}, "start": {"column": 9, "line": 40}}}}, "range": {"end": {"column": 62, "line": 40}, "start": {"column": 9, "line": 40}}}], "stringLiteralExprs": [{"range": {"end": {"column": 38, "line": 40}, "start": {"column": 16, "line": 40}}, "segments": [{"stringSegment": {"content": "Tap to Pay on iPhone", "range": {"end": {"column": 37, "line": 40}, "start": {"column": 17, "line": 40}}}}]}]},
 ]
 
 # Parser output for `Text("Start Tap to Pay")` at 49:9.
-does_not_warn_for_non_button_tap_to_pay_copy_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 49, "column": 9}, "end": {"line": 49, "column": 33}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 49, "column": 9}, "end": {"line": 49, "column": 13}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 49, "column": 9}, "end": {"line": 49, "column": 13}}, "token": {"kind": "identifier", "text": "Text"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 49, "column": 13}, "end": {"line": 49, "column": 14}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 49, "column": 14}, "end": {"line": 49, "column": 32}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 49, "column": 14}, "end": {"line": 49, "column": 32}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 49, "column": 14}, "end": {"line": 49, "column": 32}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 49, "column": 14}, "end": {"line": 49, "column": 15}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 49, "column": 15}, "end": {"line": 49, "column": 31}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 49, "column": 15}, "end": {"line": 49, "column": 31}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 49, "column": 15}, "end": {"line": 49, "column": 31}}, "token": {"kind": "stringSegment", "text": "Start Tap to Pay"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 49, "column": 31}, "end": {"line": 49, "column": 32}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 49, "column": 32}, "end": {"line": 49, "column": 33}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 49, "column": 33}, "end": {"line": 49, "column": 33}}, "children": []},
-]}
+does_not_warn_for_non_button_tap_to_pay_copy_swift_syntax_node := {"declReferenceExprs": [{"baseName": "Text", "range": {"end": {"column": 13, "line": 49}, "start": {"column": 9, "line": 49}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 32, "line": 49}, "start": {"column": 14, "line": 49}}, "segments": [{"stringSegment": {"content": "Start Tap to Pay", "range": {"end": {"column": 31, "line": 49}, "start": {"column": 15, "line": 49}}}}]}}, "range": {"end": {"column": 32, "line": 49}, "start": {"column": 14, "line": 49}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Text", "range": {"end": {"column": 13, "line": 49}, "start": {"column": 9, "line": 49}}}}, "range": {"end": {"column": 33, "line": 49}, "start": {"column": 9, "line": 49}}}], "stringLiteralExprs": [{"range": {"end": {"column": 32, "line": 49}, "start": {"column": 14, "line": 49}}, "segments": [{"stringSegment": {"content": "Start Tap to Pay", "range": {"end": {"column": 31, "line": 49}, "start": {"column": 15, "line": 49}}}}]}]}
 
 # Parser output for `Button("Pay with card", action: payWithCard)` at 58:9.
-does_not_warn_for_unrelated_button_string_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 58, "column": 9}, "end": {"line": 58, "column": 53}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 58, "column": 9}, "end": {"line": 58, "column": 15}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 58, "column": 9}, "end": {"line": 58, "column": 15}}, "token": {"kind": "identifier", "text": "Button"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 58, "column": 15}, "end": {"line": 58, "column": 16}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 58, "column": 16}, "end": {"line": 58, "column": 52}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 58, "column": 16}, "end": {"line": 58, "column": 32}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 58, "column": 16}, "end": {"line": 58, "column": 31}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 58, "column": 16}, "end": {"line": 58, "column": 17}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 58, "column": 17}, "end": {"line": 58, "column": 30}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 58, "column": 17}, "end": {"line": 58, "column": 30}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 58, "column": 17}, "end": {"line": 58, "column": 30}}, "token": {"kind": "stringSegment", "text": "Pay with card"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 58, "column": 30}, "end": {"line": 58, "column": 31}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 58, "column": 31}, "end": {"line": 58, "column": 32}}, "token": {"kind": "comma", "text": ","}, "children": []},
-    ]},
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 58, "column": 33}, "end": {"line": 58, "column": 52}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 58, "column": 33}, "end": {"line": 58, "column": 39}}, "token": {"kind": "identifier", "text": "action"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 58, "column": 39}, "end": {"line": 58, "column": 40}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 58, "column": 41}, "end": {"line": 58, "column": 52}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 58, "column": 41}, "end": {"line": 58, "column": 52}}, "token": {"kind": "identifier", "text": "payWithCard"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 58, "column": 52}, "end": {"line": 58, "column": 53}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 58, "column": 53}, "end": {"line": 58, "column": 53}}, "children": []},
-]}
+does_not_warn_for_unrelated_button_string_swift_syntax_node := {"declReferenceExprs": [{"baseName": "Button", "range": {"end": {"column": 15, "line": 58}, "start": {"column": 9, "line": 58}}}, {"baseName": "payWithCard", "range": {"end": {"column": 52, "line": 58}, "start": {"column": 41, "line": 58}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 31, "line": 58}, "start": {"column": 16, "line": 58}}, "segments": [{"stringSegment": {"content": "Pay with card", "range": {"end": {"column": 30, "line": 58}, "start": {"column": 17, "line": 58}}}}]}}, "range": {"end": {"column": 32, "line": 58}, "start": {"column": 16, "line": 58}}}, {"expression": {"declReferenceExpr": {"baseName": "payWithCard", "range": {"end": {"column": 52, "line": 58}, "start": {"column": 41, "line": 58}}}}, "label": "action", "range": {"end": {"column": 52, "line": 58}, "start": {"column": 33, "line": 58}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Button", "range": {"end": {"column": 15, "line": 58}, "start": {"column": 9, "line": 58}}}}, "range": {"end": {"column": 53, "line": 58}, "start": {"column": 9, "line": 58}}}], "stringLiteralExprs": [{"range": {"end": {"column": 31, "line": 58}, "start": {"column": 16, "line": 58}}, "segments": [{"stringSegment": {"content": "Pay with card", "range": {"end": {"column": 30, "line": 58}, "start": {"column": 17, "line": 58}}}}]}]}

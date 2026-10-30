@@ -18,35 +18,7 @@ test_does_not_warn_for_progress_view_with_label if {
 }
 
 # Parser output for `ProgressView()` at 14:9.
-warns_for_progress_view_with_no_arguments_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 14, "column": 9}, "end": {"line": 14, "column": 23}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 14, "column": 9}, "end": {"line": 14, "column": 21}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 9}, "end": {"line": 14, "column": 21}}, "token": {"kind": "identifier", "text": "ProgressView"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 21}, "end": {"line": 14, "column": 22}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 14, "column": 22}, "end": {"line": 14, "column": 22}}, "children": []},
-  {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 22}, "end": {"line": 14, "column": 23}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 14, "column": 23}, "end": {"line": 14, "column": 23}}, "children": []},
-]}
+warns_for_progress_view_with_no_arguments_node := {"declReferenceExprs": [{"baseName": "ProgressView", "range": {"end": {"column": 21, "line": 14}, "start": {"column": 9, "line": 14}}}], "functionCallExprs": [{"calledExpression": {"declReferenceExpr": {"baseName": "ProgressView", "range": {"end": {"column": 21, "line": 14}, "start": {"column": 9, "line": 14}}}}, "range": {"end": {"column": 23, "line": 14}, "start": {"column": 9, "line": 14}}}]}
 
 # Parser output for `ProgressView("Loading route")` at 22:9.
-does_not_warn_for_progress_view_with_label_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 22, "column": 9}, "end": {"line": 22, "column": 38}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 22, "column": 9}, "end": {"line": 22, "column": 21}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 9}, "end": {"line": 22, "column": 21}}, "token": {"kind": "identifier", "text": "ProgressView"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 21}, "end": {"line": 22, "column": 22}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 22, "column": 22}, "end": {"line": 22, "column": 37}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 22, "column": 22}, "end": {"line": 22, "column": 37}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 22, "column": 22}, "end": {"line": 22, "column": 37}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 22}, "end": {"line": 22, "column": 23}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 22, "column": 23}, "end": {"line": 22, "column": 36}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 22, "column": 23}, "end": {"line": 22, "column": 36}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 23}, "end": {"line": 22, "column": 36}}, "token": {"kind": "stringSegment", "text": "Loading route"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 36}, "end": {"line": 22, "column": 37}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 37}, "end": {"line": 22, "column": 38}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 22, "column": 38}, "end": {"line": 22, "column": 38}}, "children": []},
-]}
+does_not_warn_for_progress_view_with_label_node := {"declReferenceExprs": [{"baseName": "ProgressView", "range": {"end": {"column": 21, "line": 22}, "start": {"column": 9, "line": 22}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 37, "line": 22}, "start": {"column": 22, "line": 22}}, "segments": [{"stringSegment": {"content": "Loading route", "range": {"end": {"column": 36, "line": 22}, "start": {"column": 23, "line": 22}}}}]}}, "range": {"end": {"column": 37, "line": 22}, "start": {"column": 22, "line": 22}}}], "calledExpression": {"declReferenceExpr": {"baseName": "ProgressView", "range": {"end": {"column": 21, "line": 22}, "start": {"column": 9, "line": 22}}}}, "range": {"end": {"column": 38, "line": 22}, "start": {"column": 9, "line": 22}}}], "stringLiteralExprs": [{"range": {"end": {"column": 37, "line": 22}, "start": {"column": 22, "line": 22}}, "segments": [{"stringSegment": {"content": "Loading route", "range": {"end": {"column": 36, "line": 22}, "start": {"column": 23, "line": 22}}}}]}]}

@@ -18,53 +18,7 @@ test_does_not_warn_for_accessibility_label_swift_syntax if {
 }
 
 # Parser output for `decoration.accessibilityHidden(true)` at 18:10.
-warns_for_accessibility_hidden_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 18, "column": 10}, "end": {"line": 18, "column": 46}}, "children": [
-  {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 18, "column": 10}, "end": {"line": 18, "column": 40}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 18, "column": 10}, "end": {"line": 18, "column": 20}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 10}, "end": {"line": 18, "column": 20}}, "token": {"kind": "identifier", "text": "decoration"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 20}, "end": {"line": 18, "column": 21}}, "token": {"kind": "period", "text": "."}, "children": []},
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 18, "column": 21}, "end": {"line": 18, "column": 40}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 21}, "end": {"line": 18, "column": 40}}, "token": {"kind": "identifier", "text": "accessibilityHidden"}, "children": []},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 40}, "end": {"line": 18, "column": 41}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 18, "column": 41}, "end": {"line": 18, "column": 45}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 18, "column": 41}, "end": {"line": 18, "column": 45}}, "children": [
-      {"type": "BooleanLiteralExprSyntax", "range": {"start": {"line": 18, "column": 41}, "end": {"line": 18, "column": 45}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 41}, "end": {"line": 18, "column": 45}}, "token": {"kind": "keyword", "text": "true"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 45}, "end": {"line": 18, "column": 46}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 18, "column": 46}, "end": {"line": 18, "column": 46}}, "children": []},
-]}
+warns_for_accessibility_hidden_swift_syntax_node := {"declReferenceExprs": [{"baseName": "decoration", "range": {"end": {"column": 20, "line": 18}, "start": {"column": 10, "line": 18}}}, {"baseName": "accessibilityHidden", "range": {"end": {"column": 40, "line": 18}, "start": {"column": 21, "line": 18}}}], "functionCallExprs": [{"arguments": [{"expression": {"booleanLiteralExpr": {"literal": "true", "range": {"end": {"column": 45, "line": 18}, "start": {"column": 41, "line": 18}}}}, "range": {"end": {"column": 45, "line": 18}, "start": {"column": 41, "line": 18}}}], "calledExpression": {"memberAccessExpr": {"base": {"declReferenceExpr": {"baseName": "decoration", "range": {"end": {"column": 20, "line": 18}, "start": {"column": 10, "line": 18}}}}, "declName": {"baseName": "accessibilityHidden", "range": {"end": {"column": 40, "line": 18}, "start": {"column": 21, "line": 18}}}, "range": {"end": {"column": 40, "line": 18}, "start": {"column": 10, "line": 18}}}}, "range": {"end": {"column": 46, "line": 18}, "start": {"column": 10, "line": 18}}}], "memberAccessExprs": [{"base": {"declReferenceExpr": {"baseName": "decoration", "range": {"end": {"column": 20, "line": 18}, "start": {"column": 10, "line": 18}}}}, "declName": {"baseName": "accessibilityHidden", "range": {"end": {"column": 40, "line": 18}, "start": {"column": 21, "line": 18}}}, "range": {"end": {"column": 40, "line": 18}, "start": {"column": 10, "line": 18}}}]}
 
 # Parser output for `icon.accessibilityLabel("Route")` at 22:10.
-does_not_warn_for_accessibility_label_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 22, "column": 10}, "end": {"line": 22, "column": 42}}, "children": [
-  {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 22, "column": 10}, "end": {"line": 22, "column": 33}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 22, "column": 10}, "end": {"line": 22, "column": 14}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 10}, "end": {"line": 22, "column": 14}}, "token": {"kind": "identifier", "text": "icon"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 14}, "end": {"line": 22, "column": 15}}, "token": {"kind": "period", "text": "."}, "children": []},
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 22, "column": 15}, "end": {"line": 22, "column": 33}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 15}, "end": {"line": 22, "column": 33}}, "token": {"kind": "identifier", "text": "accessibilityLabel"}, "children": []},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 33}, "end": {"line": 22, "column": 34}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 22, "column": 34}, "end": {"line": 22, "column": 41}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 22, "column": 34}, "end": {"line": 22, "column": 41}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 22, "column": 34}, "end": {"line": 22, "column": 41}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 34}, "end": {"line": 22, "column": 35}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 22, "column": 35}, "end": {"line": 22, "column": 40}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 22, "column": 35}, "end": {"line": 22, "column": 40}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 35}, "end": {"line": 22, "column": 40}}, "token": {"kind": "stringSegment", "text": "Route"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 40}, "end": {"line": 22, "column": 41}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 41}, "end": {"line": 22, "column": 42}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 22, "column": 42}, "end": {"line": 22, "column": 42}}, "children": []},
-]}
+does_not_warn_for_accessibility_label_swift_syntax_node := {"declReferenceExprs": [{"baseName": "icon", "range": {"end": {"column": 14, "line": 22}, "start": {"column": 10, "line": 22}}}, {"baseName": "accessibilityLabel", "range": {"end": {"column": 33, "line": 22}, "start": {"column": 15, "line": 22}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 41, "line": 22}, "start": {"column": 34, "line": 22}}, "segments": [{"stringSegment": {"content": "Route", "range": {"end": {"column": 40, "line": 22}, "start": {"column": 35, "line": 22}}}}]}}, "range": {"end": {"column": 41, "line": 22}, "start": {"column": 34, "line": 22}}}], "calledExpression": {"memberAccessExpr": {"base": {"declReferenceExpr": {"baseName": "icon", "range": {"end": {"column": 14, "line": 22}, "start": {"column": 10, "line": 22}}}}, "declName": {"baseName": "accessibilityLabel", "range": {"end": {"column": 33, "line": 22}, "start": {"column": 15, "line": 22}}}, "range": {"end": {"column": 33, "line": 22}, "start": {"column": 10, "line": 22}}}}, "range": {"end": {"column": 42, "line": 22}, "start": {"column": 10, "line": 22}}}], "memberAccessExprs": [{"base": {"declReferenceExpr": {"baseName": "icon", "range": {"end": {"column": 14, "line": 22}, "start": {"column": 10, "line": 22}}}}, "declName": {"baseName": "accessibilityLabel", "range": {"end": {"column": 33, "line": 22}, "start": {"column": 15, "line": 22}}}, "range": {"end": {"column": 33, "line": 22}, "start": {"column": 10, "line": 22}}}], "stringLiteralExprs": [{"range": {"end": {"column": 41, "line": 22}, "start": {"column": 34, "line": 22}}, "segments": [{"stringSegment": {"content": "Route", "range": {"end": {"column": 40, "line": 22}, "start": {"column": 35, "line": 22}}}}]}]}

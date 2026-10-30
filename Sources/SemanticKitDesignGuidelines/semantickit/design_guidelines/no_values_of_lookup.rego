@@ -17,46 +17,23 @@ message := "Do not read properties through values(of:); a property is read on th
 
 # `Cert.key.values(of: alice)`
 denial_set contains finding(call) if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
-  callee := call.children[0]
-  callee.type == "MemberAccessExprSyntax"
-  name := callee.children[count(callee.children) - 1]
-  name.type == "DeclReferenceExprSyntax"
-  name.children[0].token.text == "values"
-  some arguments in call.children
-  arguments.type == "LabeledExprListSyntax"
-  arguments.children[0].children[0].token.text == "of"
+  some call in input.functionCallExprs
+  call.calledExpression.memberAccessExpr.declName.baseName == "values"
+  call.arguments[0].label == "of"
 }
 
 # `values(of: alice)`: a bare call, on `self` or a free function
 denial_set contains finding(call) if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
-  callee := call.children[0]
-  callee.type == "DeclReferenceExprSyntax"
-  callee.children[0].token.text == "values"
-  some arguments in call.children
-  arguments.type == "LabeledExprListSyntax"
-  arguments.children[0].children[0].token.text == "of"
+  some call in input.functionCallExprs
+  call.calledExpression.declReferenceExpr.baseName == "values"
+  call.arguments[0].label == "of"
 }
 
 # `func values(of subject: …)`
 denial_set contains finding(decl) if {
-  decl := input
-  decl.type == "FunctionDeclSyntax"
-  some name in decl.children
-  name.token.kind == "identifier"
-  name.token.text == "values"
-  some signature in decl.children
-  signature.type == "FunctionSignatureSyntax"
-  some clause in signature.children
-  clause.type == "FunctionParameterClauseSyntax"
-  some list in clause.children
-  list.type == "FunctionParameterListSyntax"
-  some label in list.children[0].children
-  label.type == "TokenSyntax"
-  label.token.text == "of"
+  some decl in input.functionDecls
+  decl.name == "values"
+  decl.signature.parameterClause.parameters[0].firstName == "of"
 }
 
 finding(node) := {

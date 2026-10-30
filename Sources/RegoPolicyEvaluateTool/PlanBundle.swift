@@ -49,15 +49,6 @@ struct PlanBundle {
         return try PlanBundle(directory: directory)
     }
 
-    /// The node types the bundle's policies test `input.type` against.
-    var scope: PolicyScope {
-        get throws {
-            let scopes = try bundle.planFiles.map { try PolicyScope(plan: $0.data) }
-            guard !scopes.contains(where: { $0.nodeTypes == nil }) else { return PolicyScope(nodeTypes: nil) }
-            return PolicyScope(nodeTypes: scopes.reduce(into: Set<String>()) { $0.formUnion($1.nodeTypes ?? []) })
-        }
-    }
-
     /// The query of each plan whose entrypoint is a policy's `decision`
     /// rule, such as `data.apple.hig.color.hardcoded_color.decision`.
     var decisionQueries: [String] {

@@ -34,105 +34,13 @@ test_does_not_warn_for_non_help_call_with_long_copy if {
 }
 
 # Parser output for `help("Open route planning controls and show detailed guidance for every available route option")` at 31:14.
-warns_for_help_base_name_with_long_tooltip_copy_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 31, "column": 14}, "end": {"line": 31, "column": 110}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 31, "column": 14}, "end": {"line": 31, "column": 18}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 14}, "end": {"line": 31, "column": 18}}, "token": {"kind": "identifier", "text": "help"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 18}, "end": {"line": 31, "column": 19}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 31, "column": 19}, "end": {"line": 31, "column": 109}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 31, "column": 19}, "end": {"line": 31, "column": 109}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 31, "column": 19}, "end": {"line": 31, "column": 109}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 19}, "end": {"line": 31, "column": 20}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 31, "column": 20}, "end": {"line": 31, "column": 108}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 31, "column": 20}, "end": {"line": 31, "column": 108}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 20}, "end": {"line": 31, "column": 108}}, "token": {"kind": "stringSegment", "text": "Open route planning controls and show detailed guidance for every available route option"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 108}, "end": {"line": 31, "column": 109}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 109}, "end": {"line": 31, "column": 110}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 31, "column": 110}, "end": {"line": 31, "column": 110}}, "children": []},
-]}
+warns_for_help_base_name_with_long_tooltip_copy_node := {"declReferenceExprs": [{"baseName": "help", "range": {"end": {"column": 18, "line": 31}, "start": {"column": 14, "line": 31}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 109, "line": 31}, "start": {"column": 19, "line": 31}}, "segments": [{"stringSegment": {"content": "Open route planning controls and show detailed guidance for every available route option", "range": {"end": {"column": 108, "line": 31}, "start": {"column": 20, "line": 31}}}}]}}, "range": {"end": {"column": 109, "line": 31}, "start": {"column": 19, "line": 31}}}], "calledExpression": {"declReferenceExpr": {"baseName": "help", "range": {"end": {"column": 18, "line": 31}, "start": {"column": 14, "line": 31}}}}, "range": {"end": {"column": 110, "line": 31}, "start": {"column": 14, "line": 31}}}], "stringLiteralExprs": [{"range": {"end": {"column": 109, "line": 31}, "start": {"column": 19, "line": 31}}, "segments": [{"stringSegment": {"content": "Open route planning controls and show detailed guidance for every available route option", "range": {"end": {"column": 108, "line": 31}, "start": {"column": 20, "line": 31}}}}]}]}
 
 # Parser output for `routeButton.help("Review all routing controls and choose the setting that best matches the selected trip")` at 44:10.
-warns_for_help_member_name_with_long_tooltip_copy_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 44, "column": 10}, "end": {"line": 44, "column": 116}}, "children": [
-  {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 44, "column": 10}, "end": {"line": 44, "column": 26}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 44, "column": 10}, "end": {"line": 44, "column": 21}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 44, "column": 10}, "end": {"line": 44, "column": 21}}, "token": {"kind": "identifier", "text": "routeButton"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 44, "column": 21}, "end": {"line": 44, "column": 22}}, "token": {"kind": "period", "text": "."}, "children": []},
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 44, "column": 22}, "end": {"line": 44, "column": 26}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 44, "column": 22}, "end": {"line": 44, "column": 26}}, "token": {"kind": "identifier", "text": "help"}, "children": []},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 44, "column": 26}, "end": {"line": 44, "column": 27}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 44, "column": 27}, "end": {"line": 44, "column": 115}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 44, "column": 27}, "end": {"line": 44, "column": 115}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 44, "column": 27}, "end": {"line": 44, "column": 115}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 44, "column": 27}, "end": {"line": 44, "column": 28}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 44, "column": 28}, "end": {"line": 44, "column": 114}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 44, "column": 28}, "end": {"line": 44, "column": 114}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 44, "column": 28}, "end": {"line": 44, "column": 114}}, "token": {"kind": "stringSegment", "text": "Review all routing controls and choose the setting that best matches the selected trip"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 44, "column": 114}, "end": {"line": 44, "column": 115}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 44, "column": 115}, "end": {"line": 44, "column": 116}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 44, "column": 116}, "end": {"line": 44, "column": 116}}, "children": []},
-]}
+warns_for_help_member_name_with_long_tooltip_copy_node := {"declReferenceExprs": [{"baseName": "routeButton", "range": {"end": {"column": 21, "line": 44}, "start": {"column": 10, "line": 44}}}, {"baseName": "help", "range": {"end": {"column": 26, "line": 44}, "start": {"column": 22, "line": 44}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 115, "line": 44}, "start": {"column": 27, "line": 44}}, "segments": [{"stringSegment": {"content": "Review all routing controls and choose the setting that best matches the selected trip", "range": {"end": {"column": 114, "line": 44}, "start": {"column": 28, "line": 44}}}}]}}, "range": {"end": {"column": 115, "line": 44}, "start": {"column": 27, "line": 44}}}], "calledExpression": {"memberAccessExpr": {"base": {"declReferenceExpr": {"baseName": "routeButton", "range": {"end": {"column": 21, "line": 44}, "start": {"column": 10, "line": 44}}}}, "declName": {"baseName": "help", "range": {"end": {"column": 26, "line": 44}, "start": {"column": 22, "line": 44}}}, "range": {"end": {"column": 26, "line": 44}, "start": {"column": 10, "line": 44}}}}, "range": {"end": {"column": 116, "line": 44}, "start": {"column": 10, "line": 44}}}], "memberAccessExprs": [{"base": {"declReferenceExpr": {"baseName": "routeButton", "range": {"end": {"column": 21, "line": 44}, "start": {"column": 10, "line": 44}}}}, "declName": {"baseName": "help", "range": {"end": {"column": 26, "line": 44}, "start": {"column": 22, "line": 44}}}, "range": {"end": {"column": 26, "line": 44}, "start": {"column": 10, "line": 44}}}], "stringLiteralExprs": [{"range": {"end": {"column": 115, "line": 44}, "start": {"column": 27, "line": 44}}, "segments": [{"stringSegment": {"content": "Review all routing controls and choose the setting that best matches the selected trip", "range": {"end": {"column": 114, "line": 44}, "start": {"column": 28, "line": 44}}}}]}]}
 
 # Parser output for `routeButton.help("Show route options")` at 52:14.
-does_not_warn_for_help_call_with_short_tooltip_copy_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 52, "column": 14}, "end": {"line": 52, "column": 52}}, "children": [
-  {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 52, "column": 14}, "end": {"line": 52, "column": 30}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 52, "column": 14}, "end": {"line": 52, "column": 25}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 52, "column": 14}, "end": {"line": 52, "column": 25}}, "token": {"kind": "identifier", "text": "routeButton"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 52, "column": 25}, "end": {"line": 52, "column": 26}}, "token": {"kind": "period", "text": "."}, "children": []},
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 52, "column": 26}, "end": {"line": 52, "column": 30}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 52, "column": 26}, "end": {"line": 52, "column": 30}}, "token": {"kind": "identifier", "text": "help"}, "children": []},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 52, "column": 30}, "end": {"line": 52, "column": 31}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 52, "column": 31}, "end": {"line": 52, "column": 51}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 52, "column": 31}, "end": {"line": 52, "column": 51}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 52, "column": 31}, "end": {"line": 52, "column": 51}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 52, "column": 31}, "end": {"line": 52, "column": 32}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 52, "column": 32}, "end": {"line": 52, "column": 50}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 52, "column": 32}, "end": {"line": 52, "column": 50}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 52, "column": 32}, "end": {"line": 52, "column": 50}}, "token": {"kind": "stringSegment", "text": "Show route options"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 52, "column": 50}, "end": {"line": 52, "column": 51}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 52, "column": 51}, "end": {"line": 52, "column": 52}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 52, "column": 52}, "end": {"line": 52, "column": 52}}, "children": []},
-]}
+does_not_warn_for_help_call_with_short_tooltip_copy_node := {"declReferenceExprs": [{"baseName": "routeButton", "range": {"end": {"column": 25, "line": 52}, "start": {"column": 14, "line": 52}}}, {"baseName": "help", "range": {"end": {"column": 30, "line": 52}, "start": {"column": 26, "line": 52}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 51, "line": 52}, "start": {"column": 31, "line": 52}}, "segments": [{"stringSegment": {"content": "Show route options", "range": {"end": {"column": 50, "line": 52}, "start": {"column": 32, "line": 52}}}}]}}, "range": {"end": {"column": 51, "line": 52}, "start": {"column": 31, "line": 52}}}], "calledExpression": {"memberAccessExpr": {"base": {"declReferenceExpr": {"baseName": "routeButton", "range": {"end": {"column": 25, "line": 52}, "start": {"column": 14, "line": 52}}}}, "declName": {"baseName": "help", "range": {"end": {"column": 30, "line": 52}, "start": {"column": 26, "line": 52}}}, "range": {"end": {"column": 30, "line": 52}, "start": {"column": 14, "line": 52}}}}, "range": {"end": {"column": 52, "line": 52}, "start": {"column": 14, "line": 52}}}], "memberAccessExprs": [{"base": {"declReferenceExpr": {"baseName": "routeButton", "range": {"end": {"column": 25, "line": 52}, "start": {"column": 14, "line": 52}}}}, "declName": {"baseName": "help", "range": {"end": {"column": 30, "line": 52}, "start": {"column": 26, "line": 52}}}, "range": {"end": {"column": 30, "line": 52}, "start": {"column": 14, "line": 52}}}], "stringLiteralExprs": [{"range": {"end": {"column": 51, "line": 52}, "start": {"column": 31, "line": 52}}, "segments": [{"stringSegment": {"content": "Show route options", "range": {"end": {"column": 50, "line": 52}, "start": {"column": 32, "line": 52}}}}]}]}
 
 # Parser output for `Text("Open route planning controls and show detailed guidance for every available route option")` at 60:12.
-does_not_warn_for_non_help_call_with_long_copy_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 60, "column": 12}, "end": {"line": 60, "column": 108}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 60, "column": 12}, "end": {"line": 60, "column": 16}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 60, "column": 12}, "end": {"line": 60, "column": 16}}, "token": {"kind": "identifier", "text": "Text"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 60, "column": 16}, "end": {"line": 60, "column": 17}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 60, "column": 17}, "end": {"line": 60, "column": 107}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 60, "column": 17}, "end": {"line": 60, "column": 107}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 60, "column": 17}, "end": {"line": 60, "column": 107}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 60, "column": 17}, "end": {"line": 60, "column": 18}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 60, "column": 18}, "end": {"line": 60, "column": 106}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 60, "column": 18}, "end": {"line": 60, "column": 106}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 60, "column": 18}, "end": {"line": 60, "column": 106}}, "token": {"kind": "stringSegment", "text": "Open route planning controls and show detailed guidance for every available route option"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 60, "column": 106}, "end": {"line": 60, "column": 107}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 60, "column": 107}, "end": {"line": 60, "column": 108}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 60, "column": 108}, "end": {"line": 60, "column": 108}}, "children": []},
-]}
+does_not_warn_for_non_help_call_with_long_copy_node := {"declReferenceExprs": [{"baseName": "Text", "range": {"end": {"column": 16, "line": 60}, "start": {"column": 12, "line": 60}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 107, "line": 60}, "start": {"column": 17, "line": 60}}, "segments": [{"stringSegment": {"content": "Open route planning controls and show detailed guidance for every available route option", "range": {"end": {"column": 106, "line": 60}, "start": {"column": 18, "line": 60}}}}]}}, "range": {"end": {"column": 107, "line": 60}, "start": {"column": 17, "line": 60}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Text", "range": {"end": {"column": 16, "line": 60}, "start": {"column": 12, "line": 60}}}}, "range": {"end": {"column": 108, "line": 60}, "start": {"column": 12, "line": 60}}}], "stringLiteralExprs": [{"range": {"end": {"column": 107, "line": 60}, "start": {"column": 17, "line": 60}}, "segments": [{"stringSegment": {"content": "Open route planning controls and show detailed guidance for every available route option", "range": {"end": {"column": 106, "line": 60}, "start": {"column": 18, "line": 60}}}}]}]}

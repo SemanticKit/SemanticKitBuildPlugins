@@ -28,72 +28,56 @@ message := "Do not look terms up in a registry or a dictionary keyed by IRI or b
 
 # `[IRI: Term]`, `[Swift.String: Term]`
 denial_set contains finding(node) if {
-  node := input
-  node.type == "DictionaryTypeSyntax"
-  registry_types(node.children[1], node.children[3])
+  some node in input.dictionaryTypes
+  registry_types(node.key, node.value)
 }
 
 # `Dictionary<IRI, Term>`
 denial_set contains finding(node) if {
-  node := input
-  node.type == "IdentifierTypeSyntax"
-  node.children[0].token.text == "Dictionary"
+  some node in input.identifierTypes
+  node.name == "Dictionary"
   registry_types(generic_argument(node, 0), generic_argument(node, 1))
 }
 
 # `Swift.Dictionary<IRIKit.IRI, Term>`
 denial_set contains finding(node) if {
-  node := input
-  node.type == "MemberTypeSyntax"
-  some name in node.children
-  name.type == "TokenSyntax"
-  name.token.text == "Dictionary"
+  some node in input.memberTypes
+  node.name == "Dictionary"
   registry_types(generic_argument(node, 0), generic_argument(node, 1))
 }
 
 # `[IRI: Term]()`, `[IRI: Term].init()`, `Dictionary<IRI, Term>()`,
 # `Swift.Dictionary<String, Term>.init()`
-denial_set contains finding(node) if {
-  node := input
-  node.type == "FunctionCallExprSyntax"
-  some dictionary in dictionary_expressions(node.children[0])
+denial_set contains finding(call) if {
+  some call in input.functionCallExprs
+  some dictionary in dictionary_expressions(call.calledExpression)
   name_keyed_expression(dictionary)
 }
 
 # The dictionary a call builds: the callee, or the base of its `.init`.
 dictionary_expressions(callee) := {callee} | {base |
-  callee.type == "MemberAccessExprSyntax"
-  callee.children[count(callee.children) - 1].children[0].token.text == "init"
-  base := callee.children[0]
+  callee.memberAccessExpr.declName.baseName == "init"
+  base := callee.memberAccessExpr.base
 }
 
 # `[IRI: Term]()`: the dictionary type spelled as an expression.
 name_keyed_expression(dictionary) if {
-  dictionary.type == "DictionaryExprSyntax"
-  some elements in dictionary.children
-  elements.type == "DictionaryElementListSyntax"
-  count(elements.children) == 1
-  element := elements.children[0]
-  registry_expression_types(element.children[0], element.children[2])
+  [element] := dictionary.dictionaryExpr.elements
+  registry_expression_types(element.key, element.value)
 }
 
-name_keyed_expression(specialization) if {
-  specialization.type == "GenericSpecializationExprSyntax"
-  callee := specialization.children[0]
-  reference_name(callee) == "Dictionary"
+name_keyed_expression(expression) if {
+  specialization := expression.genericSpecializationExpr
+  reference_name(specialization.expression) == "Dictionary"
   registry_types(generic_argument(specialization, 0), generic_argument(specialization, 1))
 }
 
 # `["knows": Knows(), "name": Name()]`, `[Foaf.knows.iri: ...]`,
 # `["http://xmlns.com/foaf/0.1/knows": ...]`: a registry written as a literal.
 denial_set contains finding(node) if {
-  node := input
-  node.type == "DictionaryExprSyntax"
-  some elements in node.children
-  elements.type == "DictionaryElementListSyntax"
-  some element in elements.children
-  element.type == "DictionaryElementSyntax"
-  registry_entry(element.children[0], element.children[2])
+  some node in input.dictionaryExprs
+  some element in node.elements
+  registry_entry(element.key, element.value)
 }
 
 registry_entry(key, _) if iri_key_expression(key)
@@ -106,15 +90,11 @@ registry_entry(key, value) if {
 # `IRI("...")`, `try! IRI(validating: "...")`, `URL(string: "...")`
 iri_key_expression(key) if {
   some form in forms(key)
-  form.type == "FunctionCallExprSyntax"
-  callee_name(form.children[0]) in iri_keys
+  callee_name(form.functionCallExpr) in iri_keys
 }
 
 # `Foaf.knows.iri`, `term.rawValue`
-iri_key_expression(key) if {
-  key.type == "MemberAccessExprSyntax"
-  reference_name(key) in {"iri", "rawValue"}
-}
+iri_key_expression(key) if key.memberAccessExpr.declName.baseName in {"iri", "rawValue"}
 
 # "http://xmlns.com/foaf/0.1/knows", "foaf:knows"
 iri_key_expression(key) if regex.match(`^[A-Za-z][A-Za-z0-9+.-]*:[^\s]+$`, string_literal_text(key))
@@ -123,40 +103,24 @@ iri_key_expression(key) if regex.match(`^[A-Za-z][A-Za-z0-9+.-]*:[^\s]+$`, strin
 # Property(...)`, or a metatype, `"knows": Knows.self`.
 term_named_value(name, value) if {
   some form in forms(value)
-  form.type == "FunctionCallExprSyntax"
-  callee := callee_name(form.children[0])
+  callee := callee_name(form.functionCallExpr)
   lower(callee) == lower(name)
 }
 
 term_named_value(_, value) if {
   some form in forms(value)
-  form.type == "FunctionCallExprSyntax"
-  callee_name(form.children[0]) in term_kinds
+  callee_name(form.functionCallExpr) in term_kinds
 }
 
-term_named_value(_, value) if {
-  value.type == "MemberAccessExprSyntax"
-  reference_name(value) == "self"
-}
+term_named_value(_, value) if value.memberAccessExpr.declName.baseName == "self"
 
 # The text of a string literal with one plain segment.
-string_literal_text(literal) := text if {
-  literal.type == "StringLiteralExprSyntax"
-  some segments in literal.children
-  segments.type == "StringLiteralSegmentListSyntax"
-  count(segments.children) == 1
-  segment := segments.children[0]
-  segment.type == "StringSegmentSyntax"
-  text := segment.children[0].token.text
+string_literal_text(expression) := segment.stringSegment.content if {
+  [segment] := expression.stringLiteralExpr.segments
 }
 
-generic_argument(node, index) := argument if {
-  some clause in node.children
-  clause.type == "GenericArgumentClauseSyntax"
-  some list in clause.children
-  list.type == "GenericArgumentListSyntax"
-  argument := list.children[index].children[0]
-}
+# The type a generic argument names: `IRI` in `Dictionary<IRI, Term>`.
+generic_argument(node, index) := node.genericArgumentClause.arguments[index].argument.type
 
 # Key and value types of a registry: any IRI key, or a String key with term values.
 registry_types(key, _) if named_type(key, iri_keys)
@@ -177,24 +141,12 @@ registry_expression_types(key, value) if {
 term_value_expression(value) if reference_name(value) in term_kinds
 
 # `Term.Type`
-term_value_expression(value) if {
-  value.type == "MemberAccessExprSyntax"
-  reference_name(value) == "Type"
-}
+term_value_expression(value) if value.memberAccessExpr.declName.baseName == "Type"
 
 # `IRI`, `String`, `IRIKit.IRI`, `Swift.String`, `Foundation.URL`
-named_type(type, names) if {
-  type.type == "IdentifierTypeSyntax"
-  type.children[0].token.text in names
-}
+named_type(type, names) if type.identifierType.name in names
 
-named_type(type, names) if {
-  type.type == "MemberTypeSyntax"
-  some name in type.children
-  name.type == "TokenSyntax"
-  name.token.kind == "identifier"
-  name.token.text in names
-}
+named_type(type, names) if type.memberType.name in names
 
 # `Term`, `Property`, `RDFKit.Class`, `Term.Type`, `any Term.Type`, `Term?`,
 # `[Term]`: a term kind or a metatype anywhere in the value type.
@@ -205,86 +157,59 @@ term_value_type(type) if {
 
 term_value_type(type) if {
   walk(type, [_, node])
-  node.type == "MetatypeTypeSyntax"
+  node.metatypeType
 }
 
-reference_name(reference) := reference.children[0].token.text if reference.type == "DeclReferenceExprSyntax"
+# `Foaf`, `Vocabularies.Foaf`
+reference_name(expression) := expression.declReferenceExpr.baseName
 
-reference_name(reference) := reference.children[count(reference.children) - 1].children[0].token.text if {
-  reference.type == "MemberAccessExprSyntax"
-}
+reference_name(expression) := expression.memberAccessExpr.declName.baseName
 
-# The expression, and what `try`, `try!`, `await` and `!` wrap, two levels deep.
-wrappers := {"TryExprSyntax", "AwaitExprSyntax", "ForceUnwrapExprSyntax", "OptionalChainingExprSyntax"}
-
+# The expression, and what `try`, `try!`, `await`, `!` and `?` wrap, two
+# levels deep.
 forms(value) := {value} | inner(value) | {deeper | some form in inner(value); some deeper in inner(form)}
 
-inner(value) := {child |
-  value.type in wrappers
-  some child in value.children
-  child.type != "TokenSyntax"
-}
+inner(value) := (({child | child := value.tryExpr.expression} | {child | child := value.awaitExpr.expression}) | {child | child := value.forceUnwrapExpr.expression}) | {child | child := value.optionalChainingExpr.expression}
 
 # `IRI`, `IRIKit.IRI`, `IRI.init`, `IRIKit.IRI.init`
-callee_name(callee) := reference_name(callee) if not initializer_reference(callee)
+callee_name(call) := call.calledExpression.declReferenceExpr.baseName
 
-callee_name(callee) := reference_name(callee.children[0]) if initializer_reference(callee)
-
-initializer_reference(callee) if {
-  callee.type == "MemberAccessExprSyntax"
-  callee.children[count(callee.children) - 1].children[0].token.text == "init"
+callee_name(call) := name if {
+  name := call.calledExpression.memberAccessExpr.declName.baseName
+  name != "init"
 }
 
-# `final class TermRegistry`, `struct VocabularyRegistry`. Each body tests one
-# node type, so the evaluator gives the policy only the nodes it can match.
-denial_set contains finding(node) if {
-  node := input
-  node.type == "ClassDeclSyntax"
-  registry_name(node)
+callee_name(call) := reference_name(access.base) if {
+  access := call.calledExpression.memberAccessExpr
+  access.declName.baseName == "init"
 }
 
-denial_set contains finding(node) if {
-  node := input
-  node.type == "StructDeclSyntax"
-  registry_name(node)
+# `final class TermRegistry`, `struct VocabularyRegistry`
+denial_set contains finding(decl) if {
+  some decl in registry_declarations
+  endswith(decl.name, "Registry")
 }
 
-denial_set contains finding(node) if {
-  node := input
-  node.type == "EnumDeclSyntax"
-  registry_name(node)
-}
+registry_declarations contains decl if some decl in input.classDecls
 
-denial_set contains finding(node) if {
-  node := input
-  node.type == "ActorDeclSyntax"
-  registry_name(node)
-}
+registry_declarations contains decl if some decl in input.structDecls
 
-denial_set contains finding(node) if {
-  node := input
-  node.type == "ProtocolDeclSyntax"
-  registry_name(node)
-}
+registry_declarations contains decl if some decl in input.enumDecls
+
+registry_declarations contains decl if some decl in input.actorDecls
+
+registry_declarations contains decl if some decl in input.protocolDecls
 
 # `TermRegistry.shared`, `TermRegistry()`: a registry in use.
 denial_set contains finding(node) if {
-  node := input
-  node.type == "DeclReferenceExprSyntax"
-  endswith(node.children[0].token.text, "Registry")
+  some node in input.declReferenceExprs
+  endswith(node.baseName, "Registry")
 }
 
 # `var terms: TermRegistry`, `extension TermRegistry`
 denial_set contains finding(node) if {
-  node := input
-  node.type == "IdentifierTypeSyntax"
-  endswith(node.children[0].token.text, "Registry")
-}
-
-registry_name(decl) if {
-  some name in decl.children
-  name.token.kind == "identifier"
-  endswith(name.token.text, "Registry")
+  some node in input.identifierTypes
+  endswith(node.name, "Registry")
 }
 
 finding(node) := {

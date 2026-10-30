@@ -49,25 +49,42 @@ decision := {"deny": [], "warn": warnings, "note": []}
 
 Each entry of `deny`, `warn` and `note` has `rule_id`, `message`, `line`, `column` and `severity`.
 
-`input` is one syntax node. `RegoPolicyEvaluate` gives the nodes of every Swift file to every policy in turn, so a policy states the node it matches:
+`input` is one Swift file. `RegoPolicyEvaluate` parses each Swift file with SwiftParser, folds its operator sequences with the standard operators (SwiftOperators), and walks it once with a `SyntaxVisitor`. `input` holds one list for each kind of node policies look for, named after the node type, and each node in a list carries its swift-syntax properties by name:
 
 ```rego
-call := input
-call.type == "FunctionCallExprSyntax"
+some call in input.functionCallExprs
+call.calledExpression.declReferenceExpr.baseName == "Button"
+some argument in call.arguments
+some segment in argument.expression.stringLiteralExpr.segments
+count(segment.stringSegment.content) > 32
 ```
 
-A policy whose every rule body reads `input` only after such a type test finds nothing in a node of any other type, so the evaluator reads those tests from the policy's plan and gives the policy only the nodes of the types they name. It checks this once per policy by evaluating it on a node of a type the tests do not name: if that finds anything, or a rule body reads `input` before testing its type, or passes `input` anywhere but on to the policy's own rules, the policy gets every node.
+| List | Node | Properties |
+| --- | --- | --- |
+| `functionCallExprs` | `FunctionCallExprSyntax` | `calledExpression`, `arguments` (each `label`, `expression`), `trailingClosure`, `additionalTrailingClosures` |
+| `memberAccessExprs` | `MemberAccessExprSyntax` | `base`, `declName` |
+| `declReferenceExprs` | `DeclReferenceExprSyntax` | `baseName`, `argumentNames` |
+| `stringLiteralExprs` | `StringLiteralExprSyntax` | `segments`, each `{"stringSegment": {"content"}}` or `{"expressionSegment": {"expressions"}}` |
+| `infixOperatorExprs` | `InfixOperatorExprSyntax` | `leftOperand`, `operator`, `rightOperand` |
+| `dictionaryExprs` | `DictionaryExprSyntax` | `elements`, each `key`, `value` |
+| `genericSpecializationExprs` | `GenericSpecializationExprSyntax` | `expression`, `genericArgumentClause` |
+| `macroExpansionExprs` | `MacroExpansionExprSyntax` | `macroName`, `arguments`, `trailingClosure` |
+| `returnStmts` | `ReturnStmtSyntax` | `expression` |
+| `variableDecls` | `VariableDeclSyntax` | `attributes`, `modifiers` (each `name`, `detail`), `bindingSpecifier`, `bindings` (each `pattern`, `typeAnnotation`, `initializer`, `accessorBlock`), `documentation` |
+| `functionDecls` | `FunctionDeclSyntax` | `attributes`, `modifiers`, `name`, `genericParameterClause`, `signature` (`parameterClause.parameters`, each `firstName`, `secondName`, `type`; `returnClause.type`), `body`, `documentation` |
+| `initializerDecls` | `InitializerDeclSyntax` | `attributes`, `modifiers`, `signature`, `body`, `documentation` |
+| `enumCaseDecls` | `EnumCaseDeclSyntax` | `modifiers`, `elements` (each `name`, `parameterClause`, `rawValue`) |
+| `structDecls`, `classDecls`, `enumDecls`, `actorDecls`, `protocolDecls` | the type declarations | `attributes`, `modifiers`, `name`, `inheritanceClause.inheritedTypes`, `memberBlock.members` (each `decl`), `documentation` |
+| `extensionDecls` | `ExtensionDeclSyntax` | the same, with `extendedType` in place of `name` |
+| `identifierTypes`, `memberTypes`, `dictionaryTypes` | `IdentifierTypeSyntax`, `MemberTypeSyntax`, `DictionaryTypeSyntax` | `name` (`baseType` on a member type), `genericArgumentClause`; `key`, `value` |
 
-A node is the SwiftParser node, written as JSON:
+Every node also has `range`, `{"start": {"line", "column"}, "end": {"line", "column"}}`, 1-based and without trivia. A token is its text. A child that can be one of several kinds of node is an object with one key, the name of its case in swift-syntax's own enum for that kind: an expression is `{"functionCallExpr": {...}}`, `{"memberAccessExpr": {...}}`, `{"stringLiteralExpr": {...}}` (`ExprSyntaxEnum`), a type `{"identifierType": {...}}` (`TypeSyntaxEnum`), a declaration in a member block `{"variableDecl": {...}}` (`DeclSyntaxEnum`), a pattern `{"identifierPattern": {"identifier"}}` (`PatternSyntaxEnum`), and a statement in a body `{"item": {"decl" | "stmt" | "expr": ...}}`. A property that is `nil` or an empty list is left out, so a policy tests for it with `not node.initializer` or `object.get`. `documentation` is the text of the `///` and `/** */` comments before a declaration, one comment per line.
 
-| Field | Value |
-| --- | --- |
-| `type` | the SwiftSyntax node type, such as `FunctionCallExprSyntax`, `MemberAccessExprSyntax`, `TokenSyntax` |
-| `range` | `{"start": {"line", "column"}, "end": {"line", "column"}}`, 1-based, without trivia |
-| `token` | on tokens only: `kind` (the token kind's case name, such as `identifier`, `stringSegment`, `leftParen`), `text` and, when `///` or `/** */` comments come before the token, `documentation`: their text, one comment per line |
-| `children` | the node's children in source order (`Syntax.children(viewMode: .all)`) |
+Each node in a list also has `context`: the declarations around it, outermost first, each as in a member block (`{"structDecl": {...}}`) without its `memberBlock`, `body` or the values of its bindings, so a policy can tell whether a call sits in a boundary coder. A list with no nodes is left out. Policies never read nodes by position or by type name: they read the named properties.
 
-A modifier call such as `view.help("…")` is a `FunctionCallExprSyntax` whose first child is a `MemberAccessExprSyntax`; its last child is the `DeclReferenceExprSyntax` of the name. A plain call such as `Button("OK")` has the `DeclReferenceExprSyntax` as its first child. The code in `#if` blocks is part of the tree whether or not it is compiled.
+`RegoPolicyEvaluateTool input --source <file.swift>` prints the `input` a file gives policies as JSON. A Rego test fixture is that output for the Swift its comment names, `# Parser output for `<swift>` at <line>:<column>.`, and a Swift test checks that every fixture still matches.
+
+The code in `#if` blocks is part of the input whether or not it is compiled.
 
 ## Diagnostics
 
@@ -138,6 +155,6 @@ The library also holds `no_dictionary_boundary_plumbing`, a `warn` rule.
 
 ## Tests
 
-`opa test Sources Tests/Rego` runs the policy tests. Each test's `input` is the parser output for the line of Swift in the comment above it.
+`opa test Sources Tests/Rego` runs the policy tests, and `swift test` runs them too. Each test's `input` is what `RegoPolicyEvaluateTool input` writes for the line of Swift in the comment above it.
 
-`swift test` runs the evaluator's tests in `Tests/RegoPolicyEvaluateToolTests`, with `opa` on `PATH` or in `~/.local/bin`. They parse the Swift in every fixture comment and check that the fixture is the node the evaluator writes for it, so the Rego tests keep testing what policies see at build time. They also plan and evaluate a `deny` policy and check the diagnostic and the exit status, run the `SemanticKitDesignGuidelines` policies over a Swift file with one banned shape per line (each fails with its rule, the tool exits 1) and over the same file with the intended shapes (the tool exits 0), check which node types each library policy is given, and check how decisions decode.
+`swift test` runs the evaluator's tests in `Tests/RegoPolicyEvaluateToolTests`, with `opa` on `PATH` or in `~/.local/bin`. They parse the Swift in every fixture comment and check that the fixture is the input the evaluator writes for it, so the Rego tests keep testing what policies see at build time. They also plan and evaluate a `deny` policy and check the diagnostic and the exit status, run the `SemanticKitDesignGuidelines` policies over a Swift file with one banned shape per line (each fails with its rule, the tool exits 1) and over the same file with the intended shapes (the tool exits 0), check that every library policy plans and loads, check the named properties of the input, and check how decisions decode.

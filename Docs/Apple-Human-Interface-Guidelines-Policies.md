@@ -44,7 +44,7 @@ Each policy file should own the small amount of Rego needed for that rule.
 
 Every policy matches the parser syntax node shape; none reference the old `data.swift.syntax.*` helpers.
 
-`RegoPolicyEvaluateTool` is the one place Swift takes part: it writes each Swift file's SwiftParser nodes as policy input (`SyntaxInput`) and evaluates the planned policies inside the build, so a rule can fail `swift build` by name. A new rule is policy work. It adds a Rego file and its test, not Swift package targets, evaluator abstractions or serializers.
+`RegoPolicyEvaluateTool` is the one place Swift takes part: it walks each Swift file with a swift-syntax `SyntaxVisitor` and writes its nodes, by their named properties, as policy input (`SyntaxInput`) and evaluates the planned policies inside the build, so a rule can fail `swift build` by name. A new rule is policy work. It adds a Rego file and its test, not Swift package targets, evaluator abstractions or serializers.
 
 ## Policy Shape
 

@@ -12,15 +12,42 @@ decision := {"deny": denials, "warn": [], "note": []}
 
 denials := [denial | denial := denial_set[_]]
 
-denial_set contains {
+finding(node) := {
   "rule_id": "semantickit.design_guidelines.no_individual_graph",
   "message": "Do not declare or use IndividualGraph; individuals live in the RDFCore graph of our own stack.",
-  "line": token.range.start.line,
-  "column": token.range.start.column,
+  "line": node.range.start.line,
+  "column": node.range.start.column,
   "severity": "error",
-} if {
-  token := input
-  token.type == "TokenSyntax"
-  token.token.kind == "identifier"
-  token.token.text == "IndividualGraph"
 }
+
+# `IndividualGraph()`, `graph: IndividualGraph`, `Store.IndividualGraph`
+denial_set contains finding(node) if {
+  some node in input.declReferenceExprs
+  node.baseName == "IndividualGraph"
+}
+
+denial_set contains finding(node) if {
+  some node in input.identifierTypes
+  node.name == "IndividualGraph"
+}
+
+denial_set contains finding(node) if {
+  some node in input.memberTypes
+  node.name == "IndividualGraph"
+}
+
+# `final class IndividualGraph`, `struct IndividualGraph`
+denial_set contains finding(decl) if {
+  some decl in declarations
+  decl.name == "IndividualGraph"
+}
+
+declarations contains decl if some decl in input.classDecls
+
+declarations contains decl if some decl in input.structDecls
+
+declarations contains decl if some decl in input.enumDecls
+
+declarations contains decl if some decl in input.actorDecls
+
+declarations contains decl if some decl in input.protocolDecls

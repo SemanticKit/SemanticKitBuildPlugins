@@ -59,236 +59,24 @@ test_does_not_warn_for_exact_term_on_non_visible_call if {
 # Parser output for `Button("Tracking", action: startTracking)` at 19:11.
 # Parser output for `help("World tracking")` at 20:11.
 warns_for_exact_technical_ar_terms_in_visible_string_calls_nodes := [
-  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 17, "column": 11}, "end": {"line": 17, "column": 24}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 17, "column": 11}, "end": {"line": 17, "column": 15}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 17, "column": 11}, "end": {"line": 17, "column": 15}}, "token": {"kind": "identifier", "text": "Text"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 17, "column": 15}, "end": {"line": 17, "column": 16}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 17, "column": 16}, "end": {"line": 17, "column": 23}}, "children": [
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 17, "column": 16}, "end": {"line": 17, "column": 23}}, "children": [
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 17, "column": 16}, "end": {"line": 17, "column": 23}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 17, "column": 16}, "end": {"line": 17, "column": 17}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 17, "column": 17}, "end": {"line": 17, "column": 22}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 17, "column": 17}, "end": {"line": 17, "column": 22}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 17, "column": 17}, "end": {"line": 17, "column": 22}}, "token": {"kind": "stringSegment", "text": "ARKit"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 17, "column": 22}, "end": {"line": 17, "column": 23}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 17, "column": 23}, "end": {"line": 17, "column": 24}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 17, "column": 24}, "end": {"line": 17, "column": 24}}, "children": []},
-  ]},
-  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 18, "column": 11}, "end": {"line": 18, "column": 57}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 18, "column": 11}, "end": {"line": 18, "column": 16}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 11}, "end": {"line": 18, "column": 16}}, "token": {"kind": "identifier", "text": "Label"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 16}, "end": {"line": 18, "column": 17}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 18, "column": 17}, "end": {"line": 18, "column": 56}}, "children": [
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 18, "column": 17}, "end": {"line": 18, "column": 35}}, "children": [
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 18, "column": 17}, "end": {"line": 18, "column": 34}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 17}, "end": {"line": 18, "column": 18}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 18, "column": 18}, "end": {"line": 18, "column": 33}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 18, "column": 18}, "end": {"line": 18, "column": 33}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 18}, "end": {"line": 18, "column": 33}}, "token": {"kind": "stringSegment", "text": "World Detection"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 33}, "end": {"line": 18, "column": 34}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 34}, "end": {"line": 18, "column": 35}}, "token": {"kind": "comma", "text": ","}, "children": []},
-      ]},
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 18, "column": 36}, "end": {"line": 18, "column": 56}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 36}, "end": {"line": 18, "column": 47}}, "token": {"kind": "identifier", "text": "systemImage"}, "children": []},
-        {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 47}, "end": {"line": 18, "column": 48}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 18, "column": 49}, "end": {"line": 18, "column": 56}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 49}, "end": {"line": 18, "column": 50}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 18, "column": 50}, "end": {"line": 18, "column": 55}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 18, "column": 50}, "end": {"line": 18, "column": 55}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 50}, "end": {"line": 18, "column": 55}}, "token": {"kind": "stringSegment", "text": "arkit"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 55}, "end": {"line": 18, "column": 56}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 56}, "end": {"line": 18, "column": 57}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 18, "column": 57}, "end": {"line": 18, "column": 57}}, "children": []},
-  ]},
-  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 19, "column": 11}, "end": {"line": 19, "column": 52}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 19, "column": 11}, "end": {"line": 19, "column": 17}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 11}, "end": {"line": 19, "column": 17}}, "token": {"kind": "identifier", "text": "Button"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 17}, "end": {"line": 19, "column": 18}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 19, "column": 18}, "end": {"line": 19, "column": 51}}, "children": [
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 19, "column": 18}, "end": {"line": 19, "column": 29}}, "children": [
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 19, "column": 18}, "end": {"line": 19, "column": 28}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 18}, "end": {"line": 19, "column": 19}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 19, "column": 19}, "end": {"line": 19, "column": 27}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 19, "column": 19}, "end": {"line": 19, "column": 27}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 19}, "end": {"line": 19, "column": 27}}, "token": {"kind": "stringSegment", "text": "Tracking"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 27}, "end": {"line": 19, "column": 28}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 28}, "end": {"line": 19, "column": 29}}, "token": {"kind": "comma", "text": ","}, "children": []},
-      ]},
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 19, "column": 30}, "end": {"line": 19, "column": 51}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 30}, "end": {"line": 19, "column": 36}}, "token": {"kind": "identifier", "text": "action"}, "children": []},
-        {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 36}, "end": {"line": 19, "column": 37}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-        {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 19, "column": 38}, "end": {"line": 19, "column": 51}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 38}, "end": {"line": 19, "column": 51}}, "token": {"kind": "identifier", "text": "startTracking"}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 51}, "end": {"line": 19, "column": 52}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 19, "column": 52}, "end": {"line": 19, "column": 52}}, "children": []},
-  ]},
-  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 20, "column": 11}, "end": {"line": 20, "column": 33}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 20, "column": 11}, "end": {"line": 20, "column": 15}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 20, "column": 11}, "end": {"line": 20, "column": 15}}, "token": {"kind": "identifier", "text": "help"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 20, "column": 15}, "end": {"line": 20, "column": 16}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 20, "column": 16}, "end": {"line": 20, "column": 32}}, "children": [
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 20, "column": 16}, "end": {"line": 20, "column": 32}}, "children": [
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 20, "column": 16}, "end": {"line": 20, "column": 32}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 20, "column": 16}, "end": {"line": 20, "column": 17}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 20, "column": 17}, "end": {"line": 20, "column": 31}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 20, "column": 17}, "end": {"line": 20, "column": 31}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 20, "column": 17}, "end": {"line": 20, "column": 31}}, "token": {"kind": "stringSegment", "text": "World tracking"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 20, "column": 31}, "end": {"line": 20, "column": 32}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 20, "column": 32}, "end": {"line": 20, "column": 33}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 20, "column": 33}, "end": {"line": 20, "column": 33}}, "children": []},
-  ]},
+  {"declReferenceExprs": [{"baseName": "Text", "range": {"end": {"column": 15, "line": 17}, "start": {"column": 11, "line": 17}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 23, "line": 17}, "start": {"column": 16, "line": 17}}, "segments": [{"stringSegment": {"content": "ARKit", "range": {"end": {"column": 22, "line": 17}, "start": {"column": 17, "line": 17}}}}]}}, "range": {"end": {"column": 23, "line": 17}, "start": {"column": 16, "line": 17}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Text", "range": {"end": {"column": 15, "line": 17}, "start": {"column": 11, "line": 17}}}}, "range": {"end": {"column": 24, "line": 17}, "start": {"column": 11, "line": 17}}}], "stringLiteralExprs": [{"range": {"end": {"column": 23, "line": 17}, "start": {"column": 16, "line": 17}}, "segments": [{"stringSegment": {"content": "ARKit", "range": {"end": {"column": 22, "line": 17}, "start": {"column": 17, "line": 17}}}}]}]},
+  {"declReferenceExprs": [{"baseName": "Label", "range": {"end": {"column": 16, "line": 18}, "start": {"column": 11, "line": 18}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 34, "line": 18}, "start": {"column": 17, "line": 18}}, "segments": [{"stringSegment": {"content": "World Detection", "range": {"end": {"column": 33, "line": 18}, "start": {"column": 18, "line": 18}}}}]}}, "range": {"end": {"column": 35, "line": 18}, "start": {"column": 17, "line": 18}}}, {"expression": {"stringLiteralExpr": {"range": {"end": {"column": 56, "line": 18}, "start": {"column": 49, "line": 18}}, "segments": [{"stringSegment": {"content": "arkit", "range": {"end": {"column": 55, "line": 18}, "start": {"column": 50, "line": 18}}}}]}}, "label": "systemImage", "range": {"end": {"column": 56, "line": 18}, "start": {"column": 36, "line": 18}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Label", "range": {"end": {"column": 16, "line": 18}, "start": {"column": 11, "line": 18}}}}, "range": {"end": {"column": 57, "line": 18}, "start": {"column": 11, "line": 18}}}], "stringLiteralExprs": [{"range": {"end": {"column": 34, "line": 18}, "start": {"column": 17, "line": 18}}, "segments": [{"stringSegment": {"content": "World Detection", "range": {"end": {"column": 33, "line": 18}, "start": {"column": 18, "line": 18}}}}]}, {"range": {"end": {"column": 56, "line": 18}, "start": {"column": 49, "line": 18}}, "segments": [{"stringSegment": {"content": "arkit", "range": {"end": {"column": 55, "line": 18}, "start": {"column": 50, "line": 18}}}}]}]},
+  {"declReferenceExprs": [{"baseName": "Button", "range": {"end": {"column": 17, "line": 19}, "start": {"column": 11, "line": 19}}}, {"baseName": "startTracking", "range": {"end": {"column": 51, "line": 19}, "start": {"column": 38, "line": 19}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 28, "line": 19}, "start": {"column": 18, "line": 19}}, "segments": [{"stringSegment": {"content": "Tracking", "range": {"end": {"column": 27, "line": 19}, "start": {"column": 19, "line": 19}}}}]}}, "range": {"end": {"column": 29, "line": 19}, "start": {"column": 18, "line": 19}}}, {"expression": {"declReferenceExpr": {"baseName": "startTracking", "range": {"end": {"column": 51, "line": 19}, "start": {"column": 38, "line": 19}}}}, "label": "action", "range": {"end": {"column": 51, "line": 19}, "start": {"column": 30, "line": 19}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Button", "range": {"end": {"column": 17, "line": 19}, "start": {"column": 11, "line": 19}}}}, "range": {"end": {"column": 52, "line": 19}, "start": {"column": 11, "line": 19}}}], "stringLiteralExprs": [{"range": {"end": {"column": 28, "line": 19}, "start": {"column": 18, "line": 19}}, "segments": [{"stringSegment": {"content": "Tracking", "range": {"end": {"column": 27, "line": 19}, "start": {"column": 19, "line": 19}}}}]}]},
+  {"declReferenceExprs": [{"baseName": "help", "range": {"end": {"column": 15, "line": 20}, "start": {"column": 11, "line": 20}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 32, "line": 20}, "start": {"column": 16, "line": 20}}, "segments": [{"stringSegment": {"content": "World tracking", "range": {"end": {"column": 31, "line": 20}, "start": {"column": 17, "line": 20}}}}]}}, "range": {"end": {"column": 32, "line": 20}, "start": {"column": 16, "line": 20}}}], "calledExpression": {"declReferenceExpr": {"baseName": "help", "range": {"end": {"column": 15, "line": 20}, "start": {"column": 11, "line": 20}}}}, "range": {"end": {"column": 33, "line": 20}, "start": {"column": 11, "line": 20}}}], "stringLiteralExprs": [{"range": {"end": {"column": 32, "line": 20}, "start": {"column": 16, "line": 20}}, "segments": [{"stringSegment": {"content": "World tracking", "range": {"end": {"column": 31, "line": 20}, "start": {"column": 17, "line": 20}}}}]}]},
 ]
 
 # Parser output for `TextField("Tracking", text: $tracking)` at 29:9.
-warns_for_text_field_exact_technical_ar_term_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 29, "column": 9}, "end": {"line": 29, "column": 47}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 29, "column": 9}, "end": {"line": 29, "column": 18}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 9}, "end": {"line": 29, "column": 18}}, "token": {"kind": "identifier", "text": "TextField"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 18}, "end": {"line": 29, "column": 19}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 29, "column": 19}, "end": {"line": 29, "column": 46}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 29, "column": 19}, "end": {"line": 29, "column": 30}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 29, "column": 19}, "end": {"line": 29, "column": 29}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 19}, "end": {"line": 29, "column": 20}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 29, "column": 20}, "end": {"line": 29, "column": 28}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 29, "column": 20}, "end": {"line": 29, "column": 28}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 20}, "end": {"line": 29, "column": 28}}, "token": {"kind": "stringSegment", "text": "Tracking"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 28}, "end": {"line": 29, "column": 29}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 29}, "end": {"line": 29, "column": 30}}, "token": {"kind": "comma", "text": ","}, "children": []},
-    ]},
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 29, "column": 31}, "end": {"line": 29, "column": 46}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 31}, "end": {"line": 29, "column": 35}}, "token": {"kind": "identifier", "text": "text"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 35}, "end": {"line": 29, "column": 36}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 29, "column": 37}, "end": {"line": 29, "column": 46}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 37}, "end": {"line": 29, "column": 46}}, "token": {"kind": "identifier", "text": "$tracking"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 46}, "end": {"line": 29, "column": 47}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 29, "column": 47}, "end": {"line": 29, "column": 47}}, "children": []},
-]}
+warns_for_text_field_exact_technical_ar_term_node := {"declReferenceExprs": [{"baseName": "TextField", "range": {"end": {"column": 18, "line": 29}, "start": {"column": 9, "line": 29}}}, {"baseName": "$tracking", "range": {"end": {"column": 46, "line": 29}, "start": {"column": 37, "line": 29}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 29, "line": 29}, "start": {"column": 19, "line": 29}}, "segments": [{"stringSegment": {"content": "Tracking", "range": {"end": {"column": 28, "line": 29}, "start": {"column": 20, "line": 29}}}}]}}, "range": {"end": {"column": 30, "line": 29}, "start": {"column": 19, "line": 29}}}, {"expression": {"declReferenceExpr": {"baseName": "$tracking", "range": {"end": {"column": 46, "line": 29}, "start": {"column": 37, "line": 29}}}}, "label": "text", "range": {"end": {"column": 46, "line": 29}, "start": {"column": 31, "line": 29}}}], "calledExpression": {"declReferenceExpr": {"baseName": "TextField", "range": {"end": {"column": 18, "line": 29}, "start": {"column": 9, "line": 29}}}}, "range": {"end": {"column": 47, "line": 29}, "start": {"column": 9, "line": 29}}}], "stringLiteralExprs": [{"range": {"end": {"column": 29, "line": 29}, "start": {"column": 19, "line": 29}}, "segments": [{"stringSegment": {"content": "Tracking", "range": {"end": {"column": 28, "line": 29}, "start": {"column": 20, "line": 29}}}}]}]}
 
 # Parser output for `Text("Move your device to find a surface")` at 24:11.
-does_not_warn_for_approachable_ar_instructional_text_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 24, "column": 11}, "end": {"line": 24, "column": 53}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 24, "column": 11}, "end": {"line": 24, "column": 15}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 11}, "end": {"line": 24, "column": 15}}, "token": {"kind": "identifier", "text": "Text"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 15}, "end": {"line": 24, "column": 16}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 24, "column": 16}, "end": {"line": 24, "column": 52}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 24, "column": 16}, "end": {"line": 24, "column": 52}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 24, "column": 16}, "end": {"line": 24, "column": 52}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 16}, "end": {"line": 24, "column": 17}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 24, "column": 17}, "end": {"line": 24, "column": 51}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 24, "column": 17}, "end": {"line": 24, "column": 51}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 17}, "end": {"line": 24, "column": 51}}, "token": {"kind": "stringSegment", "text": "Move your device to find a surface"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 51}, "end": {"line": 24, "column": 52}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 52}, "end": {"line": 24, "column": 53}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 24, "column": 53}, "end": {"line": 24, "column": 53}}, "children": []},
-]}
+does_not_warn_for_approachable_ar_instructional_text_node := {"declReferenceExprs": [{"baseName": "Text", "range": {"end": {"column": 15, "line": 24}, "start": {"column": 11, "line": 24}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 52, "line": 24}, "start": {"column": 16, "line": 24}}, "segments": [{"stringSegment": {"content": "Move your device to find a surface", "range": {"end": {"column": 51, "line": 24}, "start": {"column": 17, "line": 24}}}}]}}, "range": {"end": {"column": 52, "line": 24}, "start": {"column": 16, "line": 24}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Text", "range": {"end": {"column": 15, "line": 24}, "start": {"column": 11, "line": 24}}}}, "range": {"end": {"column": 53, "line": 24}, "start": {"column": 11, "line": 24}}}], "stringLiteralExprs": [{"range": {"end": {"column": 52, "line": 24}, "start": {"column": 16, "line": 24}}, "segments": [{"stringSegment": {"content": "Move your device to find a surface", "range": {"end": {"column": 51, "line": 24}, "start": {"column": 17, "line": 24}}}}]}]}
 
 # Parser output for `Text("Use ARKit to scan the room")` at 31:11.
 # Parser output for `Text("world detection")` at 32:11.
 warns_for_substring_and_case_different_terms_nodes := [
-  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 31, "column": 11}, "end": {"line": 31, "column": 45}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 31, "column": 11}, "end": {"line": 31, "column": 15}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 11}, "end": {"line": 31, "column": 15}}, "token": {"kind": "identifier", "text": "Text"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 15}, "end": {"line": 31, "column": 16}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 31, "column": 16}, "end": {"line": 31, "column": 44}}, "children": [
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 31, "column": 16}, "end": {"line": 31, "column": 44}}, "children": [
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 31, "column": 16}, "end": {"line": 31, "column": 44}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 16}, "end": {"line": 31, "column": 17}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 31, "column": 17}, "end": {"line": 31, "column": 43}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 31, "column": 17}, "end": {"line": 31, "column": 43}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 17}, "end": {"line": 31, "column": 43}}, "token": {"kind": "stringSegment", "text": "Use ARKit to scan the room"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 43}, "end": {"line": 31, "column": 44}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 44}, "end": {"line": 31, "column": 45}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 31, "column": 45}, "end": {"line": 31, "column": 45}}, "children": []},
-  ]},
-  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 32, "column": 11}, "end": {"line": 32, "column": 34}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 32, "column": 11}, "end": {"line": 32, "column": 15}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 32, "column": 11}, "end": {"line": 32, "column": 15}}, "token": {"kind": "identifier", "text": "Text"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 32, "column": 15}, "end": {"line": 32, "column": 16}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 32, "column": 16}, "end": {"line": 32, "column": 33}}, "children": [
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 32, "column": 16}, "end": {"line": 32, "column": 33}}, "children": [
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 32, "column": 16}, "end": {"line": 32, "column": 33}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 32, "column": 16}, "end": {"line": 32, "column": 17}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 32, "column": 17}, "end": {"line": 32, "column": 32}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 32, "column": 17}, "end": {"line": 32, "column": 32}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 32, "column": 17}, "end": {"line": 32, "column": 32}}, "token": {"kind": "stringSegment", "text": "world detection"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 32, "column": 32}, "end": {"line": 32, "column": 33}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 32, "column": 33}, "end": {"line": 32, "column": 34}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 32, "column": 34}, "end": {"line": 32, "column": 34}}, "children": []},
-  ]},
+  {"declReferenceExprs": [{"baseName": "Text", "range": {"end": {"column": 15, "line": 31}, "start": {"column": 11, "line": 31}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 44, "line": 31}, "start": {"column": 16, "line": 31}}, "segments": [{"stringSegment": {"content": "Use ARKit to scan the room", "range": {"end": {"column": 43, "line": 31}, "start": {"column": 17, "line": 31}}}}]}}, "range": {"end": {"column": 44, "line": 31}, "start": {"column": 16, "line": 31}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Text", "range": {"end": {"column": 15, "line": 31}, "start": {"column": 11, "line": 31}}}}, "range": {"end": {"column": 45, "line": 31}, "start": {"column": 11, "line": 31}}}], "stringLiteralExprs": [{"range": {"end": {"column": 44, "line": 31}, "start": {"column": 16, "line": 31}}, "segments": [{"stringSegment": {"content": "Use ARKit to scan the room", "range": {"end": {"column": 43, "line": 31}, "start": {"column": 17, "line": 31}}}}]}]},
+  {"declReferenceExprs": [{"baseName": "Text", "range": {"end": {"column": 15, "line": 32}, "start": {"column": 11, "line": 32}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 33, "line": 32}, "start": {"column": 16, "line": 32}}, "segments": [{"stringSegment": {"content": "world detection", "range": {"end": {"column": 32, "line": 32}, "start": {"column": 17, "line": 32}}}}]}}, "range": {"end": {"column": 33, "line": 32}, "start": {"column": 16, "line": 32}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Text", "range": {"end": {"column": 15, "line": 32}, "start": {"column": 11, "line": 32}}}}, "range": {"end": {"column": 34, "line": 32}, "start": {"column": 11, "line": 32}}}], "stringLiteralExprs": [{"range": {"end": {"column": 33, "line": 32}, "start": {"column": 16, "line": 32}}, "segments": [{"stringSegment": {"content": "world detection", "range": {"end": {"column": 32, "line": 32}, "start": {"column": 17, "line": 32}}}}]}]},
 ]
 
 # Parser output for `logEvent(name: "ARKit")` at 12:5.
-does_not_warn_for_exact_term_on_non_visible_call_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 12, "column": 5}, "end": {"line": 12, "column": 28}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 12, "column": 5}, "end": {"line": 12, "column": 13}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 5}, "end": {"line": 12, "column": 13}}, "token": {"kind": "identifier", "text": "logEvent"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 13}, "end": {"line": 12, "column": 14}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 12, "column": 14}, "end": {"line": 12, "column": 27}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 12, "column": 14}, "end": {"line": 12, "column": 27}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 14}, "end": {"line": 12, "column": 18}}, "token": {"kind": "identifier", "text": "name"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 18}, "end": {"line": 12, "column": 19}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 12, "column": 20}, "end": {"line": 12, "column": 27}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 20}, "end": {"line": 12, "column": 21}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 12, "column": 21}, "end": {"line": 12, "column": 26}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 12, "column": 21}, "end": {"line": 12, "column": 26}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 21}, "end": {"line": 12, "column": 26}}, "token": {"kind": "stringSegment", "text": "ARKit"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 26}, "end": {"line": 12, "column": 27}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 27}, "end": {"line": 12, "column": 28}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 12, "column": 28}, "end": {"line": 12, "column": 28}}, "children": []},
-]}
+does_not_warn_for_exact_term_on_non_visible_call_node := {"declReferenceExprs": [{"baseName": "logEvent", "range": {"end": {"column": 13, "line": 12}, "start": {"column": 5, "line": 12}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 27, "line": 12}, "start": {"column": 20, "line": 12}}, "segments": [{"stringSegment": {"content": "ARKit", "range": {"end": {"column": 26, "line": 12}, "start": {"column": 21, "line": 12}}}}]}}, "label": "name", "range": {"end": {"column": 27, "line": 12}, "start": {"column": 14, "line": 12}}}], "calledExpression": {"declReferenceExpr": {"baseName": "logEvent", "range": {"end": {"column": 13, "line": 12}, "start": {"column": 5, "line": 12}}}}, "range": {"end": {"column": 28, "line": 12}, "start": {"column": 5, "line": 12}}}], "stringLiteralExprs": [{"range": {"end": {"column": 27, "line": 12}, "start": {"column": 20, "line": 12}}, "segments": [{"stringSegment": {"content": "ARKit", "range": {"end": {"column": 26, "line": 12}, "start": {"column": 21, "line": 12}}}}]}]}

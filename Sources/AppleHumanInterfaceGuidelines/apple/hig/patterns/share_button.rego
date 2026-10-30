@@ -22,22 +22,14 @@ custom_share_button_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
-  callee := call.children[0]
-  callee.type == "DeclReferenceExprSyntax"
-  callee_name := callee.children[0].token.text
+  some call in input.functionCallExprs
+  callee := call.calledExpression.declReferenceExpr
+  callee_name := callee.baseName
   custom_share_surface_names[callee_name]
   callee_name != "ShareLink"
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  labeled_argument := argument_list.children[_]
-  literal := labeled_argument.children[_]
-  literal.type == "StringLiteralExprSyntax"
-  segment_list := literal.children[_]
-  segment_list.type == "StringLiteralSegmentListSyntax"
-  segment := segment_list.children[_]
-  segment.type == "StringSegmentSyntax"
-  argument := segment.children[0].token.text
+  some labeled_argument in call.arguments
+  literal := labeled_argument.expression.stringLiteralExpr
+  segment := literal.segments[_].stringSegment
+  argument := segment.content
   {argument == "Share", indexof(argument, "Share ") >= 0, indexof(argument, " share") >= 0}[true]
 }

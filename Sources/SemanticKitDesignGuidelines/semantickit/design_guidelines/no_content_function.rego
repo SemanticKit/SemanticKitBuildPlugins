@@ -26,99 +26,47 @@ finding(function) := {
 
 # `func content() -> Content`, `func content() -> some Content`
 denial_set contains finding(function) if {
-  function := input
-  function.type == "FunctionDeclSyntax"
-  content_function(function)
-  some signature in function.children
-  signature.type == "FunctionSignatureSyntax"
-  some clause in signature.children
-  clause.type == "ReturnClauseSyntax"
-  some type in clause.children
-  content_type(type)
+  some function in input.functionDecls
+  function.name == "content"
+  content_type(function.signature.returnClause.type)
 }
 
 # `@Ontology struct Fauna { func content() … }`, `struct Fauna: Ontology { … }`
-denial_set contains finding(member) if {
-  decl := input
-  decl.type == "StructDeclSyntax"
-  some member in ontology_content(decl)
-}
-
-denial_set contains finding(member) if {
-  decl := input
-  decl.type == "ClassDeclSyntax"
-  some member in ontology_content(decl)
-}
-
-denial_set contains finding(member) if {
-  decl := input
-  decl.type == "EnumDeclSyntax"
-  some member in ontology_content(decl)
-}
-
-denial_set contains finding(member) if {
-  decl := input
-  decl.type == "ActorDeclSyntax"
-  some member in ontology_content(decl)
-}
-
-denial_set contains finding(member) if {
-  decl := input
-  decl.type == "ExtensionDeclSyntax"
-  some member in ontology_content(decl)
-}
-
-ontology_content(decl) := {member |
+denial_set contains finding(member.functionDecl) if {
+  some decl in groups
   ontology(decl)
-  some block in decl.children
-  block.type == "MemberBlockSyntax"
-  some list in block.children
-  list.type == "MemberBlockItemListSyntax"
-  some item in list.children
-  member := item.children[0]
-  member.type == "FunctionDeclSyntax"
-  content_function(member)
+  some item in decl.memberBlock.members
+  member := item.decl
+  member.functionDecl.name == "content"
 }
 
-content_function(function) if {
-  some name in function.children
-  name.type == "TokenSyntax"
-  name.token.kind == "identifier"
-  name.token.text == "content"
-}
+# The structs, classes, enums, actors and extensions of the file.
+groups contains decl if some decl in input.structDecls
+
+groups contains decl if some decl in input.classDecls
+
+groups contains decl if some decl in input.enumDecls
+
+groups contains decl if some decl in input.actorDecls
+
+groups contains decl if some decl in input.extensionDecls
 
 content_type(type) if type_name(type) == "Content"
 
 # `some Content`, `any Content`
-content_type(type) if {
-  type.type == "SomeOrAnyTypeSyntax"
-  some constraint in type.children
-  type_name(constraint) == "Content"
+content_type(type) if type_name(type.someOrAnyType.constraint) == "Content"
+
+ontology(decl) if {
+  some attribute in decl.attributes
+  type_name(attribute.attributeName) == "Ontology"
 }
 
 ontology(decl) if {
-  some attributes in decl.children
-  attributes.type == "AttributeListSyntax"
-  some attribute in attributes.children
-  attribute.type == "AttributeSyntax"
-  some name in attribute.children
-  type_name(name) == "Ontology"
+  some inherited in decl.inheritanceClause.inheritedTypes
+  type_name(inherited.type) == "Ontology"
 }
 
-ontology(decl) if {
-  some clause in decl.children
-  clause.type == "InheritanceClauseSyntax"
-  some list in clause.children
-  list.type == "InheritedTypeListSyntax"
-  some inherited in list.children
-  type_name(inherited.children[0]) == "Ontology"
-}
+# `Content`, `RDFKit.Content`
+type_name(type) := type.identifierType.name
 
-type_name(type) := type.children[0].token.text if type.type == "IdentifierTypeSyntax"
-
-type_name(type) := name.token.text if {
-  type.type == "MemberTypeSyntax"
-  some name in type.children
-  name.type == "TokenSyntax"
-  name.token.kind == "identifier"
-}
+type_name(type) := type.memberType.name

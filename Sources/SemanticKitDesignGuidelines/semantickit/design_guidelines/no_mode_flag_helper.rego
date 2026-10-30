@@ -4,7 +4,8 @@ package semantickit.design_guidelines.no_mode_flag_helper
 # type and of the format's own coder type: never a free or private helper
 # that takes a `Bool` mode. Denied: a function named `decode…`, `encode…` or
 # `parse…` that takes a `Bool` (or `Swift.Bool`) parameter and is either
-# free (declared as a statement, not as a member of a type or extension) or
+# free (declared as a statement, not as a member of a type or extension: the
+# innermost declaration around it is not a type or an extension) or
 # `private`/`fileprivate`,
 # as in `private func decodeTerm(_ token: String, tsvMode: Bool)`.
 # DESIGN-CONTRACT.md rule 15 (Charles): "Turning text into a term is an
@@ -30,55 +31,48 @@ finding(function) := {
 
 # A private or fileprivate helper, wherever it is declared.
 denial_set contains finding(function) if {
-  function := input
-  function.type == "FunctionDeclSyntax"
+  some function in input.functionDecls
   flagged_coding_helper(function)
   restricted(function)
 }
 
-# A free function: one declared as a statement, at the top level of a file
-# or inside a function body, rather than as a member of a type or extension
-# (members are `MemberBlockItemSyntax`, statements `CodeBlockItemSyntax`).
+# A free function: one declared at the top level of a file or inside a
+# function body, rather than as a member of a type or extension.
 denial_set contains finding(function) if {
-  item := input
-  item.type == "CodeBlockItemSyntax"
-  some function in item.children
-  function.type == "FunctionDeclSyntax"
+  some function in input.functionDecls
   flagged_coding_helper(function)
+  not member(function)
 }
+
+# The innermost declaration around the function is a type or an extension.
+member(function) if {
+  type_or_extension(function.context[count(function.context) - 1])
+}
+
+type_or_extension(declaration) if declaration.structDecl
+
+type_or_extension(declaration) if declaration.classDecl
+
+type_or_extension(declaration) if declaration.enumDecl
+
+type_or_extension(declaration) if declaration.actorDecl
+
+type_or_extension(declaration) if declaration.protocolDecl
+
+type_or_extension(declaration) if declaration.extensionDecl
 
 flagged_coding_helper(function) if {
-  function.type == "FunctionDeclSyntax"
-  regex.match(`^(decode|encode|parse)([A-Z_].*)?$`, function_name(function))
-  some signature in function.children
-  signature.type == "FunctionSignatureSyntax"
-  some clause in signature.children
-  clause.type == "FunctionParameterClauseSyntax"
-  some parameters in clause.children
-  parameters.type == "FunctionParameterListSyntax"
-  some parameter in parameters.children
-  some type in parameter.children
-  bool_type(type)
+  regex.match(`^(decode|encode|parse)([A-Z_].*)?$`, function.name)
+  some parameter in function.signature.parameterClause.parameters
+  bool_type(parameter.type)
 }
 
-function_name(function) := names[0] if {
-  names := [token.token.text | some token in function.children; token.type == "TokenSyntax"; token.token.kind == "identifier"]
-}
+# `Bool`, `Swift.Bool`
+bool_type(type) if type.identifierType.name == "Bool"
 
-bool_type(type) if {
-  type.type == "IdentifierTypeSyntax"
-  type.children[0].token.text == "Bool"
-}
-
-# `Swift.Bool`
-bool_type(type) if {
-  type.type == "MemberTypeSyntax"
-  type.children[count(type.children) - 1].token.text == "Bool"
-}
+bool_type(type) if type.memberType.name == "Bool"
 
 restricted(function) if {
-  some modifiers in function.children
-  modifiers.type == "DeclModifierListSyntax"
-  some modifier in modifiers.children
-  modifier.children[0].token.text in {"private", "fileprivate"}
+  some modifier in function.modifiers
+  modifier.name in {"private", "fileprivate"}
 }

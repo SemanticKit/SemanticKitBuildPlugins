@@ -34,99 +34,13 @@ test_does_not_review_open_window_action_without_open_window_swift_syntax if {
 }
 
 # Parser output for `openWindow(id: "document")` at 19:9.
-reviews_base_open_window_usage_to_confirm_new_window_command_is_deliberate_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 19, "column": 9}, "end": {"line": 19, "column": 35}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 19, "column": 9}, "end": {"line": 19, "column": 19}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 9}, "end": {"line": 19, "column": 19}}, "token": {"kind": "identifier", "text": "openWindow"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 19}, "end": {"line": 19, "column": 20}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 19, "column": 20}, "end": {"line": 19, "column": 34}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 19, "column": 20}, "end": {"line": 19, "column": 34}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 20}, "end": {"line": 19, "column": 22}}, "token": {"kind": "identifier", "text": "id"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 22}, "end": {"line": 19, "column": 23}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 19, "column": 24}, "end": {"line": 19, "column": 34}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 24}, "end": {"line": 19, "column": 25}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 19, "column": 25}, "end": {"line": 19, "column": 33}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 19, "column": 25}, "end": {"line": 19, "column": 33}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 25}, "end": {"line": 19, "column": 33}}, "token": {"kind": "stringSegment", "text": "document"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 33}, "end": {"line": 19, "column": 34}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 34}, "end": {"line": 19, "column": 35}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 19, "column": 35}, "end": {"line": 19, "column": 35}}, "children": []},
-]}
+reviews_base_open_window_usage_to_confirm_new_window_command_is_deliberate_node := {"declReferenceExprs": [{"baseName": "openWindow", "range": {"end": {"column": 19, "line": 19}, "start": {"column": 9, "line": 19}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 34, "line": 19}, "start": {"column": 24, "line": 19}}, "segments": [{"stringSegment": {"content": "document", "range": {"end": {"column": 33, "line": 19}, "start": {"column": 25, "line": 19}}}}]}}, "label": "id", "range": {"end": {"column": 34, "line": 19}, "start": {"column": 20, "line": 19}}}], "calledExpression": {"declReferenceExpr": {"baseName": "openWindow", "range": {"end": {"column": 19, "line": 19}, "start": {"column": 9, "line": 19}}}}, "range": {"end": {"column": 35, "line": 19}, "start": {"column": 9, "line": 19}}}], "stringLiteralExprs": [{"range": {"end": {"column": 34, "line": 19}, "start": {"column": 24, "line": 19}}, "segments": [{"stringSegment": {"content": "document", "range": {"end": {"column": 33, "line": 19}, "start": {"column": 25, "line": 19}}}}]}]}
 
 # Parser output for `environment.openWindow(id: "detail", value: detail.id)` at 42:15.
-reviews_member_open_window_action_usage_to_confirm_new_window_command_is_deliberate_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 42, "column": 15}, "end": {"line": 42, "column": 69}}, "children": [
-  {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 42, "column": 15}, "end": {"line": 42, "column": 37}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 42, "column": 15}, "end": {"line": 42, "column": 26}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 15}, "end": {"line": 42, "column": 26}}, "token": {"kind": "identifier", "text": "environment"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 26}, "end": {"line": 42, "column": 27}}, "token": {"kind": "period", "text": "."}, "children": []},
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 42, "column": 27}, "end": {"line": 42, "column": 37}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 27}, "end": {"line": 42, "column": 37}}, "token": {"kind": "identifier", "text": "openWindow"}, "children": []},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 37}, "end": {"line": 42, "column": 38}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 42, "column": 38}, "end": {"line": 42, "column": 68}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 42, "column": 38}, "end": {"line": 42, "column": 51}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 38}, "end": {"line": 42, "column": 40}}, "token": {"kind": "identifier", "text": "id"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 40}, "end": {"line": 42, "column": 41}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 42, "column": 42}, "end": {"line": 42, "column": 50}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 42}, "end": {"line": 42, "column": 43}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 42, "column": 43}, "end": {"line": 42, "column": 49}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 42, "column": 43}, "end": {"line": 42, "column": 49}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 43}, "end": {"line": 42, "column": 49}}, "token": {"kind": "stringSegment", "text": "detail"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 49}, "end": {"line": 42, "column": 50}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 50}, "end": {"line": 42, "column": 51}}, "token": {"kind": "comma", "text": ","}, "children": []},
-    ]},
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 42, "column": 52}, "end": {"line": 42, "column": 68}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 52}, "end": {"line": 42, "column": 57}}, "token": {"kind": "identifier", "text": "value"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 57}, "end": {"line": 42, "column": 58}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 42, "column": 59}, "end": {"line": 42, "column": 68}}, "children": [
-        {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 42, "column": 59}, "end": {"line": 42, "column": 65}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 59}, "end": {"line": 42, "column": 65}}, "token": {"kind": "identifier", "text": "detail"}, "children": []},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 65}, "end": {"line": 42, "column": 66}}, "token": {"kind": "period", "text": "."}, "children": []},
-        {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 42, "column": 66}, "end": {"line": 42, "column": 68}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 66}, "end": {"line": 42, "column": 68}}, "token": {"kind": "identifier", "text": "id"}, "children": []},
-        ]},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 68}, "end": {"line": 42, "column": 69}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 42, "column": 69}, "end": {"line": 42, "column": 69}}, "children": []},
-]}
+reviews_member_open_window_action_usage_to_confirm_new_window_command_is_deliberate_node := {"declReferenceExprs": [{"baseName": "environment", "range": {"end": {"column": 26, "line": 42}, "start": {"column": 15, "line": 42}}}, {"baseName": "openWindow", "range": {"end": {"column": 37, "line": 42}, "start": {"column": 27, "line": 42}}}, {"baseName": "detail", "range": {"end": {"column": 65, "line": 42}, "start": {"column": 59, "line": 42}}}, {"baseName": "id", "range": {"end": {"column": 68, "line": 42}, "start": {"column": 66, "line": 42}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 50, "line": 42}, "start": {"column": 42, "line": 42}}, "segments": [{"stringSegment": {"content": "detail", "range": {"end": {"column": 49, "line": 42}, "start": {"column": 43, "line": 42}}}}]}}, "label": "id", "range": {"end": {"column": 51, "line": 42}, "start": {"column": 38, "line": 42}}}, {"expression": {"memberAccessExpr": {"base": {"declReferenceExpr": {"baseName": "detail", "range": {"end": {"column": 65, "line": 42}, "start": {"column": 59, "line": 42}}}}, "declName": {"baseName": "id", "range": {"end": {"column": 68, "line": 42}, "start": {"column": 66, "line": 42}}}, "range": {"end": {"column": 68, "line": 42}, "start": {"column": 59, "line": 42}}}}, "label": "value", "range": {"end": {"column": 68, "line": 42}, "start": {"column": 52, "line": 42}}}], "calledExpression": {"memberAccessExpr": {"base": {"declReferenceExpr": {"baseName": "environment", "range": {"end": {"column": 26, "line": 42}, "start": {"column": 15, "line": 42}}}}, "declName": {"baseName": "openWindow", "range": {"end": {"column": 37, "line": 42}, "start": {"column": 27, "line": 42}}}, "range": {"end": {"column": 37, "line": 42}, "start": {"column": 15, "line": 42}}}}, "range": {"end": {"column": 69, "line": 42}, "start": {"column": 15, "line": 42}}}], "memberAccessExprs": [{"base": {"declReferenceExpr": {"baseName": "environment", "range": {"end": {"column": 26, "line": 42}, "start": {"column": 15, "line": 42}}}}, "declName": {"baseName": "openWindow", "range": {"end": {"column": 37, "line": 42}, "start": {"column": 27, "line": 42}}}, "range": {"end": {"column": 37, "line": 42}, "start": {"column": 15, "line": 42}}}, {"base": {"declReferenceExpr": {"baseName": "detail", "range": {"end": {"column": 65, "line": 42}, "start": {"column": 59, "line": 42}}}}, "declName": {"baseName": "id", "range": {"end": {"column": 68, "line": 42}, "start": {"column": 66, "line": 42}}}, "range": {"end": {"column": 68, "line": 42}, "start": {"column": 59, "line": 42}}}], "stringLiteralExprs": [{"range": {"end": {"column": 50, "line": 42}, "start": {"column": 42, "line": 42}}, "segments": [{"stringSegment": {"content": "detail", "range": {"end": {"column": 49, "line": 42}, "start": {"column": 43, "line": 42}}}}]}]}
 
 # Parser output for `openURL(documentURL)` at 31:9.
-does_not_review_open_url_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 31, "column": 9}, "end": {"line": 31, "column": 29}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 31, "column": 9}, "end": {"line": 31, "column": 16}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 9}, "end": {"line": 31, "column": 16}}, "token": {"kind": "identifier", "text": "openURL"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 16}, "end": {"line": 31, "column": 17}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 31, "column": 17}, "end": {"line": 31, "column": 28}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 31, "column": 17}, "end": {"line": 31, "column": 28}}, "children": [
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 31, "column": 17}, "end": {"line": 31, "column": 28}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 17}, "end": {"line": 31, "column": 28}}, "token": {"kind": "identifier", "text": "documentURL"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 28}, "end": {"line": 31, "column": 29}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 31, "column": 29}, "end": {"line": 31, "column": 29}}, "children": []},
-]}
+does_not_review_open_url_swift_syntax_node := {"declReferenceExprs": [{"baseName": "openURL", "range": {"end": {"column": 16, "line": 31}, "start": {"column": 9, "line": 31}}}, {"baseName": "documentURL", "range": {"end": {"column": 28, "line": 31}, "start": {"column": 17, "line": 31}}}], "functionCallExprs": [{"arguments": [{"expression": {"declReferenceExpr": {"baseName": "documentURL", "range": {"end": {"column": 28, "line": 31}, "start": {"column": 17, "line": 31}}}}, "range": {"end": {"column": 28, "line": 31}, "start": {"column": 17, "line": 31}}}], "calledExpression": {"declReferenceExpr": {"baseName": "openURL", "range": {"end": {"column": 16, "line": 31}, "start": {"column": 9, "line": 31}}}}, "range": {"end": {"column": 29, "line": 31}, "start": {"column": 9, "line": 31}}}]}
 
 # Parser output for `OpenWindowAction()` at 52:13.
-does_not_review_open_window_action_without_open_window_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 52, "column": 13}, "end": {"line": 52, "column": 31}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 52, "column": 13}, "end": {"line": 52, "column": 29}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 52, "column": 13}, "end": {"line": 52, "column": 29}}, "token": {"kind": "identifier", "text": "OpenWindowAction"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 52, "column": 29}, "end": {"line": 52, "column": 30}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 52, "column": 30}, "end": {"line": 52, "column": 30}}, "children": []},
-  {"type": "TokenSyntax", "range": {"start": {"line": 52, "column": 30}, "end": {"line": 52, "column": 31}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 52, "column": 31}, "end": {"line": 52, "column": 31}}, "children": []},
-]}
+does_not_review_open_window_action_without_open_window_swift_syntax_node := {"declReferenceExprs": [{"baseName": "OpenWindowAction", "range": {"end": {"column": 29, "line": 52}, "start": {"column": 13, "line": 52}}}], "functionCallExprs": [{"calledExpression": {"declReferenceExpr": {"baseName": "OpenWindowAction", "range": {"end": {"column": 29, "line": 52}, "start": {"column": 13, "line": 52}}}}, "range": {"end": {"column": 31, "line": 52}, "start": {"column": 13, "line": 52}}}]}

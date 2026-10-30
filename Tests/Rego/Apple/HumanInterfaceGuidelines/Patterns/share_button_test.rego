@@ -18,63 +18,7 @@ test_does_not_warn_for_sharelink if {
 }
 
 # Parser output for `Button("Share", action: share)` at 18:11.
-warns_for_custom_button_with_share_text_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 18, "column": 11}, "end": {"line": 18, "column": 41}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 18, "column": 11}, "end": {"line": 18, "column": 17}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 11}, "end": {"line": 18, "column": 17}}, "token": {"kind": "identifier", "text": "Button"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 17}, "end": {"line": 18, "column": 18}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 18, "column": 18}, "end": {"line": 18, "column": 40}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 18, "column": 18}, "end": {"line": 18, "column": 26}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 18, "column": 18}, "end": {"line": 18, "column": 25}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 18}, "end": {"line": 18, "column": 19}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 18, "column": 19}, "end": {"line": 18, "column": 24}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 18, "column": 19}, "end": {"line": 18, "column": 24}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 19}, "end": {"line": 18, "column": 24}}, "token": {"kind": "stringSegment", "text": "Share"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 24}, "end": {"line": 18, "column": 25}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 25}, "end": {"line": 18, "column": 26}}, "token": {"kind": "comma", "text": ","}, "children": []},
-    ]},
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 18, "column": 27}, "end": {"line": 18, "column": 40}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 27}, "end": {"line": 18, "column": 33}}, "token": {"kind": "identifier", "text": "action"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 33}, "end": {"line": 18, "column": 34}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 18, "column": 35}, "end": {"line": 18, "column": 40}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 35}, "end": {"line": 18, "column": 40}}, "token": {"kind": "identifier", "text": "share"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 40}, "end": {"line": 18, "column": 41}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 18, "column": 41}, "end": {"line": 18, "column": 41}}, "children": []},
-]}
+warns_for_custom_button_with_share_text_node := {"declReferenceExprs": [{"baseName": "Button", "range": {"end": {"column": 17, "line": 18}, "start": {"column": 11, "line": 18}}}, {"baseName": "share", "range": {"end": {"column": 40, "line": 18}, "start": {"column": 35, "line": 18}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 25, "line": 18}, "start": {"column": 18, "line": 18}}, "segments": [{"stringSegment": {"content": "Share", "range": {"end": {"column": 24, "line": 18}, "start": {"column": 19, "line": 18}}}}]}}, "range": {"end": {"column": 26, "line": 18}, "start": {"column": 18, "line": 18}}}, {"expression": {"declReferenceExpr": {"baseName": "share", "range": {"end": {"column": 40, "line": 18}, "start": {"column": 35, "line": 18}}}}, "label": "action", "range": {"end": {"column": 40, "line": 18}, "start": {"column": 27, "line": 18}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Button", "range": {"end": {"column": 17, "line": 18}, "start": {"column": 11, "line": 18}}}}, "range": {"end": {"column": 41, "line": 18}, "start": {"column": 11, "line": 18}}}], "stringLiteralExprs": [{"range": {"end": {"column": 25, "line": 18}, "start": {"column": 18, "line": 18}}, "segments": [{"stringSegment": {"content": "Share", "range": {"end": {"column": 24, "line": 18}, "start": {"column": 19, "line": 18}}}}]}]}
 
 # Parser output for `ShareLink("Share", item: url)` at 26:9.
-does_not_warn_for_sharelink_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 26, "column": 9}, "end": {"line": 26, "column": 38}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 26, "column": 9}, "end": {"line": 26, "column": 18}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 26, "column": 9}, "end": {"line": 26, "column": 18}}, "token": {"kind": "identifier", "text": "ShareLink"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 26, "column": 18}, "end": {"line": 26, "column": 19}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 26, "column": 19}, "end": {"line": 26, "column": 37}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 26, "column": 19}, "end": {"line": 26, "column": 27}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 26, "column": 19}, "end": {"line": 26, "column": 26}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 26, "column": 19}, "end": {"line": 26, "column": 20}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 26, "column": 20}, "end": {"line": 26, "column": 25}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 26, "column": 20}, "end": {"line": 26, "column": 25}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 26, "column": 20}, "end": {"line": 26, "column": 25}}, "token": {"kind": "stringSegment", "text": "Share"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 26, "column": 25}, "end": {"line": 26, "column": 26}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 26, "column": 26}, "end": {"line": 26, "column": 27}}, "token": {"kind": "comma", "text": ","}, "children": []},
-    ]},
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 26, "column": 28}, "end": {"line": 26, "column": 37}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 26, "column": 28}, "end": {"line": 26, "column": 32}}, "token": {"kind": "identifier", "text": "item"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 26, "column": 32}, "end": {"line": 26, "column": 33}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 26, "column": 34}, "end": {"line": 26, "column": 37}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 26, "column": 34}, "end": {"line": 26, "column": 37}}, "token": {"kind": "identifier", "text": "url"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 26, "column": 37}, "end": {"line": 26, "column": 38}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 26, "column": 38}, "end": {"line": 26, "column": 38}}, "children": []},
-]}
+does_not_warn_for_sharelink_node := {"declReferenceExprs": [{"baseName": "ShareLink", "range": {"end": {"column": 18, "line": 26}, "start": {"column": 9, "line": 26}}}, {"baseName": "url", "range": {"end": {"column": 37, "line": 26}, "start": {"column": 34, "line": 26}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 26, "line": 26}, "start": {"column": 19, "line": 26}}, "segments": [{"stringSegment": {"content": "Share", "range": {"end": {"column": 25, "line": 26}, "start": {"column": 20, "line": 26}}}}]}}, "range": {"end": {"column": 27, "line": 26}, "start": {"column": 19, "line": 26}}}, {"expression": {"declReferenceExpr": {"baseName": "url", "range": {"end": {"column": 37, "line": 26}, "start": {"column": 34, "line": 26}}}}, "label": "item", "range": {"end": {"column": 37, "line": 26}, "start": {"column": 28, "line": 26}}}], "calledExpression": {"declReferenceExpr": {"baseName": "ShareLink", "range": {"end": {"column": 18, "line": 26}, "start": {"column": 9, "line": 26}}}}, "range": {"end": {"column": 38, "line": 26}, "start": {"column": 9, "line": 26}}}], "stringLiteralExprs": [{"range": {"end": {"column": 26, "line": 26}, "start": {"column": 19, "line": 26}}, "segments": [{"stringSegment": {"content": "Share", "range": {"end": {"column": 25, "line": 26}, "start": {"column": 20, "line": 26}}}}]}]}

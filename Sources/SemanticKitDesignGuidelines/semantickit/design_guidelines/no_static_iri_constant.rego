@@ -18,9 +18,8 @@ package semantickit.design_guidelines.no_static_iri_constant
 # The one static IRI a type keeps is its own projection,
 # `static var iri: IRI { Fauna.namespace.iri }`: computed, typed IRI, and built
 # from no string. The namespace itself is declared in the ontology's
-# `var body`, not as a static.
-# Binding identity rule (Charles): "An IRI on a type is a static projection
-# computed from the namespace, read only at the boundary."
+# `var body`, not as a static. Whether a declaration keeps that projection at
+# all waits on Charles's confirmation of DESIGN-CONTRACT.md rule 17.
 # DESIGN-CONTRACT.md rule 2 (Charles): "Types never communicate through IRI
 # strings. IRIs exist only at the boundary." Rule 3: "No static mapping onto
 # enums, structs and statics."
@@ -40,29 +39,21 @@ denial_set contains {
   "column": decl.range.start.column,
   "severity": "error",
 } if {
-  decl := input
-  decl.type == "VariableDeclSyntax"
+  some decl in input.variableDecls
   is_static(decl)
-  some bindings in decl.children
-  bindings.type == "PatternBindingListSyntax"
-  some binding in bindings.children
+  some binding in decl.bindings
   iri_binding(binding)
 }
 
 is_static(decl) if {
-  some modifiers in decl.children
-  modifiers.type == "DeclModifierListSyntax"
-  some modifier in modifiers.children
-  modifier.children[0].token.text in {"static", "class"}
+  some modifier in decl.modifiers
+  modifier.name in {"static", "class"}
 }
 
 # `static let knows: IRI`, `: URL?`, `: IRIKit.IRI!`; not the projection.
 iri_binding(binding) if {
   not projection(binding)
-  some annotation in binding.children
-  annotation.type == "TypeAnnotationSyntax"
-  some type in annotation.children
-  iri_type(type)
+  iri_type(binding.typeAnnotation.type)
 }
 
 iri_binding(binding) if {
@@ -72,147 +63,99 @@ iri_binding(binding) if {
 
 # `static var iri: IRI { … }`: the type's own IRI, computed.
 projection(binding) if {
-  binding.children[0].type == "IdentifierPatternSyntax"
-  binding.children[0].children[0].token.text == "iri"
-  some accessor in binding.children
-  accessor.type == "AccessorBlockSyntax"
-  not initialized(binding)
-}
-
-initialized(binding) if {
-  some initializer in binding.children
-  initializer.type == "InitializerClauseSyntax"
+  binding.pattern.identifierPattern.identifier == "iri"
+  binding.accessorBlock
+  not binding.initializer
 }
 
 # What the property is set to, or what its accessors compute.
-values(binding) := {value |
-  some clause in binding.children
-  clause.type in {"InitializerClauseSyntax", "AccessorBlockSyntax"}
-  some value in clause.children
-  value.type != "TokenSyntax"
-}
+values(binding) := {value | value := binding.initializer.value} | {block | block := binding.accessorBlock}
 
 # `URL(string: "…")!`, `try! IRI(validating: "…")`, `{ NamedNode("…") }()`
 iri_value(value) if {
-  walk(value, [_, call])
-  call.type == "FunctionCallExprSyntax"
-  callee_name(call.children[0]) in identifier_types
+  walk(value, [_, node])
+  callee_name(node.functionCallExpr) in identifier_types
 }
 
 # `"http://xmlns.com/foaf/0.1/knows"`, `Namespace("http://…")`, `"foaf:knows"`
 iri_value(value) if {
-  walk(value, [_, literal])
-  literal.type == "StringLiteralExprSyntax"
-  iri_string(leading_text(literal))
+  walk(value, [_, node])
+  iri_string(leading_text(node.stringLiteralExpr))
 }
 
 # `"\(ns)knows"`
 iri_value(value) if {
-  walk(value, [_, segment])
-  segment.type == "ExpressionSegmentSyntax"
+  walk(value, [_, node])
+  node.expressionSegment
 }
 
 # `ns + "knows"`, `"http://…" + name`
 iri_value(value) if {
-  walk(value, [_, sequence])
-  sequence.type == "SequenceExprSyntax"
-  some list in sequence.children
-  some operator in list.children
-  operator.type == "BinaryOperatorExprSyntax"
-  operator.children[0].token.text == "+"
-  some operand in list.children
-  operand.type == "StringLiteralExprSyntax"
+  walk(value, [_, node])
+  operation := node.infixOperatorExpr
+  operation.operator.binaryOperatorExpr.operator == "+"
+  some operand in [operation.leftOperand, operation.rightOperand]
+  operand.stringLiteralExpr
 }
 
 # `ns.appending("knows")`, `[ns, "knows"].joined()`, `String(format: "%@knows", ns)`
 iri_value(value) if {
-  walk(value, [_, call])
+  walk(value, [_, node])
+  call := node.functionCallExpr
   string_building_call(call)
   walk(call, [_, literal])
-  literal.type == "StringLiteralExprSyntax"
+  literal.stringLiteralExpr
 }
 
 # `ns.appending("knows")`, `[ns, "knows"].joined()`, `String(format: "%@knows",
 # ns)`: a string built by a call rather than by `+`. `URL.appending(path:)` and
 # `appendingPathComponent(_:)` take labels or name file paths and are not
 # string concatenation.
+string_building_call(call) if call.calledExpression.memberAccessExpr.declName.baseName == "joined"
+
 string_building_call(call) if {
-  call.type == "FunctionCallExprSyntax"
-  callee := call.children[0]
-  callee.type == "MemberAccessExprSyntax"
-  callee.children[count(callee.children) - 1].children[0].token.text == "joined"
+  call.calledExpression.memberAccessExpr.declName.baseName == "appending"
+  [argument] := call.arguments
+  not argument.label
 }
 
 string_building_call(call) if {
-  call.type == "FunctionCallExprSyntax"
-  callee := call.children[0]
-  callee.type == "MemberAccessExprSyntax"
-  callee.children[count(callee.children) - 1].children[0].token.text == "appending"
-  some arguments in call.children
-  arguments.type == "LabeledExprListSyntax"
-  count(arguments.children) == 1
-  arguments.children[0].children[0].type != "TokenSyntax"
-}
-
-string_building_call(call) if {
-  call.type == "FunctionCallExprSyntax"
-  callee := call.children[0]
-  callee.type == "DeclReferenceExprSyntax"
-  callee.children[0].token.text == "String"
-  some arguments in call.children
-  arguments.type == "LabeledExprListSyntax"
-  first := arguments.children[0].children[0]
-  first.type == "TokenSyntax"
-  first.token.text == "format"
+  call.calledExpression.declReferenceExpr.baseName == "String"
+  call.arguments[0].label == "format"
 }
 
 iri_type(type) if named_iri(type)
 
-iri_type(type) if {
-  type.type in {"OptionalTypeSyntax", "ImplicitlyUnwrappedOptionalTypeSyntax"}
-  named_iri(type.children[0])
-}
+iri_type(type) if named_iri(type.optionalType.wrappedType)
 
-named_iri(type) if {
-  type.type == "IdentifierTypeSyntax"
-  type.children[0].token.text in identifier_types
-}
+iri_type(type) if named_iri(type.implicitlyUnwrappedOptionalType.wrappedType)
 
-named_iri(type) if {
-  type.type == "MemberTypeSyntax"
-  some name in type.children
-  name.type == "TokenSyntax"
-  name.token.kind == "identifier"
-  name.token.text in identifier_types
-}
+named_iri(type) if type.identifierType.name in identifier_types
+
+named_iri(type) if type.memberType.name in identifier_types
 
 identifier_types := {"IRI", "URL", "URI", "NamedNode", "IRIRef"}
 
 # The text before any interpolation: "http://example.org/" in
 # "http://example.org/\(name)".
-leading_text(literal) := text if {
-  some segments in literal.children
-  segments.type == "StringLiteralSegmentListSyntax"
-  segment := segments.children[0]
-  segment.type == "StringSegmentSyntax"
-  text := segment.children[0].token.text
-}
+leading_text(literal) := literal.segments[0].stringSegment.content
 
 # "http://xmlns.com/foaf/0.1/knows", "urn:isbn:…", "foaf:knows"
 iri_string(text) if regex.match(`^[A-Za-z][A-Za-z0-9+.-]*:[^\s]+$`, text)
 
 # `IRI`, `IRIKit.IRI`, `IRI.init`, `IRIKit.IRI.init`
-callee_name(callee) := reference_name(callee) if not initializer_reference(callee)
+callee_name(call) := call.calledExpression.declReferenceExpr.baseName
 
-callee_name(callee) := reference_name(callee.children[0]) if initializer_reference(callee)
-
-initializer_reference(callee) if {
-  callee.type == "MemberAccessExprSyntax"
-  callee.children[count(callee.children) - 1].children[0].token.text == "init"
+callee_name(call) := name if {
+  name := call.calledExpression.memberAccessExpr.declName.baseName
+  name != "init"
 }
 
-reference_name(reference) := reference.children[0].token.text if reference.type == "DeclReferenceExprSyntax"
-
-reference_name(reference) := reference.children[count(reference.children) - 1].children[0].token.text if {
-  reference.type == "MemberAccessExprSyntax"
+callee_name(call) := reference_name(access.base) if {
+  access := call.calledExpression.memberAccessExpr
+  access.declName.baseName == "init"
 }
+
+reference_name(expression) := expression.declReferenceExpr.baseName
+
+reference_name(expression) := expression.memberAccessExpr.declName.baseName

@@ -22,14 +22,10 @@ denial_set contains {
   "column": call.range.start.column,
   "severity": "error",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
-  callee := call.children[0]
-  callee.type == "MemberAccessExprSyntax"
-  name := callee.children[count(callee.children) - 1]
-  name.type == "DeclReferenceExprSyntax"
-  type_modifier(name.children[0].token.text)
-  declaration_chain(callee.children[0])
+  some call in input.functionCallExprs
+  access := call.calledExpression.memberAccessExpr
+  type_modifier(access.declName.baseName)
+  declaration_chain(access.base)
 }
 
 type_modifier(name) if regex.match(`^add[A-Z]`, name)
@@ -41,11 +37,11 @@ type_modifier("isDeclaredBy")
 # value, `Dataset().addGraph(g)`, modifies an instance, which Charles allows:
 # "SwiftUI modifiers modify instances" (rule 6).
 declaration_chain(base) if {
+  some start in base
   walk(base, [_, node])
-  node.type == "FunctionCallExprSyntax"
-  node.range.start == base.range.start
-  node.children[0].type == "DeclReferenceExprSyntax"
-  node.children[0].children[0].token.text in declaration_kinds
+  call := node.functionCallExpr
+  call.range.start == start.range.start
+  call.calledExpression.declReferenceExpr.baseName in declaration_kinds
 }
 
 declaration_kinds := {

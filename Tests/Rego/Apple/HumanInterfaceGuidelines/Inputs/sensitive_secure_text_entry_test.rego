@@ -35,187 +35,19 @@ test_does_not_warn_for_non_sensitive_textfield_swift_syntax if {
 }
 
 # Parser output for `TextField("Password", text: $password)` at 19:11.
-warns_for_password_textfield_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 19, "column": 11}, "end": {"line": 19, "column": 49}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 19, "column": 11}, "end": {"line": 19, "column": 20}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 11}, "end": {"line": 19, "column": 20}}, "token": {"kind": "identifier", "text": "TextField"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 20}, "end": {"line": 19, "column": 21}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 19, "column": 21}, "end": {"line": 19, "column": 48}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 19, "column": 21}, "end": {"line": 19, "column": 32}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 19, "column": 21}, "end": {"line": 19, "column": 31}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 21}, "end": {"line": 19, "column": 22}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 19, "column": 22}, "end": {"line": 19, "column": 30}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 19, "column": 22}, "end": {"line": 19, "column": 30}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 22}, "end": {"line": 19, "column": 30}}, "token": {"kind": "stringSegment", "text": "Password"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 30}, "end": {"line": 19, "column": 31}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 31}, "end": {"line": 19, "column": 32}}, "token": {"kind": "comma", "text": ","}, "children": []},
-    ]},
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 19, "column": 33}, "end": {"line": 19, "column": 48}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 33}, "end": {"line": 19, "column": 37}}, "token": {"kind": "identifier", "text": "text"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 37}, "end": {"line": 19, "column": 38}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 19, "column": 39}, "end": {"line": 19, "column": 48}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 39}, "end": {"line": 19, "column": 48}}, "token": {"kind": "identifier", "text": "$password"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 19, "column": 48}, "end": {"line": 19, "column": 49}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 19, "column": 49}, "end": {"line": 19, "column": 49}}, "children": []},
-]}
+warns_for_password_textfield_swift_syntax_node := {"declReferenceExprs": [{"baseName": "TextField", "range": {"end": {"column": 20, "line": 19}, "start": {"column": 11, "line": 19}}}, {"baseName": "$password", "range": {"end": {"column": 48, "line": 19}, "start": {"column": 39, "line": 19}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 31, "line": 19}, "start": {"column": 21, "line": 19}}, "segments": [{"stringSegment": {"content": "Password", "range": {"end": {"column": 30, "line": 19}, "start": {"column": 22, "line": 19}}}}]}}, "range": {"end": {"column": 32, "line": 19}, "start": {"column": 21, "line": 19}}}, {"expression": {"declReferenceExpr": {"baseName": "$password", "range": {"end": {"column": 48, "line": 19}, "start": {"column": 39, "line": 19}}}}, "label": "text", "range": {"end": {"column": 48, "line": 19}, "start": {"column": 33, "line": 19}}}], "calledExpression": {"declReferenceExpr": {"baseName": "TextField", "range": {"end": {"column": 20, "line": 19}, "start": {"column": 11, "line": 19}}}}, "range": {"end": {"column": 49, "line": 19}, "start": {"column": 11, "line": 19}}}], "stringLiteralExprs": [{"range": {"end": {"column": 31, "line": 19}, "start": {"column": 21, "line": 19}}, "segments": [{"stringSegment": {"content": "Password", "range": {"end": {"column": 30, "line": 19}, "start": {"column": 22, "line": 19}}}}]}]}
 
 # Parser output for `TextField("Enter PIN", text: $pin)` at 21:13.
 # Parser output for `TextField("CVV", text: $cvv)` at 35:13.
 # Parser output for `TextField("Security code", text: $code)` at 42:13.
 warns_for_sensitive_textfield_variants_nodes := [
-  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 21, "column": 13}, "end": {"line": 21, "column": 47}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 21, "column": 13}, "end": {"line": 21, "column": 22}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 21, "column": 13}, "end": {"line": 21, "column": 22}}, "token": {"kind": "identifier", "text": "TextField"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 21, "column": 22}, "end": {"line": 21, "column": 23}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 21, "column": 23}, "end": {"line": 21, "column": 46}}, "children": [
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 21, "column": 23}, "end": {"line": 21, "column": 35}}, "children": [
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 21, "column": 23}, "end": {"line": 21, "column": 34}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 21, "column": 23}, "end": {"line": 21, "column": 24}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 21, "column": 24}, "end": {"line": 21, "column": 33}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 21, "column": 24}, "end": {"line": 21, "column": 33}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 21, "column": 24}, "end": {"line": 21, "column": 33}}, "token": {"kind": "stringSegment", "text": "Enter PIN"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 21, "column": 33}, "end": {"line": 21, "column": 34}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 21, "column": 34}, "end": {"line": 21, "column": 35}}, "token": {"kind": "comma", "text": ","}, "children": []},
-      ]},
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 21, "column": 36}, "end": {"line": 21, "column": 46}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 21, "column": 36}, "end": {"line": 21, "column": 40}}, "token": {"kind": "identifier", "text": "text"}, "children": []},
-        {"type": "TokenSyntax", "range": {"start": {"line": 21, "column": 40}, "end": {"line": 21, "column": 41}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-        {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 21, "column": 42}, "end": {"line": 21, "column": 46}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 21, "column": 42}, "end": {"line": 21, "column": 46}}, "token": {"kind": "identifier", "text": "$pin"}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 21, "column": 46}, "end": {"line": 21, "column": 47}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 21, "column": 47}, "end": {"line": 21, "column": 47}}, "children": []},
-  ]},
-  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 35, "column": 13}, "end": {"line": 35, "column": 41}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 35, "column": 13}, "end": {"line": 35, "column": 22}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 35, "column": 13}, "end": {"line": 35, "column": 22}}, "token": {"kind": "identifier", "text": "TextField"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 35, "column": 22}, "end": {"line": 35, "column": 23}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 35, "column": 23}, "end": {"line": 35, "column": 40}}, "children": [
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 35, "column": 23}, "end": {"line": 35, "column": 29}}, "children": [
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 35, "column": 23}, "end": {"line": 35, "column": 28}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 35, "column": 23}, "end": {"line": 35, "column": 24}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 35, "column": 24}, "end": {"line": 35, "column": 27}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 35, "column": 24}, "end": {"line": 35, "column": 27}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 35, "column": 24}, "end": {"line": 35, "column": 27}}, "token": {"kind": "stringSegment", "text": "CVV"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 35, "column": 27}, "end": {"line": 35, "column": 28}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 35, "column": 28}, "end": {"line": 35, "column": 29}}, "token": {"kind": "comma", "text": ","}, "children": []},
-      ]},
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 35, "column": 30}, "end": {"line": 35, "column": 40}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 35, "column": 30}, "end": {"line": 35, "column": 34}}, "token": {"kind": "identifier", "text": "text"}, "children": []},
-        {"type": "TokenSyntax", "range": {"start": {"line": 35, "column": 34}, "end": {"line": 35, "column": 35}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-        {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 35, "column": 36}, "end": {"line": 35, "column": 40}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 35, "column": 36}, "end": {"line": 35, "column": 40}}, "token": {"kind": "identifier", "text": "$cvv"}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 35, "column": 40}, "end": {"line": 35, "column": 41}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 35, "column": 41}, "end": {"line": 35, "column": 41}}, "children": []},
-  ]},
-  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 42, "column": 13}, "end": {"line": 42, "column": 52}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 42, "column": 13}, "end": {"line": 42, "column": 22}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 13}, "end": {"line": 42, "column": 22}}, "token": {"kind": "identifier", "text": "TextField"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 22}, "end": {"line": 42, "column": 23}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 42, "column": 23}, "end": {"line": 42, "column": 51}}, "children": [
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 42, "column": 23}, "end": {"line": 42, "column": 39}}, "children": [
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 42, "column": 23}, "end": {"line": 42, "column": 38}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 23}, "end": {"line": 42, "column": 24}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 42, "column": 24}, "end": {"line": 42, "column": 37}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 42, "column": 24}, "end": {"line": 42, "column": 37}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 24}, "end": {"line": 42, "column": 37}}, "token": {"kind": "stringSegment", "text": "Security code"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 37}, "end": {"line": 42, "column": 38}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 38}, "end": {"line": 42, "column": 39}}, "token": {"kind": "comma", "text": ","}, "children": []},
-      ]},
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 42, "column": 40}, "end": {"line": 42, "column": 51}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 40}, "end": {"line": 42, "column": 44}}, "token": {"kind": "identifier", "text": "text"}, "children": []},
-        {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 44}, "end": {"line": 42, "column": 45}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-        {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 42, "column": 46}, "end": {"line": 42, "column": 51}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 46}, "end": {"line": 42, "column": 51}}, "token": {"kind": "identifier", "text": "$code"}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 51}, "end": {"line": 42, "column": 52}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 42, "column": 52}, "end": {"line": 42, "column": 52}}, "children": []},
-  ]},
+  {"declReferenceExprs": [{"baseName": "TextField", "range": {"end": {"column": 22, "line": 21}, "start": {"column": 13, "line": 21}}}, {"baseName": "$pin", "range": {"end": {"column": 46, "line": 21}, "start": {"column": 42, "line": 21}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 34, "line": 21}, "start": {"column": 23, "line": 21}}, "segments": [{"stringSegment": {"content": "Enter PIN", "range": {"end": {"column": 33, "line": 21}, "start": {"column": 24, "line": 21}}}}]}}, "range": {"end": {"column": 35, "line": 21}, "start": {"column": 23, "line": 21}}}, {"expression": {"declReferenceExpr": {"baseName": "$pin", "range": {"end": {"column": 46, "line": 21}, "start": {"column": 42, "line": 21}}}}, "label": "text", "range": {"end": {"column": 46, "line": 21}, "start": {"column": 36, "line": 21}}}], "calledExpression": {"declReferenceExpr": {"baseName": "TextField", "range": {"end": {"column": 22, "line": 21}, "start": {"column": 13, "line": 21}}}}, "range": {"end": {"column": 47, "line": 21}, "start": {"column": 13, "line": 21}}}], "stringLiteralExprs": [{"range": {"end": {"column": 34, "line": 21}, "start": {"column": 23, "line": 21}}, "segments": [{"stringSegment": {"content": "Enter PIN", "range": {"end": {"column": 33, "line": 21}, "start": {"column": 24, "line": 21}}}}]}]},
+  {"declReferenceExprs": [{"baseName": "TextField", "range": {"end": {"column": 22, "line": 35}, "start": {"column": 13, "line": 35}}}, {"baseName": "$cvv", "range": {"end": {"column": 40, "line": 35}, "start": {"column": 36, "line": 35}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 28, "line": 35}, "start": {"column": 23, "line": 35}}, "segments": [{"stringSegment": {"content": "CVV", "range": {"end": {"column": 27, "line": 35}, "start": {"column": 24, "line": 35}}}}]}}, "range": {"end": {"column": 29, "line": 35}, "start": {"column": 23, "line": 35}}}, {"expression": {"declReferenceExpr": {"baseName": "$cvv", "range": {"end": {"column": 40, "line": 35}, "start": {"column": 36, "line": 35}}}}, "label": "text", "range": {"end": {"column": 40, "line": 35}, "start": {"column": 30, "line": 35}}}], "calledExpression": {"declReferenceExpr": {"baseName": "TextField", "range": {"end": {"column": 22, "line": 35}, "start": {"column": 13, "line": 35}}}}, "range": {"end": {"column": 41, "line": 35}, "start": {"column": 13, "line": 35}}}], "stringLiteralExprs": [{"range": {"end": {"column": 28, "line": 35}, "start": {"column": 23, "line": 35}}, "segments": [{"stringSegment": {"content": "CVV", "range": {"end": {"column": 27, "line": 35}, "start": {"column": 24, "line": 35}}}}]}]},
+  {"declReferenceExprs": [{"baseName": "TextField", "range": {"end": {"column": 22, "line": 42}, "start": {"column": 13, "line": 42}}}, {"baseName": "$code", "range": {"end": {"column": 51, "line": 42}, "start": {"column": 46, "line": 42}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 38, "line": 42}, "start": {"column": 23, "line": 42}}, "segments": [{"stringSegment": {"content": "Security code", "range": {"end": {"column": 37, "line": 42}, "start": {"column": 24, "line": 42}}}}]}}, "range": {"end": {"column": 39, "line": 42}, "start": {"column": 23, "line": 42}}}, {"expression": {"declReferenceExpr": {"baseName": "$code", "range": {"end": {"column": 51, "line": 42}, "start": {"column": 46, "line": 42}}}}, "label": "text", "range": {"end": {"column": 51, "line": 42}, "start": {"column": 40, "line": 42}}}], "calledExpression": {"declReferenceExpr": {"baseName": "TextField", "range": {"end": {"column": 22, "line": 42}, "start": {"column": 13, "line": 42}}}}, "range": {"end": {"column": 52, "line": 42}, "start": {"column": 13, "line": 42}}}], "stringLiteralExprs": [{"range": {"end": {"column": 38, "line": 42}, "start": {"column": 23, "line": 42}}, "segments": [{"stringSegment": {"content": "Security code", "range": {"end": {"column": 37, "line": 42}, "start": {"column": 24, "line": 42}}}}]}]},
 ]
 
 # Parser output for `SecureField("Password", text: $password)` at 27:11.
-does_not_warn_for_securefield_password_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 27, "column": 11}, "end": {"line": 27, "column": 51}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 27, "column": 11}, "end": {"line": 27, "column": 22}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 11}, "end": {"line": 27, "column": 22}}, "token": {"kind": "identifier", "text": "SecureField"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 22}, "end": {"line": 27, "column": 23}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 27, "column": 23}, "end": {"line": 27, "column": 50}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 27, "column": 23}, "end": {"line": 27, "column": 34}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 27, "column": 23}, "end": {"line": 27, "column": 33}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 23}, "end": {"line": 27, "column": 24}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 27, "column": 24}, "end": {"line": 27, "column": 32}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 27, "column": 24}, "end": {"line": 27, "column": 32}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 24}, "end": {"line": 27, "column": 32}}, "token": {"kind": "stringSegment", "text": "Password"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 32}, "end": {"line": 27, "column": 33}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 33}, "end": {"line": 27, "column": 34}}, "token": {"kind": "comma", "text": ","}, "children": []},
-    ]},
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 27, "column": 35}, "end": {"line": 27, "column": 50}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 35}, "end": {"line": 27, "column": 39}}, "token": {"kind": "identifier", "text": "text"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 39}, "end": {"line": 27, "column": 40}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 27, "column": 41}, "end": {"line": 27, "column": 50}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 41}, "end": {"line": 27, "column": 50}}, "token": {"kind": "identifier", "text": "$password"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 50}, "end": {"line": 27, "column": 51}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 27, "column": 51}, "end": {"line": 27, "column": 51}}, "children": []},
-]}
+does_not_warn_for_securefield_password_swift_syntax_node := {"declReferenceExprs": [{"baseName": "SecureField", "range": {"end": {"column": 22, "line": 27}, "start": {"column": 11, "line": 27}}}, {"baseName": "$password", "range": {"end": {"column": 50, "line": 27}, "start": {"column": 41, "line": 27}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 33, "line": 27}, "start": {"column": 23, "line": 27}}, "segments": [{"stringSegment": {"content": "Password", "range": {"end": {"column": 32, "line": 27}, "start": {"column": 24, "line": 27}}}}]}}, "range": {"end": {"column": 34, "line": 27}, "start": {"column": 23, "line": 27}}}, {"expression": {"declReferenceExpr": {"baseName": "$password", "range": {"end": {"column": 50, "line": 27}, "start": {"column": 41, "line": 27}}}}, "label": "text", "range": {"end": {"column": 50, "line": 27}, "start": {"column": 35, "line": 27}}}], "calledExpression": {"declReferenceExpr": {"baseName": "SecureField", "range": {"end": {"column": 22, "line": 27}, "start": {"column": 11, "line": 27}}}}, "range": {"end": {"column": 51, "line": 27}, "start": {"column": 11, "line": 27}}}], "stringLiteralExprs": [{"range": {"end": {"column": 33, "line": 27}, "start": {"column": 23, "line": 27}}, "segments": [{"stringSegment": {"content": "Password", "range": {"end": {"column": 32, "line": 27}, "start": {"column": 24, "line": 27}}}}]}]}
 
 # Parser output for `TextField("Display name", text: $name)` at 16:11.
-does_not_warn_for_non_sensitive_textfield_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 16, "column": 11}, "end": {"line": 16, "column": 49}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 16, "column": 11}, "end": {"line": 16, "column": 20}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 11}, "end": {"line": 16, "column": 20}}, "token": {"kind": "identifier", "text": "TextField"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 20}, "end": {"line": 16, "column": 21}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 16, "column": 21}, "end": {"line": 16, "column": 48}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 16, "column": 21}, "end": {"line": 16, "column": 36}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 16, "column": 21}, "end": {"line": 16, "column": 35}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 21}, "end": {"line": 16, "column": 22}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 16, "column": 22}, "end": {"line": 16, "column": 34}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 16, "column": 22}, "end": {"line": 16, "column": 34}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 22}, "end": {"line": 16, "column": 34}}, "token": {"kind": "stringSegment", "text": "Display name"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 34}, "end": {"line": 16, "column": 35}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 35}, "end": {"line": 16, "column": 36}}, "token": {"kind": "comma", "text": ","}, "children": []},
-    ]},
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 16, "column": 37}, "end": {"line": 16, "column": 48}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 37}, "end": {"line": 16, "column": 41}}, "token": {"kind": "identifier", "text": "text"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 41}, "end": {"line": 16, "column": 42}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 16, "column": 43}, "end": {"line": 16, "column": 48}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 43}, "end": {"line": 16, "column": 48}}, "token": {"kind": "identifier", "text": "$name"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 48}, "end": {"line": 16, "column": 49}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 16, "column": 49}, "end": {"line": 16, "column": 49}}, "children": []},
-]}
+does_not_warn_for_non_sensitive_textfield_swift_syntax_node := {"declReferenceExprs": [{"baseName": "TextField", "range": {"end": {"column": 20, "line": 16}, "start": {"column": 11, "line": 16}}}, {"baseName": "$name", "range": {"end": {"column": 48, "line": 16}, "start": {"column": 43, "line": 16}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 35, "line": 16}, "start": {"column": 21, "line": 16}}, "segments": [{"stringSegment": {"content": "Display name", "range": {"end": {"column": 34, "line": 16}, "start": {"column": 22, "line": 16}}}}]}}, "range": {"end": {"column": 36, "line": 16}, "start": {"column": 21, "line": 16}}}, {"expression": {"declReferenceExpr": {"baseName": "$name", "range": {"end": {"column": 48, "line": 16}, "start": {"column": 43, "line": 16}}}}, "label": "text", "range": {"end": {"column": 48, "line": 16}, "start": {"column": 37, "line": 16}}}], "calledExpression": {"declReferenceExpr": {"baseName": "TextField", "range": {"end": {"column": 20, "line": 16}, "start": {"column": 11, "line": 16}}}}, "range": {"end": {"column": 49, "line": 16}, "start": {"column": 11, "line": 16}}}], "stringLiteralExprs": [{"range": {"end": {"column": 35, "line": 16}, "start": {"column": 21, "line": 16}}, "segments": [{"stringSegment": {"content": "Display name", "range": {"end": {"column": 34, "line": 16}, "start": {"column": 22, "line": 16}}}}]}]}

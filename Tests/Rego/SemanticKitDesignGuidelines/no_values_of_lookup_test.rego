@@ -46,159 +46,19 @@ test_allows_values_unlabeled_call if {
 }
 
 # Parser output for `Cert.key.values(of: alice)` at 4:9.
-values_of_call_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 4, "column": 9}, "end": {"line": 4, "column": 35}}, "children": [
-  {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 4, "column": 9}, "end": {"line": 4, "column": 24}}, "children": [
-    {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 4, "column": 9}, "end": {"line": 4, "column": 17}}, "children": [
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 4, "column": 9}, "end": {"line": 4, "column": 13}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 4, "column": 9}, "end": {"line": 4, "column": 13}}, "token": {"kind": "identifier", "text": "Cert"}, "children": []},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 4, "column": 13}, "end": {"line": 4, "column": 14}}, "token": {"kind": "period", "text": "."}, "children": []},
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 4, "column": 14}, "end": {"line": 4, "column": 17}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 4, "column": 14}, "end": {"line": 4, "column": 17}}, "token": {"kind": "identifier", "text": "key"}, "children": []},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 4, "column": 17}, "end": {"line": 4, "column": 18}}, "token": {"kind": "period", "text": "."}, "children": []},
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 4, "column": 18}, "end": {"line": 4, "column": 24}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 4, "column": 18}, "end": {"line": 4, "column": 24}}, "token": {"kind": "identifier", "text": "values"}, "children": []},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 4, "column": 24}, "end": {"line": 4, "column": 25}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 4, "column": 25}, "end": {"line": 4, "column": 34}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 4, "column": 25}, "end": {"line": 4, "column": 34}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 4, "column": 25}, "end": {"line": 4, "column": 27}}, "token": {"kind": "identifier", "text": "of"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 4, "column": 27}, "end": {"line": 4, "column": 28}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 4, "column": 29}, "end": {"line": 4, "column": 34}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 4, "column": 29}, "end": {"line": 4, "column": 34}}, "token": {"kind": "identifier", "text": "alice"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 4, "column": 34}, "end": {"line": 4, "column": 35}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 4, "column": 35}, "end": {"line": 4, "column": 35}}, "children": []},
-]}
+values_of_call_node := {"declReferenceExprs": [{"baseName": "Cert", "range": {"end": {"column": 13, "line": 4}, "start": {"column": 9, "line": 4}}}, {"baseName": "key", "range": {"end": {"column": 17, "line": 4}, "start": {"column": 14, "line": 4}}}, {"baseName": "values", "range": {"end": {"column": 24, "line": 4}, "start": {"column": 18, "line": 4}}}, {"baseName": "alice", "range": {"end": {"column": 34, "line": 4}, "start": {"column": 29, "line": 4}}}], "functionCallExprs": [{"arguments": [{"expression": {"declReferenceExpr": {"baseName": "alice", "range": {"end": {"column": 34, "line": 4}, "start": {"column": 29, "line": 4}}}}, "label": "of", "range": {"end": {"column": 34, "line": 4}, "start": {"column": 25, "line": 4}}}], "calledExpression": {"memberAccessExpr": {"base": {"memberAccessExpr": {"base": {"declReferenceExpr": {"baseName": "Cert", "range": {"end": {"column": 13, "line": 4}, "start": {"column": 9, "line": 4}}}}, "declName": {"baseName": "key", "range": {"end": {"column": 17, "line": 4}, "start": {"column": 14, "line": 4}}}, "range": {"end": {"column": 17, "line": 4}, "start": {"column": 9, "line": 4}}}}, "declName": {"baseName": "values", "range": {"end": {"column": 24, "line": 4}, "start": {"column": 18, "line": 4}}}, "range": {"end": {"column": 24, "line": 4}, "start": {"column": 9, "line": 4}}}}, "range": {"end": {"column": 35, "line": 4}, "start": {"column": 9, "line": 4}}}], "memberAccessExprs": [{"base": {"memberAccessExpr": {"base": {"declReferenceExpr": {"baseName": "Cert", "range": {"end": {"column": 13, "line": 4}, "start": {"column": 9, "line": 4}}}}, "declName": {"baseName": "key", "range": {"end": {"column": 17, "line": 4}, "start": {"column": 14, "line": 4}}}, "range": {"end": {"column": 17, "line": 4}, "start": {"column": 9, "line": 4}}}}, "declName": {"baseName": "values", "range": {"end": {"column": 24, "line": 4}, "start": {"column": 18, "line": 4}}}, "range": {"end": {"column": 24, "line": 4}, "start": {"column": 9, "line": 4}}}, {"base": {"declReferenceExpr": {"baseName": "Cert", "range": {"end": {"column": 13, "line": 4}, "start": {"column": 9, "line": 4}}}}, "declName": {"baseName": "key", "range": {"end": {"column": 17, "line": 4}, "start": {"column": 14, "line": 4}}}, "range": {"end": {"column": 17, "line": 4}, "start": {"column": 9, "line": 4}}}]}
 
 # Parser output for `Solid.oidcIssuer.values(of: profile)` at 7:9.
-values_of_issuer_call_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 7, "column": 9}, "end": {"line": 7, "column": 45}}, "children": [
-  {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 7, "column": 9}, "end": {"line": 7, "column": 32}}, "children": [
-    {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 7, "column": 9}, "end": {"line": 7, "column": 25}}, "children": [
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 7, "column": 9}, "end": {"line": 7, "column": 14}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 7, "column": 9}, "end": {"line": 7, "column": 14}}, "token": {"kind": "identifier", "text": "Solid"}, "children": []},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 7, "column": 14}, "end": {"line": 7, "column": 15}}, "token": {"kind": "period", "text": "."}, "children": []},
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 7, "column": 15}, "end": {"line": 7, "column": 25}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 7, "column": 15}, "end": {"line": 7, "column": 25}}, "token": {"kind": "identifier", "text": "oidcIssuer"}, "children": []},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 7, "column": 25}, "end": {"line": 7, "column": 26}}, "token": {"kind": "period", "text": "."}, "children": []},
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 7, "column": 26}, "end": {"line": 7, "column": 32}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 7, "column": 26}, "end": {"line": 7, "column": 32}}, "token": {"kind": "identifier", "text": "values"}, "children": []},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 7, "column": 32}, "end": {"line": 7, "column": 33}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 7, "column": 33}, "end": {"line": 7, "column": 44}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 7, "column": 33}, "end": {"line": 7, "column": 44}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 7, "column": 33}, "end": {"line": 7, "column": 35}}, "token": {"kind": "identifier", "text": "of"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 7, "column": 35}, "end": {"line": 7, "column": 36}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 7, "column": 37}, "end": {"line": 7, "column": 44}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 7, "column": 37}, "end": {"line": 7, "column": 44}}, "token": {"kind": "identifier", "text": "profile"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 7, "column": 44}, "end": {"line": 7, "column": 45}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 7, "column": 45}, "end": {"line": 7, "column": 45}}, "children": []},
-]}
+values_of_issuer_call_node := {"declReferenceExprs": [{"baseName": "Solid", "range": {"end": {"column": 14, "line": 7}, "start": {"column": 9, "line": 7}}}, {"baseName": "oidcIssuer", "range": {"end": {"column": 25, "line": 7}, "start": {"column": 15, "line": 7}}}, {"baseName": "values", "range": {"end": {"column": 32, "line": 7}, "start": {"column": 26, "line": 7}}}, {"baseName": "profile", "range": {"end": {"column": 44, "line": 7}, "start": {"column": 37, "line": 7}}}], "functionCallExprs": [{"arguments": [{"expression": {"declReferenceExpr": {"baseName": "profile", "range": {"end": {"column": 44, "line": 7}, "start": {"column": 37, "line": 7}}}}, "label": "of", "range": {"end": {"column": 44, "line": 7}, "start": {"column": 33, "line": 7}}}], "calledExpression": {"memberAccessExpr": {"base": {"memberAccessExpr": {"base": {"declReferenceExpr": {"baseName": "Solid", "range": {"end": {"column": 14, "line": 7}, "start": {"column": 9, "line": 7}}}}, "declName": {"baseName": "oidcIssuer", "range": {"end": {"column": 25, "line": 7}, "start": {"column": 15, "line": 7}}}, "range": {"end": {"column": 25, "line": 7}, "start": {"column": 9, "line": 7}}}}, "declName": {"baseName": "values", "range": {"end": {"column": 32, "line": 7}, "start": {"column": 26, "line": 7}}}, "range": {"end": {"column": 32, "line": 7}, "start": {"column": 9, "line": 7}}}}, "range": {"end": {"column": 45, "line": 7}, "start": {"column": 9, "line": 7}}}], "memberAccessExprs": [{"base": {"memberAccessExpr": {"base": {"declReferenceExpr": {"baseName": "Solid", "range": {"end": {"column": 14, "line": 7}, "start": {"column": 9, "line": 7}}}}, "declName": {"baseName": "oidcIssuer", "range": {"end": {"column": 25, "line": 7}, "start": {"column": 15, "line": 7}}}, "range": {"end": {"column": 25, "line": 7}, "start": {"column": 9, "line": 7}}}}, "declName": {"baseName": "values", "range": {"end": {"column": 32, "line": 7}, "start": {"column": 26, "line": 7}}}, "range": {"end": {"column": 32, "line": 7}, "start": {"column": 9, "line": 7}}}, {"base": {"declReferenceExpr": {"baseName": "Solid", "range": {"end": {"column": 14, "line": 7}, "start": {"column": 9, "line": 7}}}}, "declName": {"baseName": "oidcIssuer", "range": {"end": {"column": 25, "line": 7}, "start": {"column": 15, "line": 7}}}, "range": {"end": {"column": 25, "line": 7}, "start": {"column": 9, "line": 7}}}]}
 
 # Parser output for `func values(of subject: Individual) -> [Node] {}` at 10:5.
-values_of_declaration_node := {"type": "FunctionDeclSyntax", "range": {"start": {"line": 10, "column": 5}, "end": {"line": 10, "column": 53}}, "children": [
-  {"type": "AttributeListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
-  {"type": "DeclModifierListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
-  {"type": "TokenSyntax", "range": {"start": {"line": 10, "column": 5}, "end": {"line": 10, "column": 9}}, "token": {"kind": "keyword", "text": "func"}, "children": []},
-  {"type": "TokenSyntax", "range": {"start": {"line": 10, "column": 10}, "end": {"line": 10, "column": 16}}, "token": {"kind": "identifier", "text": "values"}, "children": []},
-  {"type": "FunctionSignatureSyntax", "range": {"start": {"line": 10, "column": 16}, "end": {"line": 10, "column": 50}}, "children": [
-    {"type": "FunctionParameterClauseSyntax", "range": {"start": {"line": 10, "column": 16}, "end": {"line": 10, "column": 40}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 10, "column": 16}, "end": {"line": 10, "column": 17}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-      {"type": "FunctionParameterListSyntax", "range": {"start": {"line": 10, "column": 17}, "end": {"line": 10, "column": 39}}, "children": [
-        {"type": "FunctionParameterSyntax", "range": {"start": {"line": 10, "column": 17}, "end": {"line": 10, "column": 39}}, "children": [
-          {"type": "AttributeListSyntax", "range": {"start": {"line": 10, "column": 17}, "end": {"line": 10, "column": 17}}, "children": []},
-          {"type": "DeclModifierListSyntax", "range": {"start": {"line": 10, "column": 17}, "end": {"line": 10, "column": 17}}, "children": []},
-          {"type": "TokenSyntax", "range": {"start": {"line": 10, "column": 17}, "end": {"line": 10, "column": 19}}, "token": {"kind": "identifier", "text": "of"}, "children": []},
-          {"type": "TokenSyntax", "range": {"start": {"line": 10, "column": 20}, "end": {"line": 10, "column": 27}}, "token": {"kind": "identifier", "text": "subject"}, "children": []},
-          {"type": "TokenSyntax", "range": {"start": {"line": 10, "column": 27}, "end": {"line": 10, "column": 28}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-          {"type": "IdentifierTypeSyntax", "range": {"start": {"line": 10, "column": 29}, "end": {"line": 10, "column": 39}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 10, "column": 29}, "end": {"line": 10, "column": 39}}, "token": {"kind": "identifier", "text": "Individual"}, "children": []},
-          ]},
-        ]},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 10, "column": 39}, "end": {"line": 10, "column": 40}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    ]},
-    {"type": "ReturnClauseSyntax", "range": {"start": {"line": 10, "column": 41}, "end": {"line": 10, "column": 50}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 10, "column": 41}, "end": {"line": 10, "column": 43}}, "token": {"kind": "arrow", "text": "->"}, "children": []},
-      {"type": "ArrayTypeSyntax", "range": {"start": {"line": 10, "column": 44}, "end": {"line": 10, "column": 50}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 10, "column": 44}, "end": {"line": 10, "column": 45}}, "token": {"kind": "leftSquare", "text": "["}, "children": []},
-        {"type": "IdentifierTypeSyntax", "range": {"start": {"line": 10, "column": 45}, "end": {"line": 10, "column": 49}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 10, "column": 45}, "end": {"line": 10, "column": 49}}, "token": {"kind": "identifier", "text": "Node"}, "children": []},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 10, "column": 49}, "end": {"line": 10, "column": 50}}, "token": {"kind": "rightSquare", "text": "]"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "CodeBlockSyntax", "range": {"start": {"line": 10, "column": 51}, "end": {"line": 10, "column": 53}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 10, "column": 51}, "end": {"line": 10, "column": 52}}, "token": {"kind": "leftBrace", "text": "{"}, "children": []},
-    {"type": "CodeBlockItemListSyntax", "range": {"start": {"line": 10, "column": 52}, "end": {"line": 10, "column": 52}}, "children": []},
-    {"type": "TokenSyntax", "range": {"start": {"line": 10, "column": 52}, "end": {"line": 10, "column": 53}}, "token": {"kind": "rightBrace", "text": "}"}, "children": []},
-  ]},
-]}
+values_of_declaration_node := {"functionDecls": [{"body": {"range": {"end": {"column": 53, "line": 10}, "start": {"column": 51, "line": 10}}}, "name": "values", "range": {"end": {"column": 53, "line": 10}, "start": {"column": 5, "line": 10}}, "signature": {"parameterClause": {"parameters": [{"firstName": "of", "range": {"end": {"column": 39, "line": 10}, "start": {"column": 17, "line": 10}}, "secondName": "subject", "type": {"identifierType": {"name": "Individual", "range": {"end": {"column": 39, "line": 10}, "start": {"column": 29, "line": 10}}}}}], "range": {"end": {"column": 40, "line": 10}, "start": {"column": 16, "line": 10}}}, "range": {"end": {"column": 50, "line": 10}, "start": {"column": 16, "line": 10}}, "returnClause": {"range": {"end": {"column": 50, "line": 10}, "start": {"column": 41, "line": 10}}, "type": {"arrayType": {"element": {"identifierType": {"name": "Node", "range": {"end": {"column": 49, "line": 10}, "start": {"column": 45, "line": 10}}}}, "range": {"end": {"column": 50, "line": 10}, "start": {"column": 44, "line": 10}}}}}}}], "identifierTypes": [{"context": [{"functionDecl": {"name": "values", "range": {"end": {"column": 53, "line": 10}, "start": {"column": 5, "line": 10}}, "signature": {"parameterClause": {"parameters": [{"firstName": "of", "range": {"end": {"column": 39, "line": 10}, "start": {"column": 17, "line": 10}}, "secondName": "subject", "type": {"identifierType": {"name": "Individual", "range": {"end": {"column": 39, "line": 10}, "start": {"column": 29, "line": 10}}}}}], "range": {"end": {"column": 40, "line": 10}, "start": {"column": 16, "line": 10}}}, "range": {"end": {"column": 50, "line": 10}, "start": {"column": 16, "line": 10}}, "returnClause": {"range": {"end": {"column": 50, "line": 10}, "start": {"column": 41, "line": 10}}, "type": {"arrayType": {"element": {"identifierType": {"name": "Node", "range": {"end": {"column": 49, "line": 10}, "start": {"column": 45, "line": 10}}}}, "range": {"end": {"column": 50, "line": 10}, "start": {"column": 44, "line": 10}}}}}}}}], "name": "Individual", "range": {"end": {"column": 39, "line": 10}, "start": {"column": 29, "line": 10}}}, {"context": [{"functionDecl": {"name": "values", "range": {"end": {"column": 53, "line": 10}, "start": {"column": 5, "line": 10}}, "signature": {"parameterClause": {"parameters": [{"firstName": "of", "range": {"end": {"column": 39, "line": 10}, "start": {"column": 17, "line": 10}}, "secondName": "subject", "type": {"identifierType": {"name": "Individual", "range": {"end": {"column": 39, "line": 10}, "start": {"column": 29, "line": 10}}}}}], "range": {"end": {"column": 40, "line": 10}, "start": {"column": 16, "line": 10}}}, "range": {"end": {"column": 50, "line": 10}, "start": {"column": 16, "line": 10}}, "returnClause": {"range": {"end": {"column": 50, "line": 10}, "start": {"column": 41, "line": 10}}, "type": {"arrayType": {"element": {"identifierType": {"name": "Node", "range": {"end": {"column": 49, "line": 10}, "start": {"column": 45, "line": 10}}}}, "range": {"end": {"column": 50, "line": 10}, "start": {"column": 44, "line": 10}}}}}}}}], "name": "Node", "range": {"end": {"column": 49, "line": 10}, "start": {"column": 45, "line": 10}}}]}
 
 # Parser output for `alice.key.contains(publicKey)` at 13:9.
-property_on_individual_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 13, "column": 9}, "end": {"line": 13, "column": 38}}, "children": [
-  {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 13, "column": 9}, "end": {"line": 13, "column": 27}}, "children": [
-    {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 13, "column": 9}, "end": {"line": 13, "column": 18}}, "children": [
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 13, "column": 9}, "end": {"line": 13, "column": 14}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 13, "column": 9}, "end": {"line": 13, "column": 14}}, "token": {"kind": "identifier", "text": "alice"}, "children": []},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 13, "column": 14}, "end": {"line": 13, "column": 15}}, "token": {"kind": "period", "text": "."}, "children": []},
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 13, "column": 15}, "end": {"line": 13, "column": 18}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 13, "column": 15}, "end": {"line": 13, "column": 18}}, "token": {"kind": "identifier", "text": "key"}, "children": []},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 13, "column": 18}, "end": {"line": 13, "column": 19}}, "token": {"kind": "period", "text": "."}, "children": []},
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 13, "column": 19}, "end": {"line": 13, "column": 27}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 13, "column": 19}, "end": {"line": 13, "column": 27}}, "token": {"kind": "identifier", "text": "contains"}, "children": []},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 13, "column": 27}, "end": {"line": 13, "column": 28}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 13, "column": 28}, "end": {"line": 13, "column": 37}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 13, "column": 28}, "end": {"line": 13, "column": 37}}, "children": [
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 13, "column": 28}, "end": {"line": 13, "column": 37}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 13, "column": 28}, "end": {"line": 13, "column": 37}}, "token": {"kind": "identifier", "text": "publicKey"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 13, "column": 37}, "end": {"line": 13, "column": 38}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 13, "column": 38}, "end": {"line": 13, "column": 38}}, "children": []},
-]}
+property_on_individual_node := {"declReferenceExprs": [{"baseName": "alice", "range": {"end": {"column": 14, "line": 13}, "start": {"column": 9, "line": 13}}}, {"baseName": "key", "range": {"end": {"column": 18, "line": 13}, "start": {"column": 15, "line": 13}}}, {"baseName": "contains", "range": {"end": {"column": 27, "line": 13}, "start": {"column": 19, "line": 13}}}, {"baseName": "publicKey", "range": {"end": {"column": 37, "line": 13}, "start": {"column": 28, "line": 13}}}], "functionCallExprs": [{"arguments": [{"expression": {"declReferenceExpr": {"baseName": "publicKey", "range": {"end": {"column": 37, "line": 13}, "start": {"column": 28, "line": 13}}}}, "range": {"end": {"column": 37, "line": 13}, "start": {"column": 28, "line": 13}}}], "calledExpression": {"memberAccessExpr": {"base": {"memberAccessExpr": {"base": {"declReferenceExpr": {"baseName": "alice", "range": {"end": {"column": 14, "line": 13}, "start": {"column": 9, "line": 13}}}}, "declName": {"baseName": "key", "range": {"end": {"column": 18, "line": 13}, "start": {"column": 15, "line": 13}}}, "range": {"end": {"column": 18, "line": 13}, "start": {"column": 9, "line": 13}}}}, "declName": {"baseName": "contains", "range": {"end": {"column": 27, "line": 13}, "start": {"column": 19, "line": 13}}}, "range": {"end": {"column": 27, "line": 13}, "start": {"column": 9, "line": 13}}}}, "range": {"end": {"column": 38, "line": 13}, "start": {"column": 9, "line": 13}}}], "memberAccessExprs": [{"base": {"memberAccessExpr": {"base": {"declReferenceExpr": {"baseName": "alice", "range": {"end": {"column": 14, "line": 13}, "start": {"column": 9, "line": 13}}}}, "declName": {"baseName": "key", "range": {"end": {"column": 18, "line": 13}, "start": {"column": 15, "line": 13}}}, "range": {"end": {"column": 18, "line": 13}, "start": {"column": 9, "line": 13}}}}, "declName": {"baseName": "contains", "range": {"end": {"column": 27, "line": 13}, "start": {"column": 19, "line": 13}}}, "range": {"end": {"column": 27, "line": 13}, "start": {"column": 9, "line": 13}}}, {"base": {"declReferenceExpr": {"baseName": "alice", "range": {"end": {"column": 14, "line": 13}, "start": {"column": 9, "line": 13}}}}, "declName": {"baseName": "key", "range": {"end": {"column": 18, "line": 13}, "start": {"column": 15, "line": 13}}}, "range": {"end": {"column": 18, "line": 13}, "start": {"column": 9, "line": 13}}}]}
 
 # Parser output for `measurements.values(alice)` at 16:9.
-values_unlabeled_call_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 16, "column": 9}, "end": {"line": 16, "column": 35}}, "children": [
-  {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 16, "column": 9}, "end": {"line": 16, "column": 28}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 16, "column": 9}, "end": {"line": 16, "column": 21}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 9}, "end": {"line": 16, "column": 21}}, "token": {"kind": "identifier", "text": "measurements"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 21}, "end": {"line": 16, "column": 22}}, "token": {"kind": "period", "text": "."}, "children": []},
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 16, "column": 22}, "end": {"line": 16, "column": 28}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 22}, "end": {"line": 16, "column": 28}}, "token": {"kind": "identifier", "text": "values"}, "children": []},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 28}, "end": {"line": 16, "column": 29}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 16, "column": 29}, "end": {"line": 16, "column": 34}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 16, "column": 29}, "end": {"line": 16, "column": 34}}, "children": [
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 16, "column": 29}, "end": {"line": 16, "column": 34}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 29}, "end": {"line": 16, "column": 34}}, "token": {"kind": "identifier", "text": "alice"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 34}, "end": {"line": 16, "column": 35}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 16, "column": 35}, "end": {"line": 16, "column": 35}}, "children": []},
-]}
+values_unlabeled_call_node := {"declReferenceExprs": [{"baseName": "measurements", "range": {"end": {"column": 21, "line": 16}, "start": {"column": 9, "line": 16}}}, {"baseName": "values", "range": {"end": {"column": 28, "line": 16}, "start": {"column": 22, "line": 16}}}, {"baseName": "alice", "range": {"end": {"column": 34, "line": 16}, "start": {"column": 29, "line": 16}}}], "functionCallExprs": [{"arguments": [{"expression": {"declReferenceExpr": {"baseName": "alice", "range": {"end": {"column": 34, "line": 16}, "start": {"column": 29, "line": 16}}}}, "range": {"end": {"column": 34, "line": 16}, "start": {"column": 29, "line": 16}}}], "calledExpression": {"memberAccessExpr": {"base": {"declReferenceExpr": {"baseName": "measurements", "range": {"end": {"column": 21, "line": 16}, "start": {"column": 9, "line": 16}}}}, "declName": {"baseName": "values", "range": {"end": {"column": 28, "line": 16}, "start": {"column": 22, "line": 16}}}, "range": {"end": {"column": 28, "line": 16}, "start": {"column": 9, "line": 16}}}}, "range": {"end": {"column": 35, "line": 16}, "start": {"column": 9, "line": 16}}}], "memberAccessExprs": [{"base": {"declReferenceExpr": {"baseName": "measurements", "range": {"end": {"column": 21, "line": 16}, "start": {"column": 9, "line": 16}}}}, "declName": {"baseName": "values", "range": {"end": {"column": 28, "line": 16}, "start": {"column": 22, "line": 16}}}, "range": {"end": {"column": 28, "line": 16}, "start": {"column": 9, "line": 16}}}]}
 
 test_denies_bare_values_of_call if {
   result := decision with input as bare_values_of_call_node
@@ -218,39 +78,7 @@ test_allows_bare_values_in_call if {
 }
 
 # Parser output for `values(of: alice)` at 30:9.
-bare_values_of_call_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 30, "column": 9}, "end": {"line": 30, "column": 26}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 30, "column": 9}, "end": {"line": 30, "column": 15}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 30, "column": 9}, "end": {"line": 30, "column": 15}}, "token": {"kind": "identifier", "text": "values"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 30, "column": 15}, "end": {"line": 30, "column": 16}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 30, "column": 16}, "end": {"line": 30, "column": 25}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 30, "column": 16}, "end": {"line": 30, "column": 25}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 30, "column": 16}, "end": {"line": 30, "column": 18}}, "token": {"kind": "identifier", "text": "of"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 30, "column": 18}, "end": {"line": 30, "column": 19}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 30, "column": 20}, "end": {"line": 30, "column": 25}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 30, "column": 20}, "end": {"line": 30, "column": 25}}, "token": {"kind": "identifier", "text": "alice"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 30, "column": 25}, "end": {"line": 30, "column": 26}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 30, "column": 26}, "end": {"line": 30, "column": 26}}, "children": []},
-]}
+bare_values_of_call_node := {"declReferenceExprs": [{"baseName": "values", "range": {"end": {"column": 15, "line": 30}, "start": {"column": 9, "line": 30}}}, {"baseName": "alice", "range": {"end": {"column": 25, "line": 30}, "start": {"column": 20, "line": 30}}}], "functionCallExprs": [{"arguments": [{"expression": {"declReferenceExpr": {"baseName": "alice", "range": {"end": {"column": 25, "line": 30}, "start": {"column": 20, "line": 30}}}}, "label": "of", "range": {"end": {"column": 25, "line": 30}, "start": {"column": 16, "line": 30}}}], "calledExpression": {"declReferenceExpr": {"baseName": "values", "range": {"end": {"column": 15, "line": 30}, "start": {"column": 9, "line": 30}}}}, "range": {"end": {"column": 26, "line": 30}, "start": {"column": 9, "line": 30}}}]}
 
 # Parser output for `values(in: graph)` at 33:9.
-bare_values_in_call_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 33, "column": 9}, "end": {"line": 33, "column": 26}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 33, "column": 9}, "end": {"line": 33, "column": 15}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 33, "column": 9}, "end": {"line": 33, "column": 15}}, "token": {"kind": "identifier", "text": "values"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 33, "column": 15}, "end": {"line": 33, "column": 16}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 33, "column": 16}, "end": {"line": 33, "column": 25}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 33, "column": 16}, "end": {"line": 33, "column": 25}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 33, "column": 16}, "end": {"line": 33, "column": 18}}, "token": {"kind": "identifier", "text": "in"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 33, "column": 18}, "end": {"line": 33, "column": 19}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 33, "column": 20}, "end": {"line": 33, "column": 25}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 33, "column": 20}, "end": {"line": 33, "column": 25}}, "token": {"kind": "identifier", "text": "graph"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 33, "column": 25}, "end": {"line": 33, "column": 26}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 33, "column": 26}, "end": {"line": 33, "column": 26}}, "children": []},
-]}
+bare_values_in_call_node := {"declReferenceExprs": [{"baseName": "values", "range": {"end": {"column": 15, "line": 33}, "start": {"column": 9, "line": 33}}}, {"baseName": "graph", "range": {"end": {"column": 25, "line": 33}, "start": {"column": 20, "line": 33}}}], "functionCallExprs": [{"arguments": [{"expression": {"declReferenceExpr": {"baseName": "graph", "range": {"end": {"column": 25, "line": 33}, "start": {"column": 20, "line": 33}}}}, "label": "in", "range": {"end": {"column": 25, "line": 33}, "start": {"column": 16, "line": 33}}}], "calledExpression": {"declReferenceExpr": {"baseName": "values", "range": {"end": {"column": 15, "line": 33}, "start": {"column": 9, "line": 33}}}}, "range": {"end": {"column": 26, "line": 33}, "start": {"column": 9, "line": 33}}}]}

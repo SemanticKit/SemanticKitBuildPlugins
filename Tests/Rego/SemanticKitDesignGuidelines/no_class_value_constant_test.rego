@@ -46,62 +46,16 @@ test_allows_property_on_individual if {
 }
 
 # Parser output for `Foaf.agentClass` at 3:9.
-agent_class_value_node := {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 3, "column": 9}, "end": {"line": 3, "column": 24}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 3, "column": 9}, "end": {"line": 3, "column": 13}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 3, "column": 9}, "end": {"line": 3, "column": 13}}, "token": {"kind": "identifier", "text": "Foaf"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 3, "column": 13}, "end": {"line": 3, "column": 14}}, "token": {"kind": "period", "text": "."}, "children": []},
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 3, "column": 14}, "end": {"line": 3, "column": 24}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 3, "column": 14}, "end": {"line": 3, "column": 24}}, "token": {"kind": "identifier", "text": "agentClass"}, "children": []},
-  ]},
-]}
+agent_class_value_node := {"declReferenceExprs": [{"baseName": "Foaf", "range": {"end": {"column": 13, "line": 3}, "start": {"column": 9, "line": 3}}}, {"baseName": "agentClass", "range": {"end": {"column": 24, "line": 3}, "start": {"column": 14, "line": 3}}}], "memberAccessExprs": [{"base": {"declReferenceExpr": {"baseName": "Foaf", "range": {"end": {"column": 13, "line": 3}, "start": {"column": 9, "line": 3}}}}, "declName": {"baseName": "agentClass", "range": {"end": {"column": 24, "line": 3}, "start": {"column": 14, "line": 3}}}, "range": {"end": {"column": 24, "line": 3}, "start": {"column": 9, "line": 3}}}]}
 
 # Parser output for `ACL.readClass` at 6:9.
-read_class_value_node := {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 6, "column": 9}, "end": {"line": 6, "column": 22}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 6, "column": 9}, "end": {"line": 6, "column": 12}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 6, "column": 9}, "end": {"line": 6, "column": 12}}, "token": {"kind": "identifier", "text": "ACL"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 6, "column": 12}, "end": {"line": 6, "column": 13}}, "token": {"kind": "period", "text": "."}, "children": []},
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 6, "column": 13}, "end": {"line": 6, "column": 22}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 6, "column": 13}, "end": {"line": 6, "column": 22}}, "token": {"kind": "identifier", "text": "readClass"}, "children": []},
-  ]},
-]}
+read_class_value_node := {"declReferenceExprs": [{"baseName": "ACL", "range": {"end": {"column": 12, "line": 6}, "start": {"column": 9, "line": 6}}}, {"baseName": "readClass", "range": {"end": {"column": 22, "line": 6}, "start": {"column": 13, "line": 6}}}], "memberAccessExprs": [{"base": {"declReferenceExpr": {"baseName": "ACL", "range": {"end": {"column": 12, "line": 6}, "start": {"column": 9, "line": 6}}}}, "declName": {"baseName": "readClass", "range": {"end": {"column": 22, "line": 6}, "start": {"column": 13, "line": 6}}}, "range": {"end": {"column": 22, "line": 6}, "start": {"column": 9, "line": 6}}}]}
 
 # Parser output for `Vocabularies.Foaf.personClass` at 9:9.
-qualified_class_value_node := {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 9, "column": 9}, "end": {"line": 9, "column": 38}}, "children": [
-  {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 9, "column": 9}, "end": {"line": 9, "column": 26}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 9, "column": 9}, "end": {"line": 9, "column": 21}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 9, "column": 9}, "end": {"line": 9, "column": 21}}, "token": {"kind": "identifier", "text": "Vocabularies"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 9, "column": 21}, "end": {"line": 9, "column": 22}}, "token": {"kind": "period", "text": "."}, "children": []},
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 9, "column": 22}, "end": {"line": 9, "column": 26}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 9, "column": 22}, "end": {"line": 9, "column": 26}}, "token": {"kind": "identifier", "text": "Foaf"}, "children": []},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 9, "column": 26}, "end": {"line": 9, "column": 27}}, "token": {"kind": "period", "text": "."}, "children": []},
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 9, "column": 27}, "end": {"line": 9, "column": 38}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 9, "column": 27}, "end": {"line": 9, "column": 38}}, "token": {"kind": "identifier", "text": "personClass"}, "children": []},
-  ]},
-]}
+qualified_class_value_node := {"declReferenceExprs": [{"baseName": "Vocabularies", "range": {"end": {"column": 21, "line": 9}, "start": {"column": 9, "line": 9}}}, {"baseName": "Foaf", "range": {"end": {"column": 26, "line": 9}, "start": {"column": 22, "line": 9}}}, {"baseName": "personClass", "range": {"end": {"column": 38, "line": 9}, "start": {"column": 27, "line": 9}}}], "memberAccessExprs": [{"base": {"memberAccessExpr": {"base": {"declReferenceExpr": {"baseName": "Vocabularies", "range": {"end": {"column": 21, "line": 9}, "start": {"column": 9, "line": 9}}}}, "declName": {"baseName": "Foaf", "range": {"end": {"column": 26, "line": 9}, "start": {"column": 22, "line": 9}}}, "range": {"end": {"column": 26, "line": 9}, "start": {"column": 9, "line": 9}}}}, "declName": {"baseName": "personClass", "range": {"end": {"column": 38, "line": 9}, "start": {"column": 27, "line": 9}}}, "range": {"end": {"column": 38, "line": 9}, "start": {"column": 9, "line": 9}}}, {"base": {"declReferenceExpr": {"baseName": "Vocabularies", "range": {"end": {"column": 21, "line": 9}, "start": {"column": 9, "line": 9}}}}, "declName": {"baseName": "Foaf", "range": {"end": {"column": 26, "line": 9}, "start": {"column": 22, "line": 9}}}, "range": {"end": {"column": 26, "line": 9}, "start": {"column": 9, "line": 9}}}]}
 
 # Parser output for `Foaf.Agent` at 12:9.
-class_type_node := {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 12, "column": 9}, "end": {"line": 12, "column": 19}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 12, "column": 9}, "end": {"line": 12, "column": 13}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 9}, "end": {"line": 12, "column": 13}}, "token": {"kind": "identifier", "text": "Foaf"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 13}, "end": {"line": 12, "column": 14}}, "token": {"kind": "period", "text": "."}, "children": []},
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 12, "column": 14}, "end": {"line": 12, "column": 19}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 14}, "end": {"line": 12, "column": 19}}, "token": {"kind": "identifier", "text": "Agent"}, "children": []},
-  ]},
-]}
+class_type_node := {"declReferenceExprs": [{"baseName": "Foaf", "range": {"end": {"column": 13, "line": 12}, "start": {"column": 9, "line": 12}}}, {"baseName": "Agent", "range": {"end": {"column": 19, "line": 12}, "start": {"column": 14, "line": 12}}}], "memberAccessExprs": [{"base": {"declReferenceExpr": {"baseName": "Foaf", "range": {"end": {"column": 13, "line": 12}, "start": {"column": 9, "line": 12}}}}, "declName": {"baseName": "Agent", "range": {"end": {"column": 19, "line": 12}, "start": {"column": 14, "line": 12}}}, "range": {"end": {"column": 19, "line": 12}, "start": {"column": 9, "line": 12}}}]}
 
 # Parser output for `authorization.agentClass` at 15:9.
-property_on_individual_node := {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 15, "column": 9}, "end": {"line": 15, "column": 33}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 15, "column": 9}, "end": {"line": 15, "column": 22}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 15, "column": 9}, "end": {"line": 15, "column": 22}}, "token": {"kind": "identifier", "text": "authorization"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 15, "column": 22}, "end": {"line": 15, "column": 23}}, "token": {"kind": "period", "text": "."}, "children": []},
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 15, "column": 23}, "end": {"line": 15, "column": 33}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 15, "column": 23}, "end": {"line": 15, "column": 33}}, "token": {"kind": "identifier", "text": "agentClass"}, "children": []},
-  ]},
-]}
+property_on_individual_node := {"declReferenceExprs": [{"baseName": "authorization", "range": {"end": {"column": 22, "line": 15}, "start": {"column": 9, "line": 15}}}, {"baseName": "agentClass", "range": {"end": {"column": 33, "line": 15}, "start": {"column": 23, "line": 15}}}], "memberAccessExprs": [{"base": {"declReferenceExpr": {"baseName": "authorization", "range": {"end": {"column": 22, "line": 15}, "start": {"column": 9, "line": 15}}}}, "declName": {"baseName": "agentClass", "range": {"end": {"column": 33, "line": 15}, "start": {"column": 23, "line": 15}}}, "range": {"end": {"column": 33, "line": 15}, "start": {"column": 9, "line": 15}}}]}

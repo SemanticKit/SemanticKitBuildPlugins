@@ -35,161 +35,19 @@ test_does_not_warn_for_non_visible_shareplay_swift_syntax if {
 }
 
 # Parser output for `Text("Start SharePlaying now")` at 22:9.
-warns_for_shareplaying_text_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 22, "column": 9}, "end": {"line": 22, "column": 39}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 22, "column": 9}, "end": {"line": 22, "column": 13}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 9}, "end": {"line": 22, "column": 13}}, "token": {"kind": "identifier", "text": "Text"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 13}, "end": {"line": 22, "column": 14}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 22, "column": 14}, "end": {"line": 22, "column": 38}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 22, "column": 14}, "end": {"line": 22, "column": 38}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 22, "column": 14}, "end": {"line": 22, "column": 38}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 14}, "end": {"line": 22, "column": 15}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 22, "column": 15}, "end": {"line": 22, "column": 37}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 22, "column": 15}, "end": {"line": 22, "column": 37}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 15}, "end": {"line": 22, "column": 37}}, "token": {"kind": "stringSegment", "text": "Start SharePlaying now"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 37}, "end": {"line": 22, "column": 38}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 38}, "end": {"line": 22, "column": 39}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 22, "column": 39}, "end": {"line": 22, "column": 39}}, "children": []},
-]}
+warns_for_shareplaying_text_swift_syntax_node := {"declReferenceExprs": [{"baseName": "Text", "range": {"end": {"column": 13, "line": 22}, "start": {"column": 9, "line": 22}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 38, "line": 22}, "start": {"column": 14, "line": 22}}, "segments": [{"stringSegment": {"content": "Start SharePlaying now", "range": {"end": {"column": 37, "line": 22}, "start": {"column": 15, "line": 22}}}}]}}, "range": {"end": {"column": 38, "line": 22}, "start": {"column": 14, "line": 22}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Text", "range": {"end": {"column": 13, "line": 22}, "start": {"column": 9, "line": 22}}}}, "range": {"end": {"column": 39, "line": 22}, "start": {"column": 9, "line": 22}}}], "stringLiteralExprs": [{"range": {"end": {"column": 38, "line": 22}, "start": {"column": 14, "line": 22}}, "segments": [{"stringSegment": {"content": "Start SharePlaying now", "range": {"end": {"column": 37, "line": 22}, "start": {"column": 15, "line": 22}}}}]}]}
 
 # Parser output for `Button("Share-play", action: startActivity)` at 25:9.
 # Parser output for `Label("SharePlay session", systemImage: "shareplay")` at 26:9.
 # Parser output for `Text("Share play with friends")` at 27:9.
 warns_for_modified_shareplay_variants_nodes := [
-  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 25, "column": 9}, "end": {"line": 25, "column": 52}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 25, "column": 9}, "end": {"line": 25, "column": 15}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 25, "column": 9}, "end": {"line": 25, "column": 15}}, "token": {"kind": "identifier", "text": "Button"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 25, "column": 15}, "end": {"line": 25, "column": 16}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 25, "column": 16}, "end": {"line": 25, "column": 51}}, "children": [
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 25, "column": 16}, "end": {"line": 25, "column": 29}}, "children": [
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 25, "column": 16}, "end": {"line": 25, "column": 28}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 25, "column": 16}, "end": {"line": 25, "column": 17}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 25, "column": 17}, "end": {"line": 25, "column": 27}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 25, "column": 17}, "end": {"line": 25, "column": 27}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 25, "column": 17}, "end": {"line": 25, "column": 27}}, "token": {"kind": "stringSegment", "text": "Share-play"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 25, "column": 27}, "end": {"line": 25, "column": 28}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 25, "column": 28}, "end": {"line": 25, "column": 29}}, "token": {"kind": "comma", "text": ","}, "children": []},
-      ]},
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 25, "column": 30}, "end": {"line": 25, "column": 51}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 25, "column": 30}, "end": {"line": 25, "column": 36}}, "token": {"kind": "identifier", "text": "action"}, "children": []},
-        {"type": "TokenSyntax", "range": {"start": {"line": 25, "column": 36}, "end": {"line": 25, "column": 37}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-        {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 25, "column": 38}, "end": {"line": 25, "column": 51}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 25, "column": 38}, "end": {"line": 25, "column": 51}}, "token": {"kind": "identifier", "text": "startActivity"}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 25, "column": 51}, "end": {"line": 25, "column": 52}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 25, "column": 52}, "end": {"line": 25, "column": 52}}, "children": []},
-  ]},
-  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 26, "column": 9}, "end": {"line": 26, "column": 61}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 26, "column": 9}, "end": {"line": 26, "column": 14}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 26, "column": 9}, "end": {"line": 26, "column": 14}}, "token": {"kind": "identifier", "text": "Label"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 26, "column": 14}, "end": {"line": 26, "column": 15}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 26, "column": 15}, "end": {"line": 26, "column": 60}}, "children": [
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 26, "column": 15}, "end": {"line": 26, "column": 35}}, "children": [
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 26, "column": 15}, "end": {"line": 26, "column": 34}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 26, "column": 15}, "end": {"line": 26, "column": 16}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 26, "column": 16}, "end": {"line": 26, "column": 33}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 26, "column": 16}, "end": {"line": 26, "column": 33}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 26, "column": 16}, "end": {"line": 26, "column": 33}}, "token": {"kind": "stringSegment", "text": "SharePlay session"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 26, "column": 33}, "end": {"line": 26, "column": 34}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 26, "column": 34}, "end": {"line": 26, "column": 35}}, "token": {"kind": "comma", "text": ","}, "children": []},
-      ]},
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 26, "column": 36}, "end": {"line": 26, "column": 60}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 26, "column": 36}, "end": {"line": 26, "column": 47}}, "token": {"kind": "identifier", "text": "systemImage"}, "children": []},
-        {"type": "TokenSyntax", "range": {"start": {"line": 26, "column": 47}, "end": {"line": 26, "column": 48}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 26, "column": 49}, "end": {"line": 26, "column": 60}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 26, "column": 49}, "end": {"line": 26, "column": 50}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 26, "column": 50}, "end": {"line": 26, "column": 59}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 26, "column": 50}, "end": {"line": 26, "column": 59}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 26, "column": 50}, "end": {"line": 26, "column": 59}}, "token": {"kind": "stringSegment", "text": "shareplay"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 26, "column": 59}, "end": {"line": 26, "column": 60}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 26, "column": 60}, "end": {"line": 26, "column": 61}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 26, "column": 61}, "end": {"line": 26, "column": 61}}, "children": []},
-  ]},
-  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 27, "column": 9}, "end": {"line": 27, "column": 40}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 27, "column": 9}, "end": {"line": 27, "column": 13}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 9}, "end": {"line": 27, "column": 13}}, "token": {"kind": "identifier", "text": "Text"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 13}, "end": {"line": 27, "column": 14}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 27, "column": 14}, "end": {"line": 27, "column": 39}}, "children": [
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 27, "column": 14}, "end": {"line": 27, "column": 39}}, "children": [
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 27, "column": 14}, "end": {"line": 27, "column": 39}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 14}, "end": {"line": 27, "column": 15}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 27, "column": 15}, "end": {"line": 27, "column": 38}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 27, "column": 15}, "end": {"line": 27, "column": 38}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 15}, "end": {"line": 27, "column": 38}}, "token": {"kind": "stringSegment", "text": "Share play with friends"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 38}, "end": {"line": 27, "column": 39}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 39}, "end": {"line": 27, "column": 40}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 27, "column": 40}, "end": {"line": 27, "column": 40}}, "children": []},
-  ]},
+  {"declReferenceExprs": [{"baseName": "Button", "range": {"end": {"column": 15, "line": 25}, "start": {"column": 9, "line": 25}}}, {"baseName": "startActivity", "range": {"end": {"column": 51, "line": 25}, "start": {"column": 38, "line": 25}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 28, "line": 25}, "start": {"column": 16, "line": 25}}, "segments": [{"stringSegment": {"content": "Share-play", "range": {"end": {"column": 27, "line": 25}, "start": {"column": 17, "line": 25}}}}]}}, "range": {"end": {"column": 29, "line": 25}, "start": {"column": 16, "line": 25}}}, {"expression": {"declReferenceExpr": {"baseName": "startActivity", "range": {"end": {"column": 51, "line": 25}, "start": {"column": 38, "line": 25}}}}, "label": "action", "range": {"end": {"column": 51, "line": 25}, "start": {"column": 30, "line": 25}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Button", "range": {"end": {"column": 15, "line": 25}, "start": {"column": 9, "line": 25}}}}, "range": {"end": {"column": 52, "line": 25}, "start": {"column": 9, "line": 25}}}], "stringLiteralExprs": [{"range": {"end": {"column": 28, "line": 25}, "start": {"column": 16, "line": 25}}, "segments": [{"stringSegment": {"content": "Share-play", "range": {"end": {"column": 27, "line": 25}, "start": {"column": 17, "line": 25}}}}]}]},
+  {"declReferenceExprs": [{"baseName": "Label", "range": {"end": {"column": 14, "line": 26}, "start": {"column": 9, "line": 26}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 34, "line": 26}, "start": {"column": 15, "line": 26}}, "segments": [{"stringSegment": {"content": "SharePlay session", "range": {"end": {"column": 33, "line": 26}, "start": {"column": 16, "line": 26}}}}]}}, "range": {"end": {"column": 35, "line": 26}, "start": {"column": 15, "line": 26}}}, {"expression": {"stringLiteralExpr": {"range": {"end": {"column": 60, "line": 26}, "start": {"column": 49, "line": 26}}, "segments": [{"stringSegment": {"content": "shareplay", "range": {"end": {"column": 59, "line": 26}, "start": {"column": 50, "line": 26}}}}]}}, "label": "systemImage", "range": {"end": {"column": 60, "line": 26}, "start": {"column": 36, "line": 26}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Label", "range": {"end": {"column": 14, "line": 26}, "start": {"column": 9, "line": 26}}}}, "range": {"end": {"column": 61, "line": 26}, "start": {"column": 9, "line": 26}}}], "stringLiteralExprs": [{"range": {"end": {"column": 34, "line": 26}, "start": {"column": 15, "line": 26}}, "segments": [{"stringSegment": {"content": "SharePlay session", "range": {"end": {"column": 33, "line": 26}, "start": {"column": 16, "line": 26}}}}]}, {"range": {"end": {"column": 60, "line": 26}, "start": {"column": 49, "line": 26}}, "segments": [{"stringSegment": {"content": "shareplay", "range": {"end": {"column": 59, "line": 26}, "start": {"column": 50, "line": 26}}}}]}]},
+  {"declReferenceExprs": [{"baseName": "Text", "range": {"end": {"column": 13, "line": 27}, "start": {"column": 9, "line": 27}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 39, "line": 27}, "start": {"column": 14, "line": 27}}, "segments": [{"stringSegment": {"content": "Share play with friends", "range": {"end": {"column": 38, "line": 27}, "start": {"column": 15, "line": 27}}}}]}}, "range": {"end": {"column": 39, "line": 27}, "start": {"column": 14, "line": 27}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Text", "range": {"end": {"column": 13, "line": 27}, "start": {"column": 9, "line": 27}}}}, "range": {"end": {"column": 40, "line": 27}, "start": {"column": 9, "line": 27}}}], "stringLiteralExprs": [{"range": {"end": {"column": 39, "line": 27}, "start": {"column": 14, "line": 27}}, "segments": [{"stringSegment": {"content": "Share play with friends", "range": {"end": {"column": 38, "line": 27}, "start": {"column": 15, "line": 27}}}}]}]},
 ]
 
 # Parser output for `Text("Start SharePlay")` at 36:9.
-does_not_warn_for_normal_shareplay_text_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 36, "column": 9}, "end": {"line": 36, "column": 32}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 36, "column": 9}, "end": {"line": 36, "column": 13}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 36, "column": 9}, "end": {"line": 36, "column": 13}}, "token": {"kind": "identifier", "text": "Text"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 36, "column": 13}, "end": {"line": 36, "column": 14}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 36, "column": 14}, "end": {"line": 36, "column": 31}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 36, "column": 14}, "end": {"line": 36, "column": 31}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 36, "column": 14}, "end": {"line": 36, "column": 31}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 36, "column": 14}, "end": {"line": 36, "column": 15}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 36, "column": 15}, "end": {"line": 36, "column": 30}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 36, "column": 15}, "end": {"line": 36, "column": 30}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 36, "column": 15}, "end": {"line": 36, "column": 30}}, "token": {"kind": "stringSegment", "text": "Start SharePlay"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 36, "column": 30}, "end": {"line": 36, "column": 31}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 36, "column": 31}, "end": {"line": 36, "column": 32}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 36, "column": 32}, "end": {"line": 36, "column": 32}}, "children": []},
-]}
+does_not_warn_for_normal_shareplay_text_swift_syntax_node := {"declReferenceExprs": [{"baseName": "Text", "range": {"end": {"column": 13, "line": 36}, "start": {"column": 9, "line": 36}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 31, "line": 36}, "start": {"column": 14, "line": 36}}, "segments": [{"stringSegment": {"content": "Start SharePlay", "range": {"end": {"column": 30, "line": 36}, "start": {"column": 15, "line": 36}}}}]}}, "range": {"end": {"column": 31, "line": 36}, "start": {"column": 14, "line": 36}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Text", "range": {"end": {"column": 13, "line": 36}, "start": {"column": 9, "line": 36}}}}, "range": {"end": {"column": 32, "line": 36}, "start": {"column": 9, "line": 36}}}], "stringLiteralExprs": [{"range": {"end": {"column": 31, "line": 36}, "start": {"column": 14, "line": 36}}, "segments": [{"stringSegment": {"content": "Start SharePlay", "range": {"end": {"column": 30, "line": 36}, "start": {"column": 15, "line": 36}}}}]}]}
 
 # Parser output for `ActivityMetadata("shareplaying")` at 44:11.
-does_not_warn_for_non_visible_shareplay_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 44, "column": 11}, "end": {"line": 44, "column": 43}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 44, "column": 11}, "end": {"line": 44, "column": 27}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 44, "column": 11}, "end": {"line": 44, "column": 27}}, "token": {"kind": "identifier", "text": "ActivityMetadata"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 44, "column": 27}, "end": {"line": 44, "column": 28}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 44, "column": 28}, "end": {"line": 44, "column": 42}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 44, "column": 28}, "end": {"line": 44, "column": 42}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 44, "column": 28}, "end": {"line": 44, "column": 42}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 44, "column": 28}, "end": {"line": 44, "column": 29}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 44, "column": 29}, "end": {"line": 44, "column": 41}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 44, "column": 29}, "end": {"line": 44, "column": 41}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 44, "column": 29}, "end": {"line": 44, "column": 41}}, "token": {"kind": "stringSegment", "text": "shareplaying"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 44, "column": 41}, "end": {"line": 44, "column": 42}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 44, "column": 42}, "end": {"line": 44, "column": 43}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 44, "column": 43}, "end": {"line": 44, "column": 43}}, "children": []},
-]}
+does_not_warn_for_non_visible_shareplay_swift_syntax_node := {"declReferenceExprs": [{"baseName": "ActivityMetadata", "range": {"end": {"column": 27, "line": 44}, "start": {"column": 11, "line": 44}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 42, "line": 44}, "start": {"column": 28, "line": 44}}, "segments": [{"stringSegment": {"content": "shareplaying", "range": {"end": {"column": 41, "line": 44}, "start": {"column": 29, "line": 44}}}}]}}, "range": {"end": {"column": 42, "line": 44}, "start": {"column": 28, "line": 44}}}], "calledExpression": {"declReferenceExpr": {"baseName": "ActivityMetadata", "range": {"end": {"column": 27, "line": 44}, "start": {"column": 11, "line": 44}}}}, "range": {"end": {"column": 43, "line": 44}, "start": {"column": 11, "line": 44}}}], "stringLiteralExprs": [{"range": {"end": {"column": 42, "line": 44}, "start": {"column": 28, "line": 44}}, "segments": [{"stringSegment": {"content": "shareplaying", "range": {"end": {"column": 41, "line": 44}, "start": {"column": 29, "line": 44}}}}]}]}

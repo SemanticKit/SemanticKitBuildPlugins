@@ -20,55 +20,33 @@ message := "Refer to a term by its type, as in Domain(Fauna.Animal); not by a st
 # `Domain("Animal")`, `Range(IRI("…"))`, `Domain(Fauna.Animal.iri)`,
 # `SubClassOf(Animal.self)`
 denial_set contains finding(call) if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
-  call.children[0].type == "DeclReferenceExprSyntax"
-  call.children[0].children[0].token.text in term_references
-  some arguments in call.children
-  arguments.type == "LabeledExprListSyntax"
-  some argument in arguments.children
-  some value in argument.children
-  some form in forms(value)
+  some call in input.functionCallExprs
+  call.calledExpression.declReferenceExpr.baseName in term_references
+  some argument in call.arguments
+  some form in forms(argument.expression)
   by_name(form)
 }
 
 # `Domain<Fauna.Animal>()`
 denial_set contains finding(call) if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
-  call.children[0].type == "GenericSpecializationExprSyntax"
-  callee := call.children[0].children[0]
-  callee.type == "DeclReferenceExprSyntax"
-  callee.children[0].token.text in term_references
+  some call in input.functionCallExprs
+  call.calledExpression.genericSpecializationExpr.expression.declReferenceExpr.baseName in term_references
 }
 
 # `"Animal"`, `"http://www.w3.org/2001/XMLSchema#" + "nonNegativeInteger"`,
 # `"\(xsd)nonNegativeInteger"`: any argument built from a string.
 by_name(value) if {
   walk(value, [_, node])
-  node.type == "StringLiteralExprSyntax"
+  node.stringLiteralExpr
 }
 
 # `IRI("…")`, `try! IRI(validating: "…")`
-by_name(value) if {
-  value.type == "FunctionCallExprSyntax"
-  callee_name(value.children[0]) == "IRI"
-}
+by_name(value) if callee_name(value.functionCallExpr) == "IRI"
 
 # `Fauna.Animal.iri`, `term.rawValue`: the IRI projection in place of the type.
-by_name(value) if {
-  value.type == "MemberAccessExprSyntax"
-  name := value.children[count(value.children) - 1]
-  name.type == "DeclReferenceExprSyntax"
-  name.children[0].token.text in {"iri", "rawValue"}
-}
+by_name(value) if value.memberAccessExpr.declName.baseName in {"iri", "rawValue"}
 
-by_name(value) if {
-  value.type == "MemberAccessExprSyntax"
-  name := value.children[count(value.children) - 1]
-  name.type == "DeclReferenceExprSyntax"
-  name.children[0].token.text == "self"
-}
+by_name(value) if value.memberAccessExpr.declName.baseName == "self"
 
 term_references := {
   "Domain",
@@ -89,29 +67,25 @@ finding(node) := {
   "severity": "error",
 }
 
-# The expression, and what `try`, `try!`, `await` and `!` wrap, two levels deep.
-wrappers := {"TryExprSyntax", "AwaitExprSyntax", "ForceUnwrapExprSyntax", "OptionalChainingExprSyntax"}
-
+# The expression, and what `try`, `try!`, `await`, `!` and `?` wrap, two
+# levels deep.
 forms(value) := {value} | inner(value) | {deeper | some form in inner(value); some deeper in inner(form)}
 
-inner(value) := {child |
-  value.type in wrappers
-  some child in value.children
-  child.type != "TokenSyntax"
-}
+inner(value) := (({child | child := value.tryExpr.expression} | {child | child := value.awaitExpr.expression}) | {child | child := value.forceUnwrapExpr.expression}) | {child | child := value.optionalChainingExpr.expression}
 
 # `IRI`, `IRIKit.IRI`, `IRI.init`, `IRIKit.IRI.init`
-callee_name(callee) := reference_name(callee) if not initializer_reference(callee)
+callee_name(call) := call.calledExpression.declReferenceExpr.baseName
 
-callee_name(callee) := reference_name(callee.children[0]) if initializer_reference(callee)
-
-initializer_reference(callee) if {
-  callee.type == "MemberAccessExprSyntax"
-  callee.children[count(callee.children) - 1].children[0].token.text == "init"
+callee_name(call) := name if {
+  name := call.calledExpression.memberAccessExpr.declName.baseName
+  name != "init"
 }
 
-reference_name(reference) := reference.children[0].token.text if reference.type == "DeclReferenceExprSyntax"
-
-reference_name(reference) := reference.children[count(reference.children) - 1].children[0].token.text if {
-  reference.type == "MemberAccessExprSyntax"
+callee_name(call) := reference_name(access.base) if {
+  access := call.calledExpression.memberAccessExpr
+  access.declName.baseName == "init"
 }
+
+reference_name(expression) := expression.declReferenceExpr.baseName
+
+reference_name(expression) := expression.memberAccessExpr.declName.baseName

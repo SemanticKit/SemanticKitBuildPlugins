@@ -22,23 +22,15 @@ refund_label_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
+  some call in input.functionCallExprs
 
-  callee := call.children[0]
-  callee.type == "DeclReferenceExprSyntax"
-  callee.children[0].token.text == "Button"
+  callee := call.calledExpression.declReferenceExpr
+  callee.baseName == "Button"
 
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  argument := argument_list.children[_]
-  literal := argument.children[_]
-  literal.type == "StringLiteralExprSyntax"
-  segment_list := literal.children[_]
-  segment_list.type == "StringLiteralSegmentListSyntax"
-  segment := segment_list.children[_]
-  segment.type == "StringSegmentSyntax"
-  label := segment.children[0].token.text
+  some argument in call.arguments
+  literal := argument.expression.stringLiteralExpr
+  segment := literal.segments[_].stringSegment
+  label := segment.content
   normalized_label := lower(label)
   contains(normalized_label, "refund")
   not accepted_refund_labels[normalized_label]

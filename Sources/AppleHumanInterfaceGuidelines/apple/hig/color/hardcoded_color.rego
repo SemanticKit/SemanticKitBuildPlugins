@@ -20,25 +20,20 @@ hardcoded_color_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
+  some call in input.functionCallExprs
 
-  callee := call.children[0]
-  callee.type == "DeclReferenceExprSyntax"
-  color_constructor_names[callee.children[0].token.text]
+  callee := call.calledExpression.declReferenceExpr
+  color_constructor_names[callee.baseName]
 
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  red_argument := argument_list.children[_]
-  rgb_red_labels[red_argument.children[0].token.text]
-  green_argument := argument_list.children[_]
-  green_argument.children[0].token.text == "green"
-  blue_argument := argument_list.children[_]
-  blue_argument.children[0].token.text == "blue"
+  some red_argument in call.arguments
+  rgb_red_labels[red_argument.label]
+  some green_argument in call.arguments
+  green_argument.label == "green"
+  some blue_argument in call.arguments
+  blue_argument.label == "blue"
 
-  numeric_argument := argument_list.children[_]
-  literal := numeric_argument.children[_]
-  {"IntegerLiteralExprSyntax", "FloatLiteralExprSyntax"}[literal.type]
+  some numeric_argument in call.arguments
+  literal := number_literal(numeric_argument.expression)
 }
 
 hardcoded_color_warning contains {
@@ -48,27 +43,27 @@ hardcoded_color_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
+  some call in input.functionCallExprs
 
-  callee := call.children[0]
-  callee.type == "DeclReferenceExprSyntax"
-  color_constructor_names[callee.children[0].token.text]
+  callee := call.calledExpression.declReferenceExpr
+  color_constructor_names[callee.baseName]
 
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  hue_argument := argument_list.children[_]
-  hue_labels[hue_argument.children[0].token.text]
-  saturation_argument := argument_list.children[_]
-  saturation_argument.children[0].token.text == "saturation"
-  brightness_argument := argument_list.children[_]
-  brightness_argument.children[0].token.text == "brightness"
+  some hue_argument in call.arguments
+  hue_labels[hue_argument.label]
+  some saturation_argument in call.arguments
+  saturation_argument.label == "saturation"
+  some brightness_argument in call.arguments
+  brightness_argument.label == "brightness"
 
-  numeric_argument := argument_list.children[_]
-  literal := numeric_argument.children[_]
-  {"IntegerLiteralExprSyntax", "FloatLiteralExprSyntax"}[literal.type]
+  some numeric_argument in call.arguments
+  literal := number_literal(numeric_argument.expression)
 }
 
 color_constructor_names := {"Color", "UIColor", "NSColor"}
 rgb_red_labels := {"red", "calibratedRed", "deviceRed", "srgbRed", "displayP3Red"}
 hue_labels := {"hue", "calibratedHue", "deviceHue"}
+
+# A number written as a literal: `44`, `0.5`.
+number_literal(expression) := expression.integerLiteralExpr
+
+number_literal(expression) := expression.floatLiteralExpr

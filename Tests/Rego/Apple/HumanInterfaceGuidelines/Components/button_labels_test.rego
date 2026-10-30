@@ -18,63 +18,7 @@ test_does_not_warn_for_short_button_label_swift_syntax if {
 }
 
 # Parser output for `Button("Continue to the next section of onboarding", action: next)` at 22:9.
-warns_for_long_button_label_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 22, "column": 9}, "end": {"line": 22, "column": 75}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 22, "column": 9}, "end": {"line": 22, "column": 15}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 9}, "end": {"line": 22, "column": 15}}, "token": {"kind": "identifier", "text": "Button"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 15}, "end": {"line": 22, "column": 16}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 22, "column": 16}, "end": {"line": 22, "column": 74}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 22, "column": 16}, "end": {"line": 22, "column": 61}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 22, "column": 16}, "end": {"line": 22, "column": 60}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 16}, "end": {"line": 22, "column": 17}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 22, "column": 17}, "end": {"line": 22, "column": 59}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 22, "column": 17}, "end": {"line": 22, "column": 59}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 17}, "end": {"line": 22, "column": 59}}, "token": {"kind": "stringSegment", "text": "Continue to the next section of onboarding"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 59}, "end": {"line": 22, "column": 60}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 60}, "end": {"line": 22, "column": 61}}, "token": {"kind": "comma", "text": ","}, "children": []},
-    ]},
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 22, "column": 62}, "end": {"line": 22, "column": 74}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 62}, "end": {"line": 22, "column": 68}}, "token": {"kind": "identifier", "text": "action"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 68}, "end": {"line": 22, "column": 69}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 22, "column": 70}, "end": {"line": 22, "column": 74}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 70}, "end": {"line": 22, "column": 74}}, "token": {"kind": "identifier", "text": "next"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 74}, "end": {"line": 22, "column": 75}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 22, "column": 75}, "end": {"line": 22, "column": 75}}, "children": []},
-]}
+warns_for_long_button_label_swift_syntax_node := {"declReferenceExprs": [{"baseName": "Button", "range": {"end": {"column": 15, "line": 22}, "start": {"column": 9, "line": 22}}}, {"baseName": "next", "range": {"end": {"column": 74, "line": 22}, "start": {"column": 70, "line": 22}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 60, "line": 22}, "start": {"column": 16, "line": 22}}, "segments": [{"stringSegment": {"content": "Continue to the next section of onboarding", "range": {"end": {"column": 59, "line": 22}, "start": {"column": 17, "line": 22}}}}]}}, "range": {"end": {"column": 61, "line": 22}, "start": {"column": 16, "line": 22}}}, {"expression": {"declReferenceExpr": {"baseName": "next", "range": {"end": {"column": 74, "line": 22}, "start": {"column": 70, "line": 22}}}}, "label": "action", "range": {"end": {"column": 74, "line": 22}, "start": {"column": 62, "line": 22}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Button", "range": {"end": {"column": 15, "line": 22}, "start": {"column": 9, "line": 22}}}}, "range": {"end": {"column": 75, "line": 22}, "start": {"column": 9, "line": 22}}}], "stringLiteralExprs": [{"range": {"end": {"column": 60, "line": 22}, "start": {"column": 16, "line": 22}}, "segments": [{"stringSegment": {"content": "Continue to the next section of onboarding", "range": {"end": {"column": 59, "line": 22}, "start": {"column": 17, "line": 22}}}}]}]}
 
 # Parser output for `Button("Continue", action: next)` at 22:9.
-does_not_warn_for_short_button_label_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 22, "column": 9}, "end": {"line": 22, "column": 41}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 22, "column": 9}, "end": {"line": 22, "column": 15}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 9}, "end": {"line": 22, "column": 15}}, "token": {"kind": "identifier", "text": "Button"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 15}, "end": {"line": 22, "column": 16}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 22, "column": 16}, "end": {"line": 22, "column": 40}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 22, "column": 16}, "end": {"line": 22, "column": 27}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 22, "column": 16}, "end": {"line": 22, "column": 26}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 16}, "end": {"line": 22, "column": 17}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 22, "column": 17}, "end": {"line": 22, "column": 25}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 22, "column": 17}, "end": {"line": 22, "column": 25}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 17}, "end": {"line": 22, "column": 25}}, "token": {"kind": "stringSegment", "text": "Continue"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 25}, "end": {"line": 22, "column": 26}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 26}, "end": {"line": 22, "column": 27}}, "token": {"kind": "comma", "text": ","}, "children": []},
-    ]},
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 22, "column": 28}, "end": {"line": 22, "column": 40}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 28}, "end": {"line": 22, "column": 34}}, "token": {"kind": "identifier", "text": "action"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 34}, "end": {"line": 22, "column": 35}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 22, "column": 36}, "end": {"line": 22, "column": 40}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 36}, "end": {"line": 22, "column": 40}}, "token": {"kind": "identifier", "text": "next"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 22, "column": 40}, "end": {"line": 22, "column": 41}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 22, "column": 41}, "end": {"line": 22, "column": 41}}, "children": []},
-]}
+does_not_warn_for_short_button_label_swift_syntax_node := {"declReferenceExprs": [{"baseName": "Button", "range": {"end": {"column": 15, "line": 22}, "start": {"column": 9, "line": 22}}}, {"baseName": "next", "range": {"end": {"column": 40, "line": 22}, "start": {"column": 36, "line": 22}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 26, "line": 22}, "start": {"column": 16, "line": 22}}, "segments": [{"stringSegment": {"content": "Continue", "range": {"end": {"column": 25, "line": 22}, "start": {"column": 17, "line": 22}}}}]}}, "range": {"end": {"column": 27, "line": 22}, "start": {"column": 16, "line": 22}}}, {"expression": {"declReferenceExpr": {"baseName": "next", "range": {"end": {"column": 40, "line": 22}, "start": {"column": 36, "line": 22}}}}, "label": "action", "range": {"end": {"column": 40, "line": 22}, "start": {"column": 28, "line": 22}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Button", "range": {"end": {"column": 15, "line": 22}, "start": {"column": 9, "line": 22}}}}, "range": {"end": {"column": 41, "line": 22}, "start": {"column": 9, "line": 22}}}], "stringLiteralExprs": [{"range": {"end": {"column": 26, "line": 22}, "start": {"column": 16, "line": 22}}, "segments": [{"stringSegment": {"content": "Continue", "range": {"end": {"column": 25, "line": 22}, "start": {"column": 17, "line": 22}}}}]}]}
