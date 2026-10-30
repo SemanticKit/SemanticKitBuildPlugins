@@ -15,9 +15,10 @@ decision := {"deny": denials, "warn": [], "note": []}
 
 denials := [denial | denial := denial_set[_]]
 
-message := "Refer to a term by its type, as in Domain(Fauna.Animal); not by a string, an IRI, .self or explicit generic arguments."
+message := "Refer to a term by its type, as in Domain(Fauna.Animal); not by a string, an IRI, an .iri projection, .self or explicit generic arguments."
 
-# `Domain("Animal")`, `Range(IRI("…"))`, `SubClassOf(Animal.self)`
+# `Domain("Animal")`, `Range(IRI("…"))`, `Domain(Fauna.Animal.iri)`,
+# `SubClassOf(Animal.self)`
 denial_set contains finding(call) if {
   call := input
   call.type == "FunctionCallExprSyntax"
@@ -27,7 +28,8 @@ denial_set contains finding(call) if {
   arguments.type == "LabeledExprListSyntax"
   some argument in arguments.children
   some value in argument.children
-  by_name(value)
+  some form in forms(value)
+  by_name(form)
 }
 
 # `Domain<Fauna.Animal>()`
@@ -42,10 +44,18 @@ denial_set contains finding(call) if {
 
 by_name(value) if value.type == "StringLiteralExprSyntax"
 
+# `IRI("…")`, `try! IRI(validating: "…")`
 by_name(value) if {
   value.type == "FunctionCallExprSyntax"
-  value.children[0].type == "DeclReferenceExprSyntax"
-  value.children[0].children[0].token.text == "IRI"
+  callee_name(value.children[0]) == "IRI"
+}
+
+# `Fauna.Animal.iri`, `term.rawValue`: the IRI projection in place of the type.
+by_name(value) if {
+  value.type == "MemberAccessExprSyntax"
+  name := value.children[count(value.children) - 1]
+  name.type == "DeclReferenceExprSyntax"
+  name.children[0].token.text in {"iri", "rawValue"}
 }
 
 by_name(value) if {
@@ -72,4 +82,31 @@ finding(node) := {
   "line": node.range.start.line,
   "column": node.range.start.column,
   "severity": "error",
+}
+
+# The expression, and what `try`, `try!`, `await` and `!` wrap, two levels deep.
+wrappers := {"TryExprSyntax", "AwaitExprSyntax", "ForceUnwrapExprSyntax", "OptionalChainingExprSyntax"}
+
+forms(value) := {value} | inner(value) | {deeper | some form in inner(value); some deeper in inner(form)}
+
+inner(value) := {child |
+  value.type in wrappers
+  some child in value.children
+  child.type != "TokenSyntax"
+}
+
+# `IRI`, `IRIKit.IRI`, `IRI.init`, `IRIKit.IRI.init`
+callee_name(callee) := reference_name(callee) if not initializer_reference(callee)
+
+callee_name(callee) := reference_name(callee.children[0]) if initializer_reference(callee)
+
+initializer_reference(callee) if {
+  callee.type == "MemberAccessExprSyntax"
+  callee.children[count(callee.children) - 1].children[0].token.text == "init"
+}
+
+reference_name(reference) := reference.children[0].token.text if reference.type == "DeclReferenceExprSyntax"
+
+reference_name(reference) := reference.children[count(reference.children) - 1].children[0].token.text if {
+  reference.type == "MemberAccessExprSyntax"
 }

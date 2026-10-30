@@ -29,6 +29,18 @@ denial_set contains finding(call) if {
   arguments.children[0].children[0].token.text == "of"
 }
 
+# `values(of: alice)`: a bare call, on `self` or a free function
+denial_set contains finding(call) if {
+  call := input
+  call.type == "FunctionCallExprSyntax"
+  callee := call.children[0]
+  callee.type == "DeclReferenceExprSyntax"
+  callee.children[0].token.text == "values"
+  some arguments in call.children
+  arguments.type == "LabeledExprListSyntax"
+  arguments.children[0].children[0].token.text == "of"
+}
+
 # `func values(of subject: …)`
 denial_set contains finding(decl) if {
   decl := input

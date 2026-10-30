@@ -113,13 +113,14 @@ struct PolicyEvaluationTests {
     /// The node types of the library policies that match nodes other than
     /// calls; every other library policy matches `FunctionCallExprSyntax`.
     static let libraryNodeTypes: [String: Set<String>] = [
-        "no_static_term_enum": ["EnumDeclSyntax"],
+        "no_static_term_enum": ["EnumDeclSyntax", "ExtensionDeclSyntax", "StructDeclSyntax", "ClassDeclSyntax", "ActorDeclSyntax"],
         "no_static_iri_constant": ["VariableDeclSyntax"],
         "no_term_registry": [
-            "DictionaryTypeSyntax", "IdentifierTypeSyntax", "FunctionCallExprSyntax",
+            "DictionaryTypeSyntax", "IdentifierTypeSyntax", "MemberTypeSyntax", "FunctionCallExprSyntax",
             "ClassDeclSyntax", "StructDeclSyntax", "EnumDeclSyntax", "ActorDeclSyntax", "ProtocolDeclSyntax",
         ],
         "no_individual_graph": ["TokenSyntax"],
+        "no_class_value_constant": ["MemberAccessExprSyntax"],
         "no_values_of_lookup": ["FunctionCallExprSyntax", "FunctionDeclSyntax"],
     ]
 

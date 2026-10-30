@@ -122,14 +122,15 @@ targets: [
 
 | Rule | Fails on | Instead |
 | --- | --- | --- |
-| `no_static_term_enum` | an enum with a static property or a case with a string raw value: `enum Foaf { static let knows = … }`, `enum Fauna: String { case animal = "Animal" }` | declare the term in the ontology, so that it is its own type |
-| `no_static_iri_constant` | a static property typed `IRI` or set to `IRI(…)`: `static let agentClass = IRI("…")` | the type is the identity; its IRI is a projection computed from the namespace |
-| `no_term_registry` | a dictionary keyed by `IRI` or `String` (`[IRI: Term]`, `Dictionary<String, Term>`, `[String: Term]()`), or a type named `…Registry` | refer to the term by its type |
+| `no_static_term_enum` | terms kept as statics on a type. On an enum: any static property, a static function returning a term, or a String raw value, explicit or implicit (`enum Foaf { static let knows = … }`, `enum Fauna: String { case animal = "Animal" }`, `enum FoafTerm: String { case knows }`). On a struct, class, actor or extension: a static stored property set to a term (`Term(…)`, `Property(…)`, `Class(…)`, `ObjectProperty(…)` and the other declaration kinds) or to a string literal, or a static function returning a term | declare the term in the ontology, so that it is its own type |
+| `no_static_iri_constant` | a static property typed `IRI` (also `IRI?`, `IRI!`, `IRIKit.IRI`) or set to `IRI(…)` (also through `try`, `try!`, `await`, `IRI.init`): `static let readClass = try! IRI(validating: "…")` | the type is the identity. The one static IRI allowed is the type's own projection, `static var iri: IRI { … }`, computed from the namespace |
+| `no_class_value_constant` | a class read as a static value of its ontology, `<name>Class` on a type: `Foaf.agentClass`, `ACL.readClass` | name the class by its type, `Foaf.Agent` |
+| `no_term_registry` | a dictionary keyed by `IRI` or `String`, written as a type or built as a value, module-qualified or not (`[IRI: Term]`, `Dictionary<String, Term>`, `[Swift.String: Term]`, `[String: Term]()`, `Dictionary<IRI, Term>()`, `[IRI: Term].init()`), or a type named `…Registry`. Every IRI- or String-keyed dictionary in a runtime target is denied, whatever it holds | refer to the term by its type |
 | `no_interpolated_identity` | `IRI(…)` built from an interpolated or concatenated string: `IRI(rawValue: "\(namespace)\(name)")` | the IRI is computed from the namespace at the boundary |
 | `no_individual_graph` | any use or declaration of `IndividualGraph` | individuals live in the RDFCore graph |
-| `no_values_of_lookup` | a `values(of:)` call or declaration: `Cert.key.values(of: alice)` | read the property on the individual's type |
+| `no_values_of_lookup` | a `values(of:)` call, on a value or bare, or declaration: `Cert.key.values(of: alice)`, `values(of: alice)` | read the property on the individual's type |
 | `no_add_modifier_on_declaration` | an `add…` or `isDeclaredBy` modifier on a declaration: `Class("Foo").addLabel(…).addComment(…)` | declare `Label`, `Comment` and the rest in the declaration's content; `deprecated()` stays a modifier |
-| `no_term_reference_by_name` | `Domain`, `Range`, `SubClassOf`, `SubPropertyOf`, `EquivalentClass`, `EquivalentProperty`, `InverseOf` or `DisjointWith` given a string, an `IRI(…)`, a `.self` metatype or explicit generic arguments | the natural spelling `Domain(Fauna.Animal)` |
+| `no_term_reference_by_name` | `Domain`, `Range`, `SubClassOf`, `SubPropertyOf`, `EquivalentClass`, `EquivalentProperty`, `InverseOf` or `DisjointWith` given a string, an `IRI(…)` (also through `try!`), an `.iri` or `.rawValue` projection, a `.self` metatype or explicit generic arguments | the natural spelling `Domain(Fauna.Animal)` |
 
 The library also holds `no_dictionary_boundary_plumbing`, a `warn` rule.
 

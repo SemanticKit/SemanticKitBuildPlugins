@@ -199,3 +199,58 @@ values_unlabeled_call_node := {"type": "FunctionCallExprSyntax", "range": {"star
   {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 34}, "end": {"line": 16, "column": 35}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
   {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 16, "column": 35}, "end": {"line": 16, "column": 35}}, "children": []},
 ]}
+
+test_denies_bare_values_of_call if {
+  result := decision with input as bare_values_of_call_node
+
+  count(result.deny) == 1
+  result.deny[0].rule_id == "semantickit.design_guidelines.no_values_of_lookup"
+  result.deny[0].line == 30
+  result.deny[0].column == 9
+  result.deny[0].severity == "error"
+  count(result.warn) == 0
+}
+
+test_allows_bare_values_in_call if {
+  result := decision with input as bare_values_in_call_node
+
+  count(result.deny) == 0
+}
+
+# Parser output for `values(of: alice)` at 30:9.
+bare_values_of_call_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 30, "column": 9}, "end": {"line": 30, "column": 26}}, "children": [
+  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 30, "column": 9}, "end": {"line": 30, "column": 15}}, "children": [
+    {"type": "TokenSyntax", "range": {"start": {"line": 30, "column": 9}, "end": {"line": 30, "column": 15}}, "token": {"kind": "identifier", "text": "values"}, "children": []},
+  ]},
+  {"type": "TokenSyntax", "range": {"start": {"line": 30, "column": 15}, "end": {"line": 30, "column": 16}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
+  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 30, "column": 16}, "end": {"line": 30, "column": 25}}, "children": [
+    {"type": "LabeledExprSyntax", "range": {"start": {"line": 30, "column": 16}, "end": {"line": 30, "column": 25}}, "children": [
+      {"type": "TokenSyntax", "range": {"start": {"line": 30, "column": 16}, "end": {"line": 30, "column": 18}}, "token": {"kind": "identifier", "text": "of"}, "children": []},
+      {"type": "TokenSyntax", "range": {"start": {"line": 30, "column": 18}, "end": {"line": 30, "column": 19}}, "token": {"kind": "colon", "text": ":"}, "children": []},
+      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 30, "column": 20}, "end": {"line": 30, "column": 25}}, "children": [
+        {"type": "TokenSyntax", "range": {"start": {"line": 30, "column": 20}, "end": {"line": 30, "column": 25}}, "token": {"kind": "identifier", "text": "alice"}, "children": []},
+      ]},
+    ]},
+  ]},
+  {"type": "TokenSyntax", "range": {"start": {"line": 30, "column": 25}, "end": {"line": 30, "column": 26}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
+  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 30, "column": 26}, "end": {"line": 30, "column": 26}}, "children": []},
+]}
+
+# Parser output for `values(in: graph)` at 33:9.
+bare_values_in_call_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 33, "column": 9}, "end": {"line": 33, "column": 26}}, "children": [
+  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 33, "column": 9}, "end": {"line": 33, "column": 15}}, "children": [
+    {"type": "TokenSyntax", "range": {"start": {"line": 33, "column": 9}, "end": {"line": 33, "column": 15}}, "token": {"kind": "identifier", "text": "values"}, "children": []},
+  ]},
+  {"type": "TokenSyntax", "range": {"start": {"line": 33, "column": 15}, "end": {"line": 33, "column": 16}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
+  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 33, "column": 16}, "end": {"line": 33, "column": 25}}, "children": [
+    {"type": "LabeledExprSyntax", "range": {"start": {"line": 33, "column": 16}, "end": {"line": 33, "column": 25}}, "children": [
+      {"type": "TokenSyntax", "range": {"start": {"line": 33, "column": 16}, "end": {"line": 33, "column": 18}}, "token": {"kind": "identifier", "text": "in"}, "children": []},
+      {"type": "TokenSyntax", "range": {"start": {"line": 33, "column": 18}, "end": {"line": 33, "column": 19}}, "token": {"kind": "colon", "text": ":"}, "children": []},
+      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 33, "column": 20}, "end": {"line": 33, "column": 25}}, "children": [
+        {"type": "TokenSyntax", "range": {"start": {"line": 33, "column": 20}, "end": {"line": 33, "column": 25}}, "token": {"kind": "identifier", "text": "graph"}, "children": []},
+      ]},
+    ]},
+  ]},
+  {"type": "TokenSyntax", "range": {"start": {"line": 33, "column": 25}, "end": {"line": 33, "column": 26}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
+  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 33, "column": 26}, "end": {"line": 33, "column": 26}}, "children": []},
+]}

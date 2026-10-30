@@ -18,6 +18,20 @@ struct InvariantPolicyTests {
         ("let keys = Cert.key.values(of: alice)", "no_values_of_lookup", 12),
         ("let foo = Class(\"Foo\").addLabel(\"Foo\").addComment(\"A foo.\")", "no_add_modifier_on_declaration", 11),
         ("let domain = Domain(\"Animal\")", "no_term_reference_by_name", 14),
+        ("enum FoafTerm: String { case knows, person }", "no_static_term_enum", 1),
+        ("extension Foaf { static let knows = Term(\"knows\") }", "no_static_term_enum", 1),
+        ("struct Foaf { static let knows = Property(\"knows\") }", "no_static_term_enum", 1),
+        ("enum Foaf { static func knows() -> Term { Term() } }", "no_static_term_enum", 1),
+        ("struct ACL { static let readClass = try! IRI(validating: \"http://www.w3.org/ns/auth/acl#Read\") }", "no_static_iri_constant", 14),
+        ("struct ACL { static let readClass: IRI? = nil }", "no_static_iri_constant", 14),
+        ("var terms = Dictionary<IRI, Term>()", "no_term_registry", 13),
+        ("var terms = [IRI: Term].init()", "no_term_registry", 13),
+        ("var terms: [Swift.String: Term] = [:]", "no_term_registry", 12),
+        ("var terms: Swift.Dictionary<IRIKit.IRI, Term> = [:]", "no_term_registry", 12),
+        ("let keys = values(of: alice)", "no_values_of_lookup", 12),
+        ("let mode = ACL.readClass", "no_class_value_constant", 12),
+        ("let domain = Domain(Fauna.Animal.iri)", "no_term_reference_by_name", 14),
+        ("let range = Range(try! IRI(validating: \"http://example.org/fauna#Habitat\"))", "no_term_reference_by_name", 13),
     ]
 
     /// The same file once each banned shape is replaced by the intended one.
@@ -31,6 +45,13 @@ struct InvariantPolicyTests {
         let keys = alice.key
         let foo = Class("Foo") { Label("Foo"); Comment("A foo.") }
         let domain = Domain(Fauna.Animal)
+        enum TextDirection { case ltr, rtl }
+        extension Fauna.Animal { static var iri: IRI { Fauna.namespace.iri } }
+        extension Graph { static let empty = Graph() }
+        var counts = [Fauna.Habitat: Int]()
+        let mode = authorization.mode
+        let agentClass = authorization.agentClass
+        let range = Range(Fauna.Habitat)
         """
 
     private func evaluate(_ source: String, named name: String) async throws -> (status: Int32, errors: [String], path: String) {
