@@ -33,16 +33,35 @@ type_modifier(name) if regex.match(`^add[A-Z]`, name)
 type_modifier("isDeclaredBy")
 
 # The chain starts with an ontology declaration such as `Class("Foo")`: a call
-# of a declaration kind at the very start of the chain. A chain on any other
-# value, `Dataset().addGraph(g)`, modifies an instance, which Charles allows:
+# of a declaration kind at the very start of the chain, however the kind is
+# spelled: `Class("Foo")`, `RDFKit.Class("Foo")`, `Class.init("Foo")`,
+# `RDFKit.Class.init("Foo")`. A chain on any other value,
+# `Dataset().addGraph(g)`, modifies an instance, which Charles allows:
 # "SwiftUI modifiers modify instances" (rule 6).
 declaration_chain(base) if {
   some start in base
   walk(base, [_, node])
   call := node.functionCallExpr
   call.range.start == start.range.start
-  call.calledExpression.declReferenceExpr.baseName in declaration_kinds
+  callee_name(call) in declaration_kinds
 }
+
+# `Class`, `RDFKit.Class`, `Class.init`, `RDFKit.Class.init`
+callee_name(call) := call.calledExpression.declReferenceExpr.baseName
+
+callee_name(call) := name if {
+  name := call.calledExpression.memberAccessExpr.declName.baseName
+  name != "init"
+}
+
+callee_name(call) := reference_name(access.base) if {
+  access := call.calledExpression.memberAccessExpr
+  access.declName.baseName == "init"
+}
+
+reference_name(expression) := expression.declReferenceExpr.baseName
+
+reference_name(expression) := expression.memberAccessExpr.declName.baseName
 
 declaration_kinds := {
   "Class",

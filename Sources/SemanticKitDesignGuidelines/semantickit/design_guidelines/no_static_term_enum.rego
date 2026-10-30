@@ -10,6 +10,11 @@ package semantickit.design_guidelines.no_static_term_enum
 #   (`static let animal = Animal()`), to a string spelling its own name
 #   (`static let knows = "knows"`), or a static function without parameters
 #   returning a term;
+# - on any enum, struct, class, actor or extension: a static metatype of a
+#   term an ontology in scope declares, a symbolic `.self` term reference
+#   (RDFKit DslInvariants): `static let person = Person.self`,
+#   `static var animal: Fauna.Animal.Type { Fauna.Animal.self }`,
+#   `static func person() -> Person.Type`;
 # - on any enum: a static stored property (`enum Fauna { static let animal =
 #   ... }`), or a static typed `IRI` or a term kind;
 # - an enum named or documented as a vocabulary with cases or statics:
@@ -242,6 +247,50 @@ term_constant(member) if {
 }
 
 term_constant(member) if term_function(member.functionDecl)
+
+# `static let person: Person.Type = …`, `static var animal: any Fauna.Animal.Type`
+term_constant(member) if {
+  variable := member.variableDecl
+  is_static(variable)
+  not iri_valued(variable)
+  some binding in variable.bindings
+  term_metatype(binding.typeAnnotation.type)
+}
+
+# `static let person = Person.self as Any.Type`, `static var person: Any.Type
+# { Person.self }`: a term's metatype in the value or the getter.
+term_constant(member) if {
+  variable := member.variableDecl
+  is_static(variable)
+  not iri_valued(variable)
+  some binding in variable.bindings
+  some value in {value | value := binding.initializer.value} | {block | block := binding.accessorBlock}
+  walk(value, [_, node])
+  term_metatype_value(node)
+}
+
+# `static func person() -> Person.Type`
+term_constant(member) if {
+  function := member.functionDecl
+  is_static(function)
+  not function.signature.parameterClause.parameters
+  term_metatype(function.signature.returnClause.type)
+}
+
+# `Person.Type`, `Fauna.Animal.Type`, `any Person.Type`, `Person.Type?`: the
+# metatype of a term in scope.
+term_metatype(type) if {
+  walk(type, [_, node])
+  lower(type_name(node.metatypeType.baseType)) in vocabulary_terms
+}
+
+# `Person.self`, `Fauna.Animal.self`: the metatype of a term in scope.
+term_metatype_value(value) if {
+  access := value.memberAccessExpr
+  access.declName.baseName == "self"
+  regex.match(`^[A-Z]`, reference_name(access.base))
+  lower(reference_name(access.base)) in vocabulary_terms
+}
 
 # `static func knows() -> Term`: a term constant spelled as a function. A
 # static function that takes parameters, such as a decoder's

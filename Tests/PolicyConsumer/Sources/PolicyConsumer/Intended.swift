@@ -52,4 +52,11 @@ struct Person { let name: String; var greeting: String { "Hello, " + name } }
 struct Totals { static let total = a + b }
 let d4 = RDFKit.Domain(Fauna.Animal)
 let r4 = Swift.Range(bounds)
+final class Bird3: Identifiable { var id: ObjectIdentifier { ObjectIdentifier(self) } }
+struct PodClient { let url: URL }
+let pairs = Dictionary(uniqueKeysWithValues: zip(names, values))
+var contacts: [String: Contact] = [:]
+let dataset2 = Dataset.init().addGraph(graph)
+struct Zoo { static let kind = Int.self }
+func render(_ text: String, compact: Bool) -> String { text }
 #endif

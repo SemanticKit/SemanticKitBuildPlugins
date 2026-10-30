@@ -11,6 +11,13 @@ package semantickit.design_guidelines.no_term_registry
 #   (`[String: String]` headers, `[String: Int]` counts) is not a term registry;
 # - a dictionary literal keyed by IRIs (`IRI(...)`, `.iri`, `.rawValue`, or an
 #   IRI or prefixed-name string such as "http://..." or "foaf:knows");
+# - a dictionary built from a sequence keyed by IRI, whatever the dictionary
+#   is spelled as: `Dictionary(uniqueKeysWithValues: terms.map { ($0.iri,
+#   $0) })`,
+#   `Swift.Dictionary(terms.map { ($0.iri, $0) }, uniquingKeysWith: …)`;
+# - a cache keyed by String or IRI whose value type is a term an ontology in
+#   scope declares (`input.vocabulary`): `var people: [String: Person]`,
+#   `Dictionary<String, Fauna.Animal>`, `[String: Person]()`;
 # - a type named `...Registry`, declared, extended or used:
 #   `TermRegistry.shared`, `var terms: TermRegistry`.
 # DESIGN-CONTRACT.md rule 2 (Charles): "The type is the identity. ... Types
@@ -70,6 +77,31 @@ name_keyed_expression(expression) if {
   specialization := expression.genericSpecializationExpr
   reference_name(specialization.expression) == "Dictionary"
   registry_types(generic_argument(specialization, 0), generic_argument(specialization, 1))
+}
+
+# `Dictionary(uniqueKeysWithValues: terms.map { ($0.iri, $0) })`: a registry
+# built from a sequence, keyed by each element's IRI.
+denial_set contains finding(call) if {
+  some call in input.functionCallExprs
+  dictionary_callee(call.calledExpression)
+  some argument in call.arguments
+  iri_keyed(argument.expression)
+}
+
+# `Dictionary`, `Swift.Dictionary`, `Dictionary.init`, `Dictionary<IRI, Person>`
+dictionary_callee(callee) if {
+  some dictionary in dictionary_expressions(callee)
+  dictionary_name(dictionary) == "Dictionary"
+}
+
+dictionary_name(expression) := reference_name(expression)
+
+dictionary_name(expression) := reference_name(expression.genericSpecializationExpr.expression)
+
+# `$0.iri`, `term.iri` anywhere in the argument.
+iri_keyed(expression) if {
+  walk(expression, [_, node])
+  node.memberAccessExpr.declName.baseName == "iri"
 }
 
 # `["knows": Knows(), "name": Name()]`, `[Foaf.knows.iri: ...]`,
@@ -140,6 +172,9 @@ registry_expression_types(key, value) if {
 
 term_value_expression(value) if reference_name(value) in term_kinds
 
+# `[String: Person]()`: a term an ontology in scope declares.
+term_value_expression(value) if reference_name(value) in vocabulary_terms
+
 # `Term.Type`
 term_value_expression(value) if value.memberAccessExpr.declName.baseName == "Type"
 
@@ -163,6 +198,16 @@ term_value_type(type) if {
   walk(type, [_, node])
   node.metatypeType
 }
+
+# `Person`, `Fauna.Animal`, `[Person]`: a term an ontology in scope declares.
+term_value_type(type) if {
+  walk(type, [_, node])
+  named_type(node, vocabulary_terms)
+}
+
+# The terms the ontologies in scope declare (`input.vocabulary`), read by the
+# evaluator from their declarations; none is typed here.
+vocabulary_terms := {name | some name in object.get(input, ["vocabulary", "terms"], [])}
 
 # `Foaf`, `Vocabularies.Foaf`
 reference_name(expression) := expression.declReferenceExpr.baseName

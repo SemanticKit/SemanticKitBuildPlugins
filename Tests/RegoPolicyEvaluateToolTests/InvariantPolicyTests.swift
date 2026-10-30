@@ -128,6 +128,30 @@ struct InvariantPolicyTests {
         ("let t12 = IsDefinedBy(Foaf.self)", "no_term_reference_by_name", 11),
         ("let t13 = RDFKit.Domain(Animal.self)", "no_term_reference_by_name", 11),
         ("let t14 = RDFKit.SeeAlso<Animal>()", "no_term_reference_by_name", 11),
+        // A stored IRI identity, an `iri:` initializer and an individual made
+        // from an IRI (DESIGN-CONTRACT.md rule 17).
+        ("final class Person4 { let iri: IRI }", "no_stored_iri_identity", 27),
+        ("struct Animal2 { var iri: IRI; let name: String }", "no_stored_iri_identity", 22),
+        ("final class Bird2: Identifiable { let id: IRI }", "no_stored_iri_identity", 39),
+        ("protocol Resource { var iri: IRI { get } }", "no_stored_iri_identity", 25),
+        ("final class Person5 { init(iri: IRI) {} }", "no_stored_iri_identity", 23),
+        ("let tweety = Bird(iri: identifier)", "no_stored_iri_identity", 14),
+        ("struct Zoo { let tweety = Fauna.Bird.init(iri: identifier) }", "no_stored_iri_identity", 27),
+        // An `add…` chain on a declaration spelled with its module or `.init`.
+        ("let foo2 = RDFKit.Class(\"Foo\").addLabel(\"Foo\")", "no_add_modifier_on_declaration", 12),
+        ("let foo3 = Class.init(\"Foo\").addLabel(\"Foo\")", "no_add_modifier_on_declaration", 12),
+        // A `Bool` mode on any coding method, internal and public included.
+        ("public struct TurtleDecoder2 { public func decode(_ text: String, strict: Bool) throws -> [Triple] { [] } }", "no_mode_flag_helper", 32),
+        ("extension NTriplesParser { func parseTerm(_ token: String, quoted: Bool) -> Term { fatalError() } }", "no_mode_flag_helper", 28),
+        // A registry built from a sequence keyed by IRI, and a String-keyed
+        // cache of a term in scope.
+        ("let byIRI = Dictionary(uniqueKeysWithValues: people.map { ($0.iri, $0) })", "no_term_registry", 13),
+        ("var people: [String: Person] = [:]", "no_term_registry", 13),
+        ("var animals = [String: Fauna.Animal]()", "no_term_registry", 15),
+        // A static metatype of a term in scope, on any type.
+        ("struct Social11 { static let person = Person.self }", "no_static_term_enum", 1),
+        ("extension Zoo { static var animal: Any.Type { Fauna.Animal.self } }", "no_static_term_enum", 1),
+        ("final class Social12 { static let agent = Agent.self }", "no_static_term_enum", 1),
     ]
 
     /// The ontologies in scope, as the target's dependencies declare them:
@@ -194,6 +218,13 @@ struct InvariantPolicyTests {
         struct Totals { static let total = a + b }
         let d4 = RDFKit.Domain(Fauna.Animal)
         let r4 = Swift.Range(bounds)
+        final class Bird3: Identifiable { var id: ObjectIdentifier { ObjectIdentifier(self) } }
+        struct PodClient { let url: URL }
+        let pairs = Dictionary(uniqueKeysWithValues: zip(names, values))
+        var contacts: [String: Contact] = [:]
+        let dataset2 = Dataset.init().addGraph(graph)
+        struct Zoo { static let kind = Int.self }
+        func render(_ text: String, compact: Bool) -> String { text }
         """
 
     private func evaluate(_ source: String, named name: String) async throws -> (status: Int32, errors: [String], path: String) {

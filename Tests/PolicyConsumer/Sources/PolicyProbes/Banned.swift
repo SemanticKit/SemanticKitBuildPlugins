@@ -103,4 +103,21 @@ let t11 = SubPropertyOf(knows.self)
 let t12 = IsDefinedBy(Foaf.self)
 let t13 = RDFKit.Domain(Animal.self)
 let t14 = RDFKit.SeeAlso<Animal>()
+final class Person4 { let iri: IRI }
+struct Animal2 { var iri: IRI; let name: String }
+final class Bird2: Identifiable { let id: IRI }
+protocol Resource { var iri: IRI { get } }
+final class Person5 { init(iri: IRI) {} }
+let tweety = Bird(iri: identifier)
+struct Zoo { let tweety = Fauna.Bird.init(iri: identifier) }
+let foo2 = RDFKit.Class("Foo").addLabel("Foo")
+let foo3 = Class.init("Foo").addLabel("Foo")
+public struct TurtleDecoder2 { public func decode(_ text: String, strict: Bool) throws -> [Triple] { [] } }
+extension NTriplesParser { func parseTerm(_ token: String, quoted: Bool) -> Term { fatalError() } }
+let byIRI = Dictionary(uniqueKeysWithValues: people.map { ($0.iri, $0) })
+var people: [String: Person] = [:]
+var animals = [String: Fauna.Animal]()
+struct Social11 { static let person = Person.self }
+extension Zoo { static var animal: Any.Type { Fauna.Animal.self } }
+final class Social12 { static let agent = Agent.self }
 #endif
