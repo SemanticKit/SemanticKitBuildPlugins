@@ -39,6 +39,24 @@ struct InvariantPolicyTests {
         ("let iri = IRIKit.IRI(rawValue: \"\\(namespace)\\(name)\")", "no_interpolated_identity", 11),
         ("let range = Range(\"http://www.w3.org/2001/XMLSchema#\" + \"nonNegativeInteger\")", "no_term_reference_by_name", 13),
         ("enum Foaf: String { case knows = \"http://xmlns.com/foaf/0.1/knows\" }", "no_static_term_enum", 1),
+        // The bypasses FoafA to FoafD: a static term IRI however it is built.
+        ("enum FoafA { static let knows = URL(string: \"http://xmlns.com/foaf/0.1/knows\")! }", "no_static_iri_constant", 14),
+        ("enum FoafB { static let knows = \"\\(ns)knows\" }", "no_static_iri_constant", 14),
+        ("enum FoafC { static let knows = ns + \"knows\" }", "no_static_iri_constant", 14),
+        ("struct FoafD { static let knows = NamedNode(\"http://xmlns.com/foaf/0.1/knows\") }", "no_static_iri_constant", 16),
+        ("enum Foaf { case knows, person, agent }", "no_static_term_enum", 1),
+        ("/** The FOAF vocabulary. */ enum Friend { case knows, person }", "no_static_term_enum", 29),
+        ("enum Fauna { static let animal = Animal() }", "no_static_term_enum", 1),
+        ("struct Fauna { static let namespace = Namespace(\"https://fauna.example.org/ontology#\") }", "no_static_iri_constant", 16),
+        ("extension Prefix { static let owl = Prefix(\"owl\", \"http://www.w3.org/2002/07/owl#\") }", "no_static_iri_constant", 20),
+        ("enum ACL { static var read: URL { URL(string: \"http://www.w3.org/ns/auth/acl#Read\")! } }", "no_static_iri_constant", 12),
+        ("let r = TermRegistry.shared", "no_term_registry", 9),
+        ("let iri = URL(string: \"\\(base)knows\")", "no_interpolated_identity", 11),
+        ("let term = Term(\"http://example.org/\" + name)", "no_interpolated_identity", 12),
+        ("let knows = \"\\(namespace)knows\"", "no_interpolated_identity", 13),
+        ("struct Fauna: Ontology { func content() -> some Content { Namespace(\"https://fauna.example.org/ontology#\") } }", "no_content_function", 26),
+        ("let subclass = SubClassOf<Animal>()", "no_term_reference_by_name", 16),
+        ("let domain = Domain(Animal.self)", "no_term_reference_by_name", 14),
     ]
 
     /// The same file once each banned shape is replaced by the intended one.
@@ -66,6 +84,14 @@ struct InvariantPolicyTests {
         let accept = ["Accept": "text/turtle"]
         var tally: [String: Int] = [:]
         let dataset = Dataset().addGraph(graph)
+        struct Fauna: Ontology { var body: some Content { Namespace("https://fauna.example.org/ontology#") } }
+        /** The base direction of a literal. */ enum Direction { case ltr, rtl }
+        enum Limits { static var depth: Int { 64 } }
+        let greeting = "Hello, \\(name)"
+        let path = directory + "/file.txt"
+        let boundary = IRI(rawValue: "http://xmlns.com/foaf/0.1/")
+        let subclass = SubClassOf(Fauna.Animal)
+        func content(of url: URL) -> Data { Data() }
         """
 
     private func evaluate(_ source: String, named name: String) async throws -> (status: Int32, errors: [String], path: String) {

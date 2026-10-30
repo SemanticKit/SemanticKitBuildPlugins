@@ -11,8 +11,12 @@ import SwiftSyntax
 /// SwiftSyntax node type (`FunctionCallExprSyntax`), `range` holds 1-based
 /// line and column positions without trivia, `token` is present on tokens
 /// only and holds the token kind's case name (`identifier`, `stringSegment`,
-/// `leftParen`, ...) and the token's text, and `children` are the node's children in source
-/// order, as `Syntax.children(viewMode: .all)` lists them.
+/// `leftParen`, ...), the token's text and, after documentation comments,
+/// `documentation`, and `children` are the node's children in source
+/// order, as `Syntax.children(viewMode: .all)` lists them. A token's
+/// `documentation` is the text of the `///` and `/** */` comments before it,
+/// one comment per line, so that a policy can read what a declaration is
+/// documented as.
 struct SyntaxInput {
     /// Every node of the tree in pre-order, root first.
     let nodes: [AST.RegoValue]
@@ -62,15 +66,31 @@ struct SyntaxInput {
             }),
         ]
         if let token = node.as(TokenSyntax.self) {
-            object["token"] = [
+            var fields: [AST.RegoValue: AST.RegoValue] = [
                 "kind": .string(Self.caseName(of: token.tokenKind)),
                 "text": .string(token.text),
             ]
+            if let documentation = Self.documentation(before: token) {
+                fields["documentation"] = .string(documentation)
+            }
+            object["token"] = .object(fields)
         }
 
         let value = AST.RegoValue.object(object)
         nodes[index] = value
         return value
+    }
+
+    /// The documentation comments in the token's leading trivia, one per line;
+    /// `nil` when there are none.
+    private static func documentation(before token: TokenSyntax) -> String? {
+        let comments = token.leadingTrivia.compactMap { piece -> String? in
+            switch piece {
+            case .docLineComment(let text), .docBlockComment(let text): text
+            default: nil
+            }
+        }
+        return comments.isEmpty ? nil : comments.joined(separator: "\n")
     }
 
     /// `identifier` for `.identifier("Button")`, `leftParen` for `.leftParen`.

@@ -903,3 +903,35 @@ string_keyed_counts_initializer_node := {"type": "FunctionCallExprSyntax", "rang
   {"type": "TokenSyntax", "range": {"start": {"line": 87, "column": 41}, "end": {"line": 87, "column": 42}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
   {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 87, "column": 42}, "end": {"line": 87, "column": 42}}, "children": []},
 ]}
+
+test_denies_registry_reference if {
+  result := decision with input as registry_reference_node
+
+  count(result.deny) == 1
+  result.deny[0].rule_id == "semantickit.design_guidelines.no_term_registry"
+  result.deny[0].line == 100
+  result.deny[0].column == 17
+  result.deny[0].severity == "error"
+  count(result.warn) == 0
+}
+
+test_denies_registry_type if {
+  result := decision with input as registry_type_node
+
+  count(result.deny) == 1
+  result.deny[0].rule_id == "semantickit.design_guidelines.no_term_registry"
+  result.deny[0].line == 103
+  result.deny[0].column == 16
+  result.deny[0].severity == "error"
+  count(result.warn) == 0
+}
+
+# Parser output for `let r = TermRegistry.shared` at 100:9.
+registry_reference_node := {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 100, "column": 17}, "end": {"line": 100, "column": 29}}, "children": [
+  {"type": "TokenSyntax", "range": {"start": {"line": 100, "column": 17}, "end": {"line": 100, "column": 29}}, "token": {"kind": "identifier", "text": "TermRegistry"}, "children": []},
+]}
+
+# Parser output for `var terms: TermRegistry` at 103:5.
+registry_type_node := {"type": "IdentifierTypeSyntax", "range": {"start": {"line": 103, "column": 16}, "end": {"line": 103, "column": 28}}, "children": [
+  {"type": "TokenSyntax", "range": {"start": {"line": 103, "column": 16}, "end": {"line": 103, "column": 28}}, "token": {"kind": "identifier", "text": "TermRegistry"}, "children": []},
+]}

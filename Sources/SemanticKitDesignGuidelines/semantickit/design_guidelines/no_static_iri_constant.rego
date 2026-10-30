@@ -1,9 +1,22 @@
 package semantickit.design_guidelines.no_static_iri_constant
 
-# A static property typed IRI, or set to an IRI, is a term held as an IRI
-# constant (`ACL.readClass`). Inside the runtime the type is the identity; an
-# IRI is read only at the boundary. The one static IRI a type keeps is its own
-# projection, `static var iri: IRI { … }`, computed from the namespace.
+# A static property whose value is an IRI is a term held as an IRI constant
+# (`ACL.readClass`), however the IRI is built. Denied, on a static or class
+# property, stored or computed:
+# - typed as an identifier: `IRI`, `URL`, `URI`, `NamedNode`, `IRIRef`, also
+#   optional or module-qualified (`IRIKit.IRI?`);
+# - a value that calls an identifier's initializer anywhere in it:
+#   `URL(string: "…")!`, `try! IRI(validating: "…")`, `NamedNode("…")`,
+#   `IRIKit.IRI.init(…)`;
+# - a value that holds an absolute IRI or a prefixed name as a string, passed
+#   to any initializer or held bare: `"http://…"`, `Namespace("http://…")`,
+#   `Prefix("owl", "http://…")`, `"foaf:knows"`;
+# - a value that builds a string by interpolation or by `+` with a string:
+#   `"\(ns)knows"`, `ns + "knows"`.
+# The one static IRI a type keeps is its own projection,
+# `static var iri: IRI { Fauna.namespace.iri }`: computed, typed IRI, and built
+# from no string. The namespace itself is declared in the ontology's
+# `var body`, not as a static.
 # Binding identity rule (Charles): "An IRI on a type is a static projection
 # computed from the namespace, read only at the boundary."
 # DESIGN-CONTRACT.md rule 2 (Charles): "Types never communicate through IRI
@@ -20,7 +33,7 @@ denials := [denial | denial := denial_set[_]]
 
 denial_set contains {
   "rule_id": "semantickit.design_guidelines.no_static_iri_constant",
-  "message": "Do not hold a term as a static IRI constant; the term's type is its identity, and its IRI is read only at the boundary.",
+  "message": "Do not hold a term as a static IRI, URL or IRI string, however it is built; the term's type is its identity, and its IRI is read only at the boundary.",
   "line": decl.range.start.line,
   "column": decl.range.start.column,
   "severity": "error",
@@ -32,7 +45,6 @@ denial_set contains {
   bindings.type == "PatternBindingListSyntax"
   some binding in bindings.children
   iri_binding(binding)
-  not projection(binding)
 }
 
 is_static(decl) if {
@@ -42,7 +54,21 @@ is_static(decl) if {
   modifier.children[0].token.text in {"static", "class"}
 }
 
-# `static var iri: IRI { Self.namespace.iri }`: the type's own IRI, computed.
+# `static let knows: IRI`, `: URL?`, `: IRIKit.IRI!`; not the projection.
+iri_binding(binding) if {
+  not projection(binding)
+  some annotation in binding.children
+  annotation.type == "TypeAnnotationSyntax"
+  some type in annotation.children
+  iri_type(type)
+}
+
+iri_binding(binding) if {
+  some value in values(binding)
+  iri_value(value)
+}
+
+# `static var iri: IRI { … }`: the type's own IRI, computed.
 projection(binding) if {
   binding.children[0].type == "IdentifierPatternSyntax"
   binding.children[0].children[0].token.text == "iri"
@@ -56,22 +82,44 @@ initialized(binding) if {
   initializer.type == "InitializerClauseSyntax"
 }
 
-# `static let knows: IRI`, `: IRI?`, `: IRI!`, `: IRIKit.IRI`
-iri_binding(binding) if {
-  some annotation in binding.children
-  annotation.type == "TypeAnnotationSyntax"
-  some type in annotation.children
-  iri_type(type)
+# What the property is set to, or what its accessors compute.
+values(binding) := {value |
+  some clause in binding.children
+  clause.type in {"InitializerClauseSyntax", "AccessorBlockSyntax"}
+  some value in clause.children
+  value.type != "TokenSyntax"
 }
 
-# `static let knows = IRI("…")`, `= try! IRI(validating: "…")`, `= IRI.init(…)`
-iri_binding(binding) if {
-  some initializer in binding.children
-  initializer.type == "InitializerClauseSyntax"
-  some value in initializer.children
-  some form in forms(value)
-  form.type == "FunctionCallExprSyntax"
-  callee_name(form.children[0]) == "IRI"
+# `URL(string: "…")!`, `try! IRI(validating: "…")`, `{ NamedNode("…") }()`
+iri_value(value) if {
+  walk(value, [_, call])
+  call.type == "FunctionCallExprSyntax"
+  callee_name(call.children[0]) in identifier_types
+}
+
+# `"http://xmlns.com/foaf/0.1/knows"`, `Namespace("http://…")`, `"foaf:knows"`
+iri_value(value) if {
+  walk(value, [_, literal])
+  literal.type == "StringLiteralExprSyntax"
+  iri_string(leading_text(literal))
+}
+
+# `"\(ns)knows"`
+iri_value(value) if {
+  walk(value, [_, segment])
+  segment.type == "ExpressionSegmentSyntax"
+}
+
+# `ns + "knows"`, `"http://…" + name`
+iri_value(value) if {
+  walk(value, [_, sequence])
+  sequence.type == "SequenceExprSyntax"
+  some list in sequence.children
+  some operator in list.children
+  operator.type == "BinaryOperatorExprSyntax"
+  operator.children[0].token.text == "+"
+  some operand in list.children
+  operand.type == "StringLiteralExprSyntax"
 }
 
 iri_type(type) if named_iri(type)
@@ -83,7 +131,7 @@ iri_type(type) if {
 
 named_iri(type) if {
   type.type == "IdentifierTypeSyntax"
-  type.children[0].token.text == "IRI"
+  type.children[0].token.text in identifier_types
 }
 
 named_iri(type) if {
@@ -91,19 +139,23 @@ named_iri(type) if {
   some name in type.children
   name.type == "TokenSyntax"
   name.token.kind == "identifier"
-  name.token.text == "IRI"
+  name.token.text in identifier_types
 }
 
-# The expression, and what `try`, `try!`, `await` and `!` wrap, two levels deep.
-wrappers := {"TryExprSyntax", "AwaitExprSyntax", "ForceUnwrapExprSyntax", "OptionalChainingExprSyntax"}
+identifier_types := {"IRI", "URL", "URI", "NamedNode", "IRIRef"}
 
-forms(value) := {value} | inner(value) | {deeper | some form in inner(value); some deeper in inner(form)}
-
-inner(value) := {child |
-  value.type in wrappers
-  some child in value.children
-  child.type != "TokenSyntax"
+# The text before any interpolation: "http://example.org/" in
+# "http://example.org/\(name)".
+leading_text(literal) := text if {
+  some segments in literal.children
+  segments.type == "StringLiteralSegmentListSyntax"
+  segment := segments.children[0]
+  segment.type == "StringSegmentSyntax"
+  text := segment.children[0].token.text
 }
+
+# "http://xmlns.com/foaf/0.1/knows", "urn:isbn:…", "foaf:knows"
+iri_string(text) if regex.match(`^[A-Za-z][A-Za-z0-9+.-]*:[^\s]+$`, text)
 
 # `IRI`, `IRIKit.IRI`, `IRI.init`, `IRIKit.IRI.init`
 callee_name(callee) := reference_name(callee) if not initializer_reference(callee)

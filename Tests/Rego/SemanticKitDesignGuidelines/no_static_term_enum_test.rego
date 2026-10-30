@@ -11,15 +11,11 @@ test_denies_static_constant_enum if {
   count(result.warn) == 0
 }
 
-test_denies_computed_static_enum if {
+# A static typed IRI: no_static_iri_constant reports it, once.
+test_leaves_computed_iri_static_enum_to_iri_rule if {
   result := decision with input as computed_static_enum_node
 
-  count(result.deny) == 1
-  result.deny[0].rule_id == "semantickit.design_guidelines.no_static_term_enum"
-  result.deny[0].line == 7
-  result.deny[0].column == 1
-  result.deny[0].severity == "error"
-  count(result.warn) == 0
+  count(result.deny) == 0
 }
 
 test_denies_string_raw_value_enum if {
@@ -986,15 +982,11 @@ test_denies_iri_raw_value_enum if {
   count(result.warn) == 0
 }
 
-test_denies_struct_prefixed_name_constant if {
+# A prefixed-name string is an IRI: no_static_iri_constant reports it, once.
+test_leaves_struct_prefixed_name_constant_to_iri_rule if {
   result := decision with input as struct_prefixed_name_constant_node
 
-  count(result.deny) == 1
-  result.deny[0].rule_id == "semantickit.design_guidelines.no_static_term_enum"
-  result.deny[0].line == 66
-  result.deny[0].column == 1
-  result.deny[0].severity == "error"
-  count(result.warn) == 0
+  count(result.deny) == 0
 }
 
 test_allows_coding_keys_enum if {
@@ -1021,7 +1013,8 @@ test_allows_media_type_constant if {
   count(result.deny) == 0
 }
 
-test_allows_namespace_enum if {
+# A static namespace holds an IRI: no_static_iri_constant reports it, once.
+test_leaves_namespace_enum_to_iri_rule if {
   result := decision with input as namespace_enum_node
 
   count(result.deny) == 0
@@ -1420,5 +1413,625 @@ namespace_enum_node := {"type": "EnumDeclSyntax", "range": {"start": {"line": 81
       ]},
     ]},
     {"type": "TokenSyntax", "range": {"start": {"line": 81, "column": 76}, "end": {"line": 81, "column": 77}}, "token": {"kind": "rightBrace", "text": "}"}, "children": []},
+  ]},
+]}
+
+test_denies_case_only_vocabulary_enum if {
+  result := decision with input as case_only_vocabulary_enum_node
+
+  count(result.deny) == 1
+  result.deny[0].rule_id == "semantickit.design_guidelines.no_static_term_enum"
+  result.deny[0].line == 100
+  result.deny[0].column == 1
+  result.deny[0].severity == "error"
+  count(result.warn) == 0
+}
+
+test_denies_case_only_rdfs_enum if {
+  result := decision with input as case_only_rdfs_enum_node
+
+  count(result.deny) == 1
+  result.deny[0].rule_id == "semantickit.design_guidelines.no_static_term_enum"
+  result.deny[0].line == 103
+  result.deny[0].column == 1
+  result.deny[0].severity == "error"
+  count(result.warn) == 0
+}
+
+test_denies_documented_vocabulary_enum if {
+  result := decision with input as documented_vocabulary_enum_node
+
+  count(result.deny) == 1
+  result.deny[0].rule_id == "semantickit.design_guidelines.no_static_term_enum"
+  result.deny[0].line == 106
+  result.deny[0].column == 29
+  result.deny[0].severity == "error"
+  count(result.warn) == 0
+}
+
+test_denies_ontology_named_enum if {
+  result := decision with input as ontology_named_enum_node
+
+  count(result.deny) == 1
+  result.deny[0].rule_id == "semantickit.design_guidelines.no_static_term_enum"
+  result.deny[0].line == 109
+  result.deny[0].column == 1
+  result.deny[0].severity == "error"
+  count(result.warn) == 0
+}
+
+test_denies_stored_static_enum if {
+  result := decision with input as stored_static_enum_node
+
+  count(result.deny) == 1
+  result.deny[0].rule_id == "semantickit.design_guidelines.no_static_term_enum"
+  result.deny[0].line == 112
+  result.deny[0].column == 1
+  result.deny[0].severity == "error"
+  count(result.warn) == 0
+}
+
+test_denies_caseless_vocabulary_enum if {
+  result := decision with input as caseless_vocabulary_enum_node
+
+  count(result.deny) == 1
+  result.deny[0].rule_id == "semantickit.design_guidelines.no_static_term_enum"
+  result.deny[0].line == 115
+  result.deny[0].column == 1
+  result.deny[0].severity == "error"
+  count(result.warn) == 0
+}
+
+test_denies_own_type_struct_constant if {
+  result := decision with input as own_type_struct_constant_node
+
+  count(result.deny) == 1
+  result.deny[0].rule_id == "semantickit.design_guidelines.no_static_term_enum"
+  result.deny[0].line == 118
+  result.deny[0].column == 1
+  result.deny[0].severity == "error"
+  count(result.warn) == 0
+}
+
+test_denies_vocabulary_extension_static if {
+  result := decision with input as vocabulary_extension_static_node
+
+  count(result.deny) == 1
+  result.deny[0].rule_id == "semantickit.design_guidelines.no_static_term_enum"
+  result.deny[0].line == 121
+  result.deny[0].column == 1
+  result.deny[0].severity == "error"
+  count(result.warn) == 0
+}
+
+test_denies_documented_namespace_struct if {
+  result := decision with input as documented_namespace_struct_node
+
+  count(result.deny) == 1
+  result.deny[0].rule_id == "semantickit.design_guidelines.no_static_term_enum"
+  result.deny[0].line == 124
+  result.deny[0].column == 42
+  result.deny[0].severity == "error"
+  count(result.warn) == 0
+}
+
+test_allows_documented_plain_enum if {
+  result := decision with input as documented_plain_enum_node
+
+  count(result.deny) == 0
+}
+
+test_allows_iri_static_enum if {
+  result := decision with input as iri_static_enum_node
+
+  count(result.deny) == 0
+}
+
+test_allows_computed_static_enum_count if {
+  result := decision with input as computed_static_enum_count_node
+
+  count(result.deny) == 0
+}
+
+# Parser output for `enum Foaf { case knows, person, agent }` at 100:1.
+case_only_vocabulary_enum_node := {"type": "EnumDeclSyntax", "range": {"start": {"line": 100, "column": 1}, "end": {"line": 100, "column": 40}}, "children": [
+  {"type": "AttributeListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
+  {"type": "DeclModifierListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
+  {"type": "TokenSyntax", "range": {"start": {"line": 100, "column": 1}, "end": {"line": 100, "column": 5}}, "token": {"kind": "keyword", "text": "enum"}, "children": []},
+  {"type": "TokenSyntax", "range": {"start": {"line": 100, "column": 6}, "end": {"line": 100, "column": 10}}, "token": {"kind": "identifier", "text": "Foaf"}, "children": []},
+  {"type": "MemberBlockSyntax", "range": {"start": {"line": 100, "column": 11}, "end": {"line": 100, "column": 40}}, "children": [
+    {"type": "TokenSyntax", "range": {"start": {"line": 100, "column": 11}, "end": {"line": 100, "column": 12}}, "token": {"kind": "leftBrace", "text": "{"}, "children": []},
+    {"type": "MemberBlockItemListSyntax", "range": {"start": {"line": 100, "column": 13}, "end": {"line": 100, "column": 38}}, "children": [
+      {"type": "MemberBlockItemSyntax", "range": {"start": {"line": 100, "column": 13}, "end": {"line": 100, "column": 38}}, "children": [
+        {"type": "EnumCaseDeclSyntax", "range": {"start": {"line": 100, "column": 13}, "end": {"line": 100, "column": 38}}, "children": [
+          {"type": "AttributeListSyntax", "range": {"start": {"line": 100, "column": 13}, "end": {"line": 100, "column": 13}}, "children": []},
+          {"type": "DeclModifierListSyntax", "range": {"start": {"line": 100, "column": 13}, "end": {"line": 100, "column": 13}}, "children": []},
+          {"type": "TokenSyntax", "range": {"start": {"line": 100, "column": 13}, "end": {"line": 100, "column": 17}}, "token": {"kind": "keyword", "text": "case"}, "children": []},
+          {"type": "EnumCaseElementListSyntax", "range": {"start": {"line": 100, "column": 18}, "end": {"line": 100, "column": 38}}, "children": [
+            {"type": "EnumCaseElementSyntax", "range": {"start": {"line": 100, "column": 18}, "end": {"line": 100, "column": 24}}, "children": [
+              {"type": "TokenSyntax", "range": {"start": {"line": 100, "column": 18}, "end": {"line": 100, "column": 23}}, "token": {"kind": "identifier", "text": "knows"}, "children": []},
+              {"type": "TokenSyntax", "range": {"start": {"line": 100, "column": 23}, "end": {"line": 100, "column": 24}}, "token": {"kind": "comma", "text": ","}, "children": []},
+            ]},
+            {"type": "EnumCaseElementSyntax", "range": {"start": {"line": 100, "column": 25}, "end": {"line": 100, "column": 32}}, "children": [
+              {"type": "TokenSyntax", "range": {"start": {"line": 100, "column": 25}, "end": {"line": 100, "column": 31}}, "token": {"kind": "identifier", "text": "person"}, "children": []},
+              {"type": "TokenSyntax", "range": {"start": {"line": 100, "column": 31}, "end": {"line": 100, "column": 32}}, "token": {"kind": "comma", "text": ","}, "children": []},
+            ]},
+            {"type": "EnumCaseElementSyntax", "range": {"start": {"line": 100, "column": 33}, "end": {"line": 100, "column": 38}}, "children": [
+              {"type": "TokenSyntax", "range": {"start": {"line": 100, "column": 33}, "end": {"line": 100, "column": 38}}, "token": {"kind": "identifier", "text": "agent"}, "children": []},
+            ]},
+          ]},
+        ]},
+      ]},
+    ]},
+    {"type": "TokenSyntax", "range": {"start": {"line": 100, "column": 39}, "end": {"line": 100, "column": 40}}, "token": {"kind": "rightBrace", "text": "}"}, "children": []},
+  ]},
+]}
+
+# Parser output for `enum RDFS { case label, comment }` at 103:1.
+case_only_rdfs_enum_node := {"type": "EnumDeclSyntax", "range": {"start": {"line": 103, "column": 1}, "end": {"line": 103, "column": 34}}, "children": [
+  {"type": "AttributeListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
+  {"type": "DeclModifierListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
+  {"type": "TokenSyntax", "range": {"start": {"line": 103, "column": 1}, "end": {"line": 103, "column": 5}}, "token": {"kind": "keyword", "text": "enum"}, "children": []},
+  {"type": "TokenSyntax", "range": {"start": {"line": 103, "column": 6}, "end": {"line": 103, "column": 10}}, "token": {"kind": "identifier", "text": "RDFS"}, "children": []},
+  {"type": "MemberBlockSyntax", "range": {"start": {"line": 103, "column": 11}, "end": {"line": 103, "column": 34}}, "children": [
+    {"type": "TokenSyntax", "range": {"start": {"line": 103, "column": 11}, "end": {"line": 103, "column": 12}}, "token": {"kind": "leftBrace", "text": "{"}, "children": []},
+    {"type": "MemberBlockItemListSyntax", "range": {"start": {"line": 103, "column": 13}, "end": {"line": 103, "column": 32}}, "children": [
+      {"type": "MemberBlockItemSyntax", "range": {"start": {"line": 103, "column": 13}, "end": {"line": 103, "column": 32}}, "children": [
+        {"type": "EnumCaseDeclSyntax", "range": {"start": {"line": 103, "column": 13}, "end": {"line": 103, "column": 32}}, "children": [
+          {"type": "AttributeListSyntax", "range": {"start": {"line": 103, "column": 13}, "end": {"line": 103, "column": 13}}, "children": []},
+          {"type": "DeclModifierListSyntax", "range": {"start": {"line": 103, "column": 13}, "end": {"line": 103, "column": 13}}, "children": []},
+          {"type": "TokenSyntax", "range": {"start": {"line": 103, "column": 13}, "end": {"line": 103, "column": 17}}, "token": {"kind": "keyword", "text": "case"}, "children": []},
+          {"type": "EnumCaseElementListSyntax", "range": {"start": {"line": 103, "column": 18}, "end": {"line": 103, "column": 32}}, "children": [
+            {"type": "EnumCaseElementSyntax", "range": {"start": {"line": 103, "column": 18}, "end": {"line": 103, "column": 24}}, "children": [
+              {"type": "TokenSyntax", "range": {"start": {"line": 103, "column": 18}, "end": {"line": 103, "column": 23}}, "token": {"kind": "identifier", "text": "label"}, "children": []},
+              {"type": "TokenSyntax", "range": {"start": {"line": 103, "column": 23}, "end": {"line": 103, "column": 24}}, "token": {"kind": "comma", "text": ","}, "children": []},
+            ]},
+            {"type": "EnumCaseElementSyntax", "range": {"start": {"line": 103, "column": 25}, "end": {"line": 103, "column": 32}}, "children": [
+              {"type": "TokenSyntax", "range": {"start": {"line": 103, "column": 25}, "end": {"line": 103, "column": 32}}, "token": {"kind": "identifier", "text": "comment"}, "children": []},
+            ]},
+          ]},
+        ]},
+      ]},
+    ]},
+    {"type": "TokenSyntax", "range": {"start": {"line": 103, "column": 33}, "end": {"line": 103, "column": 34}}, "token": {"kind": "rightBrace", "text": "}"}, "children": []},
+  ]},
+]}
+
+# Parser output for `/** The FOAF vocabulary. */ enum Friend { case knows, person }` at 106:1.
+documented_vocabulary_enum_node := {"type": "EnumDeclSyntax", "range": {"start": {"line": 106, "column": 29}, "end": {"line": 106, "column": 63}}, "children": [
+  {"type": "AttributeListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
+  {"type": "DeclModifierListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
+  {"type": "TokenSyntax", "range": {"start": {"line": 106, "column": 29}, "end": {"line": 106, "column": 33}}, "token": {"kind": "keyword", "text": "enum", "documentation": "\/** The FOAF vocabulary. *\/"}, "children": []},
+  {"type": "TokenSyntax", "range": {"start": {"line": 106, "column": 34}, "end": {"line": 106, "column": 40}}, "token": {"kind": "identifier", "text": "Friend"}, "children": []},
+  {"type": "MemberBlockSyntax", "range": {"start": {"line": 106, "column": 41}, "end": {"line": 106, "column": 63}}, "children": [
+    {"type": "TokenSyntax", "range": {"start": {"line": 106, "column": 41}, "end": {"line": 106, "column": 42}}, "token": {"kind": "leftBrace", "text": "{"}, "children": []},
+    {"type": "MemberBlockItemListSyntax", "range": {"start": {"line": 106, "column": 43}, "end": {"line": 106, "column": 61}}, "children": [
+      {"type": "MemberBlockItemSyntax", "range": {"start": {"line": 106, "column": 43}, "end": {"line": 106, "column": 61}}, "children": [
+        {"type": "EnumCaseDeclSyntax", "range": {"start": {"line": 106, "column": 43}, "end": {"line": 106, "column": 61}}, "children": [
+          {"type": "AttributeListSyntax", "range": {"start": {"line": 106, "column": 43}, "end": {"line": 106, "column": 43}}, "children": []},
+          {"type": "DeclModifierListSyntax", "range": {"start": {"line": 106, "column": 43}, "end": {"line": 106, "column": 43}}, "children": []},
+          {"type": "TokenSyntax", "range": {"start": {"line": 106, "column": 43}, "end": {"line": 106, "column": 47}}, "token": {"kind": "keyword", "text": "case"}, "children": []},
+          {"type": "EnumCaseElementListSyntax", "range": {"start": {"line": 106, "column": 48}, "end": {"line": 106, "column": 61}}, "children": [
+            {"type": "EnumCaseElementSyntax", "range": {"start": {"line": 106, "column": 48}, "end": {"line": 106, "column": 54}}, "children": [
+              {"type": "TokenSyntax", "range": {"start": {"line": 106, "column": 48}, "end": {"line": 106, "column": 53}}, "token": {"kind": "identifier", "text": "knows"}, "children": []},
+              {"type": "TokenSyntax", "range": {"start": {"line": 106, "column": 53}, "end": {"line": 106, "column": 54}}, "token": {"kind": "comma", "text": ","}, "children": []},
+            ]},
+            {"type": "EnumCaseElementSyntax", "range": {"start": {"line": 106, "column": 55}, "end": {"line": 106, "column": 61}}, "children": [
+              {"type": "TokenSyntax", "range": {"start": {"line": 106, "column": 55}, "end": {"line": 106, "column": 61}}, "token": {"kind": "identifier", "text": "person"}, "children": []},
+            ]},
+          ]},
+        ]},
+      ]},
+    ]},
+    {"type": "TokenSyntax", "range": {"start": {"line": 106, "column": 62}, "end": {"line": 106, "column": 63}}, "token": {"kind": "rightBrace", "text": "}"}, "children": []},
+  ]},
+]}
+
+# Parser output for `enum FaunaOntology { case animal, habitat }` at 109:1.
+ontology_named_enum_node := {"type": "EnumDeclSyntax", "range": {"start": {"line": 109, "column": 1}, "end": {"line": 109, "column": 44}}, "children": [
+  {"type": "AttributeListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
+  {"type": "DeclModifierListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
+  {"type": "TokenSyntax", "range": {"start": {"line": 109, "column": 1}, "end": {"line": 109, "column": 5}}, "token": {"kind": "keyword", "text": "enum"}, "children": []},
+  {"type": "TokenSyntax", "range": {"start": {"line": 109, "column": 6}, "end": {"line": 109, "column": 19}}, "token": {"kind": "identifier", "text": "FaunaOntology"}, "children": []},
+  {"type": "MemberBlockSyntax", "range": {"start": {"line": 109, "column": 20}, "end": {"line": 109, "column": 44}}, "children": [
+    {"type": "TokenSyntax", "range": {"start": {"line": 109, "column": 20}, "end": {"line": 109, "column": 21}}, "token": {"kind": "leftBrace", "text": "{"}, "children": []},
+    {"type": "MemberBlockItemListSyntax", "range": {"start": {"line": 109, "column": 22}, "end": {"line": 109, "column": 42}}, "children": [
+      {"type": "MemberBlockItemSyntax", "range": {"start": {"line": 109, "column": 22}, "end": {"line": 109, "column": 42}}, "children": [
+        {"type": "EnumCaseDeclSyntax", "range": {"start": {"line": 109, "column": 22}, "end": {"line": 109, "column": 42}}, "children": [
+          {"type": "AttributeListSyntax", "range": {"start": {"line": 109, "column": 22}, "end": {"line": 109, "column": 22}}, "children": []},
+          {"type": "DeclModifierListSyntax", "range": {"start": {"line": 109, "column": 22}, "end": {"line": 109, "column": 22}}, "children": []},
+          {"type": "TokenSyntax", "range": {"start": {"line": 109, "column": 22}, "end": {"line": 109, "column": 26}}, "token": {"kind": "keyword", "text": "case"}, "children": []},
+          {"type": "EnumCaseElementListSyntax", "range": {"start": {"line": 109, "column": 27}, "end": {"line": 109, "column": 42}}, "children": [
+            {"type": "EnumCaseElementSyntax", "range": {"start": {"line": 109, "column": 27}, "end": {"line": 109, "column": 34}}, "children": [
+              {"type": "TokenSyntax", "range": {"start": {"line": 109, "column": 27}, "end": {"line": 109, "column": 33}}, "token": {"kind": "identifier", "text": "animal"}, "children": []},
+              {"type": "TokenSyntax", "range": {"start": {"line": 109, "column": 33}, "end": {"line": 109, "column": 34}}, "token": {"kind": "comma", "text": ","}, "children": []},
+            ]},
+            {"type": "EnumCaseElementSyntax", "range": {"start": {"line": 109, "column": 35}, "end": {"line": 109, "column": 42}}, "children": [
+              {"type": "TokenSyntax", "range": {"start": {"line": 109, "column": 35}, "end": {"line": 109, "column": 42}}, "token": {"kind": "identifier", "text": "habitat"}, "children": []},
+            ]},
+          ]},
+        ]},
+      ]},
+    ]},
+    {"type": "TokenSyntax", "range": {"start": {"line": 109, "column": 43}, "end": {"line": 109, "column": 44}}, "token": {"kind": "rightBrace", "text": "}"}, "children": []},
+  ]},
+]}
+
+# Parser output for `enum Fauna { static let animal = Animal() }` at 112:1.
+stored_static_enum_node := {"type": "EnumDeclSyntax", "range": {"start": {"line": 112, "column": 1}, "end": {"line": 112, "column": 44}}, "children": [
+  {"type": "AttributeListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
+  {"type": "DeclModifierListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
+  {"type": "TokenSyntax", "range": {"start": {"line": 112, "column": 1}, "end": {"line": 112, "column": 5}}, "token": {"kind": "keyword", "text": "enum"}, "children": []},
+  {"type": "TokenSyntax", "range": {"start": {"line": 112, "column": 6}, "end": {"line": 112, "column": 11}}, "token": {"kind": "identifier", "text": "Fauna"}, "children": []},
+  {"type": "MemberBlockSyntax", "range": {"start": {"line": 112, "column": 12}, "end": {"line": 112, "column": 44}}, "children": [
+    {"type": "TokenSyntax", "range": {"start": {"line": 112, "column": 12}, "end": {"line": 112, "column": 13}}, "token": {"kind": "leftBrace", "text": "{"}, "children": []},
+    {"type": "MemberBlockItemListSyntax", "range": {"start": {"line": 112, "column": 14}, "end": {"line": 112, "column": 42}}, "children": [
+      {"type": "MemberBlockItemSyntax", "range": {"start": {"line": 112, "column": 14}, "end": {"line": 112, "column": 42}}, "children": [
+        {"type": "VariableDeclSyntax", "range": {"start": {"line": 112, "column": 14}, "end": {"line": 112, "column": 42}}, "children": [
+          {"type": "AttributeListSyntax", "range": {"start": {"line": 112, "column": 14}, "end": {"line": 112, "column": 14}}, "children": []},
+          {"type": "DeclModifierListSyntax", "range": {"start": {"line": 112, "column": 14}, "end": {"line": 112, "column": 20}}, "children": [
+            {"type": "DeclModifierSyntax", "range": {"start": {"line": 112, "column": 14}, "end": {"line": 112, "column": 20}}, "children": [
+              {"type": "TokenSyntax", "range": {"start": {"line": 112, "column": 14}, "end": {"line": 112, "column": 20}}, "token": {"kind": "keyword", "text": "static"}, "children": []},
+            ]},
+          ]},
+          {"type": "TokenSyntax", "range": {"start": {"line": 112, "column": 21}, "end": {"line": 112, "column": 24}}, "token": {"kind": "keyword", "text": "let"}, "children": []},
+          {"type": "PatternBindingListSyntax", "range": {"start": {"line": 112, "column": 25}, "end": {"line": 112, "column": 42}}, "children": [
+            {"type": "PatternBindingSyntax", "range": {"start": {"line": 112, "column": 25}, "end": {"line": 112, "column": 42}}, "children": [
+              {"type": "IdentifierPatternSyntax", "range": {"start": {"line": 112, "column": 25}, "end": {"line": 112, "column": 31}}, "children": [
+                {"type": "TokenSyntax", "range": {"start": {"line": 112, "column": 25}, "end": {"line": 112, "column": 31}}, "token": {"kind": "identifier", "text": "animal"}, "children": []},
+              ]},
+              {"type": "InitializerClauseSyntax", "range": {"start": {"line": 112, "column": 32}, "end": {"line": 112, "column": 42}}, "children": [
+                {"type": "TokenSyntax", "range": {"start": {"line": 112, "column": 32}, "end": {"line": 112, "column": 33}}, "token": {"kind": "equal", "text": "="}, "children": []},
+                {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 112, "column": 34}, "end": {"line": 112, "column": 42}}, "children": [
+                  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 112, "column": 34}, "end": {"line": 112, "column": 40}}, "children": [
+                    {"type": "TokenSyntax", "range": {"start": {"line": 112, "column": 34}, "end": {"line": 112, "column": 40}}, "token": {"kind": "identifier", "text": "Animal"}, "children": []},
+                  ]},
+                  {"type": "TokenSyntax", "range": {"start": {"line": 112, "column": 40}, "end": {"line": 112, "column": 41}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
+                  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 112, "column": 41}, "end": {"line": 112, "column": 41}}, "children": []},
+                  {"type": "TokenSyntax", "range": {"start": {"line": 112, "column": 41}, "end": {"line": 112, "column": 42}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
+                  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 112, "column": 43}, "end": {"line": 112, "column": 43}}, "children": []},
+                ]},
+              ]},
+            ]},
+          ]},
+        ]},
+      ]},
+    ]},
+    {"type": "TokenSyntax", "range": {"start": {"line": 112, "column": 43}, "end": {"line": 112, "column": 44}}, "token": {"kind": "rightBrace", "text": "}"}, "children": []},
+  ]},
+]}
+
+# Parser output for `enum Schema { static var name: Name { Name() } }` at 115:1.
+caseless_vocabulary_enum_node := {"type": "EnumDeclSyntax", "range": {"start": {"line": 115, "column": 1}, "end": {"line": 115, "column": 49}}, "children": [
+  {"type": "AttributeListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
+  {"type": "DeclModifierListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
+  {"type": "TokenSyntax", "range": {"start": {"line": 115, "column": 1}, "end": {"line": 115, "column": 5}}, "token": {"kind": "keyword", "text": "enum"}, "children": []},
+  {"type": "TokenSyntax", "range": {"start": {"line": 115, "column": 6}, "end": {"line": 115, "column": 12}}, "token": {"kind": "identifier", "text": "Schema"}, "children": []},
+  {"type": "MemberBlockSyntax", "range": {"start": {"line": 115, "column": 13}, "end": {"line": 115, "column": 49}}, "children": [
+    {"type": "TokenSyntax", "range": {"start": {"line": 115, "column": 13}, "end": {"line": 115, "column": 14}}, "token": {"kind": "leftBrace", "text": "{"}, "children": []},
+    {"type": "MemberBlockItemListSyntax", "range": {"start": {"line": 115, "column": 15}, "end": {"line": 115, "column": 47}}, "children": [
+      {"type": "MemberBlockItemSyntax", "range": {"start": {"line": 115, "column": 15}, "end": {"line": 115, "column": 47}}, "children": [
+        {"type": "VariableDeclSyntax", "range": {"start": {"line": 115, "column": 15}, "end": {"line": 115, "column": 47}}, "children": [
+          {"type": "AttributeListSyntax", "range": {"start": {"line": 115, "column": 15}, "end": {"line": 115, "column": 15}}, "children": []},
+          {"type": "DeclModifierListSyntax", "range": {"start": {"line": 115, "column": 15}, "end": {"line": 115, "column": 21}}, "children": [
+            {"type": "DeclModifierSyntax", "range": {"start": {"line": 115, "column": 15}, "end": {"line": 115, "column": 21}}, "children": [
+              {"type": "TokenSyntax", "range": {"start": {"line": 115, "column": 15}, "end": {"line": 115, "column": 21}}, "token": {"kind": "keyword", "text": "static"}, "children": []},
+            ]},
+          ]},
+          {"type": "TokenSyntax", "range": {"start": {"line": 115, "column": 22}, "end": {"line": 115, "column": 25}}, "token": {"kind": "keyword", "text": "var"}, "children": []},
+          {"type": "PatternBindingListSyntax", "range": {"start": {"line": 115, "column": 26}, "end": {"line": 115, "column": 47}}, "children": [
+            {"type": "PatternBindingSyntax", "range": {"start": {"line": 115, "column": 26}, "end": {"line": 115, "column": 47}}, "children": [
+              {"type": "IdentifierPatternSyntax", "range": {"start": {"line": 115, "column": 26}, "end": {"line": 115, "column": 30}}, "children": [
+                {"type": "TokenSyntax", "range": {"start": {"line": 115, "column": 26}, "end": {"line": 115, "column": 30}}, "token": {"kind": "identifier", "text": "name"}, "children": []},
+              ]},
+              {"type": "TypeAnnotationSyntax", "range": {"start": {"line": 115, "column": 30}, "end": {"line": 115, "column": 36}}, "children": [
+                {"type": "TokenSyntax", "range": {"start": {"line": 115, "column": 30}, "end": {"line": 115, "column": 31}}, "token": {"kind": "colon", "text": ":"}, "children": []},
+                {"type": "IdentifierTypeSyntax", "range": {"start": {"line": 115, "column": 32}, "end": {"line": 115, "column": 36}}, "children": [
+                  {"type": "TokenSyntax", "range": {"start": {"line": 115, "column": 32}, "end": {"line": 115, "column": 36}}, "token": {"kind": "identifier", "text": "Name"}, "children": []},
+                ]},
+              ]},
+              {"type": "AccessorBlockSyntax", "range": {"start": {"line": 115, "column": 37}, "end": {"line": 115, "column": 47}}, "children": [
+                {"type": "TokenSyntax", "range": {"start": {"line": 115, "column": 37}, "end": {"line": 115, "column": 38}}, "token": {"kind": "leftBrace", "text": "{"}, "children": []},
+                {"type": "CodeBlockItemListSyntax", "range": {"start": {"line": 115, "column": 39}, "end": {"line": 115, "column": 45}}, "children": [
+                  {"type": "CodeBlockItemSyntax", "range": {"start": {"line": 115, "column": 39}, "end": {"line": 115, "column": 45}}, "children": [
+                    {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 115, "column": 39}, "end": {"line": 115, "column": 45}}, "children": [
+                      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 115, "column": 39}, "end": {"line": 115, "column": 43}}, "children": [
+                        {"type": "TokenSyntax", "range": {"start": {"line": 115, "column": 39}, "end": {"line": 115, "column": 43}}, "token": {"kind": "identifier", "text": "Name"}, "children": []},
+                      ]},
+                      {"type": "TokenSyntax", "range": {"start": {"line": 115, "column": 43}, "end": {"line": 115, "column": 44}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
+                      {"type": "LabeledExprListSyntax", "range": {"start": {"line": 115, "column": 44}, "end": {"line": 115, "column": 44}}, "children": []},
+                      {"type": "TokenSyntax", "range": {"start": {"line": 115, "column": 44}, "end": {"line": 115, "column": 45}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
+                      {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 115, "column": 46}, "end": {"line": 115, "column": 46}}, "children": []},
+                    ]},
+                  ]},
+                ]},
+                {"type": "TokenSyntax", "range": {"start": {"line": 115, "column": 46}, "end": {"line": 115, "column": 47}}, "token": {"kind": "rightBrace", "text": "}"}, "children": []},
+              ]},
+            ]},
+          ]},
+        ]},
+      ]},
+    ]},
+    {"type": "TokenSyntax", "range": {"start": {"line": 115, "column": 48}, "end": {"line": 115, "column": 49}}, "token": {"kind": "rightBrace", "text": "}"}, "children": []},
+  ]},
+]}
+
+# Parser output for `struct Fauna { static let animal = Animal() }` at 118:1.
+own_type_struct_constant_node := {"type": "StructDeclSyntax", "range": {"start": {"line": 118, "column": 1}, "end": {"line": 118, "column": 46}}, "children": [
+  {"type": "AttributeListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
+  {"type": "DeclModifierListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
+  {"type": "TokenSyntax", "range": {"start": {"line": 118, "column": 1}, "end": {"line": 118, "column": 7}}, "token": {"kind": "keyword", "text": "struct"}, "children": []},
+  {"type": "TokenSyntax", "range": {"start": {"line": 118, "column": 8}, "end": {"line": 118, "column": 13}}, "token": {"kind": "identifier", "text": "Fauna"}, "children": []},
+  {"type": "MemberBlockSyntax", "range": {"start": {"line": 118, "column": 14}, "end": {"line": 118, "column": 46}}, "children": [
+    {"type": "TokenSyntax", "range": {"start": {"line": 118, "column": 14}, "end": {"line": 118, "column": 15}}, "token": {"kind": "leftBrace", "text": "{"}, "children": []},
+    {"type": "MemberBlockItemListSyntax", "range": {"start": {"line": 118, "column": 16}, "end": {"line": 118, "column": 44}}, "children": [
+      {"type": "MemberBlockItemSyntax", "range": {"start": {"line": 118, "column": 16}, "end": {"line": 118, "column": 44}}, "children": [
+        {"type": "VariableDeclSyntax", "range": {"start": {"line": 118, "column": 16}, "end": {"line": 118, "column": 44}}, "children": [
+          {"type": "AttributeListSyntax", "range": {"start": {"line": 118, "column": 16}, "end": {"line": 118, "column": 16}}, "children": []},
+          {"type": "DeclModifierListSyntax", "range": {"start": {"line": 118, "column": 16}, "end": {"line": 118, "column": 22}}, "children": [
+            {"type": "DeclModifierSyntax", "range": {"start": {"line": 118, "column": 16}, "end": {"line": 118, "column": 22}}, "children": [
+              {"type": "TokenSyntax", "range": {"start": {"line": 118, "column": 16}, "end": {"line": 118, "column": 22}}, "token": {"kind": "keyword", "text": "static"}, "children": []},
+            ]},
+          ]},
+          {"type": "TokenSyntax", "range": {"start": {"line": 118, "column": 23}, "end": {"line": 118, "column": 26}}, "token": {"kind": "keyword", "text": "let"}, "children": []},
+          {"type": "PatternBindingListSyntax", "range": {"start": {"line": 118, "column": 27}, "end": {"line": 118, "column": 44}}, "children": [
+            {"type": "PatternBindingSyntax", "range": {"start": {"line": 118, "column": 27}, "end": {"line": 118, "column": 44}}, "children": [
+              {"type": "IdentifierPatternSyntax", "range": {"start": {"line": 118, "column": 27}, "end": {"line": 118, "column": 33}}, "children": [
+                {"type": "TokenSyntax", "range": {"start": {"line": 118, "column": 27}, "end": {"line": 118, "column": 33}}, "token": {"kind": "identifier", "text": "animal"}, "children": []},
+              ]},
+              {"type": "InitializerClauseSyntax", "range": {"start": {"line": 118, "column": 34}, "end": {"line": 118, "column": 44}}, "children": [
+                {"type": "TokenSyntax", "range": {"start": {"line": 118, "column": 34}, "end": {"line": 118, "column": 35}}, "token": {"kind": "equal", "text": "="}, "children": []},
+                {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 118, "column": 36}, "end": {"line": 118, "column": 44}}, "children": [
+                  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 118, "column": 36}, "end": {"line": 118, "column": 42}}, "children": [
+                    {"type": "TokenSyntax", "range": {"start": {"line": 118, "column": 36}, "end": {"line": 118, "column": 42}}, "token": {"kind": "identifier", "text": "Animal"}, "children": []},
+                  ]},
+                  {"type": "TokenSyntax", "range": {"start": {"line": 118, "column": 42}, "end": {"line": 118, "column": 43}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
+                  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 118, "column": 43}, "end": {"line": 118, "column": 43}}, "children": []},
+                  {"type": "TokenSyntax", "range": {"start": {"line": 118, "column": 43}, "end": {"line": 118, "column": 44}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
+                  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 118, "column": 45}, "end": {"line": 118, "column": 45}}, "children": []},
+                ]},
+              ]},
+            ]},
+          ]},
+        ]},
+      ]},
+    ]},
+    {"type": "TokenSyntax", "range": {"start": {"line": 118, "column": 45}, "end": {"line": 118, "column": 46}}, "token": {"kind": "rightBrace", "text": "}"}, "children": []},
+  ]},
+]}
+
+# Parser output for `extension Foaf { static let knows = Knows.shared }` at 121:1.
+vocabulary_extension_static_node := {"type": "ExtensionDeclSyntax", "range": {"start": {"line": 121, "column": 1}, "end": {"line": 121, "column": 51}}, "children": [
+  {"type": "AttributeListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
+  {"type": "DeclModifierListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
+  {"type": "TokenSyntax", "range": {"start": {"line": 121, "column": 1}, "end": {"line": 121, "column": 10}}, "token": {"kind": "keyword", "text": "extension"}, "children": []},
+  {"type": "IdentifierTypeSyntax", "range": {"start": {"line": 121, "column": 11}, "end": {"line": 121, "column": 15}}, "children": [
+    {"type": "TokenSyntax", "range": {"start": {"line": 121, "column": 11}, "end": {"line": 121, "column": 15}}, "token": {"kind": "identifier", "text": "Foaf"}, "children": []},
+  ]},
+  {"type": "MemberBlockSyntax", "range": {"start": {"line": 121, "column": 16}, "end": {"line": 121, "column": 51}}, "children": [
+    {"type": "TokenSyntax", "range": {"start": {"line": 121, "column": 16}, "end": {"line": 121, "column": 17}}, "token": {"kind": "leftBrace", "text": "{"}, "children": []},
+    {"type": "MemberBlockItemListSyntax", "range": {"start": {"line": 121, "column": 18}, "end": {"line": 121, "column": 49}}, "children": [
+      {"type": "MemberBlockItemSyntax", "range": {"start": {"line": 121, "column": 18}, "end": {"line": 121, "column": 49}}, "children": [
+        {"type": "VariableDeclSyntax", "range": {"start": {"line": 121, "column": 18}, "end": {"line": 121, "column": 49}}, "children": [
+          {"type": "AttributeListSyntax", "range": {"start": {"line": 121, "column": 18}, "end": {"line": 121, "column": 18}}, "children": []},
+          {"type": "DeclModifierListSyntax", "range": {"start": {"line": 121, "column": 18}, "end": {"line": 121, "column": 24}}, "children": [
+            {"type": "DeclModifierSyntax", "range": {"start": {"line": 121, "column": 18}, "end": {"line": 121, "column": 24}}, "children": [
+              {"type": "TokenSyntax", "range": {"start": {"line": 121, "column": 18}, "end": {"line": 121, "column": 24}}, "token": {"kind": "keyword", "text": "static"}, "children": []},
+            ]},
+          ]},
+          {"type": "TokenSyntax", "range": {"start": {"line": 121, "column": 25}, "end": {"line": 121, "column": 28}}, "token": {"kind": "keyword", "text": "let"}, "children": []},
+          {"type": "PatternBindingListSyntax", "range": {"start": {"line": 121, "column": 29}, "end": {"line": 121, "column": 49}}, "children": [
+            {"type": "PatternBindingSyntax", "range": {"start": {"line": 121, "column": 29}, "end": {"line": 121, "column": 49}}, "children": [
+              {"type": "IdentifierPatternSyntax", "range": {"start": {"line": 121, "column": 29}, "end": {"line": 121, "column": 34}}, "children": [
+                {"type": "TokenSyntax", "range": {"start": {"line": 121, "column": 29}, "end": {"line": 121, "column": 34}}, "token": {"kind": "identifier", "text": "knows"}, "children": []},
+              ]},
+              {"type": "InitializerClauseSyntax", "range": {"start": {"line": 121, "column": 35}, "end": {"line": 121, "column": 49}}, "children": [
+                {"type": "TokenSyntax", "range": {"start": {"line": 121, "column": 35}, "end": {"line": 121, "column": 36}}, "token": {"kind": "equal", "text": "="}, "children": []},
+                {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 121, "column": 37}, "end": {"line": 121, "column": 49}}, "children": [
+                  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 121, "column": 37}, "end": {"line": 121, "column": 42}}, "children": [
+                    {"type": "TokenSyntax", "range": {"start": {"line": 121, "column": 37}, "end": {"line": 121, "column": 42}}, "token": {"kind": "identifier", "text": "Knows"}, "children": []},
+                  ]},
+                  {"type": "TokenSyntax", "range": {"start": {"line": 121, "column": 42}, "end": {"line": 121, "column": 43}}, "token": {"kind": "period", "text": "."}, "children": []},
+                  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 121, "column": 43}, "end": {"line": 121, "column": 49}}, "children": [
+                    {"type": "TokenSyntax", "range": {"start": {"line": 121, "column": 43}, "end": {"line": 121, "column": 49}}, "token": {"kind": "identifier", "text": "shared"}, "children": []},
+                  ]},
+                ]},
+              ]},
+            ]},
+          ]},
+        ]},
+      ]},
+    ]},
+    {"type": "TokenSyntax", "range": {"start": {"line": 121, "column": 50}, "end": {"line": 121, "column": 51}}, "token": {"kind": "rightBrace", "text": "}"}, "children": []},
+  ]},
+]}
+
+# Parser output for `/** The terms of the fauna namespace. */ struct Fauna { static let animal = Fauna.Animal.self }` at 124:1.
+documented_namespace_struct_node := {"type": "StructDeclSyntax", "range": {"start": {"line": 124, "column": 42}, "end": {"line": 124, "column": 96}}, "children": [
+  {"type": "AttributeListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
+  {"type": "DeclModifierListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
+  {"type": "TokenSyntax", "range": {"start": {"line": 124, "column": 42}, "end": {"line": 124, "column": 48}}, "token": {"kind": "keyword", "text": "struct", "documentation": "\/** The terms of the fauna namespace. *\/"}, "children": []},
+  {"type": "TokenSyntax", "range": {"start": {"line": 124, "column": 49}, "end": {"line": 124, "column": 54}}, "token": {"kind": "identifier", "text": "Fauna"}, "children": []},
+  {"type": "MemberBlockSyntax", "range": {"start": {"line": 124, "column": 55}, "end": {"line": 124, "column": 96}}, "children": [
+    {"type": "TokenSyntax", "range": {"start": {"line": 124, "column": 55}, "end": {"line": 124, "column": 56}}, "token": {"kind": "leftBrace", "text": "{"}, "children": []},
+    {"type": "MemberBlockItemListSyntax", "range": {"start": {"line": 124, "column": 57}, "end": {"line": 124, "column": 94}}, "children": [
+      {"type": "MemberBlockItemSyntax", "range": {"start": {"line": 124, "column": 57}, "end": {"line": 124, "column": 94}}, "children": [
+        {"type": "VariableDeclSyntax", "range": {"start": {"line": 124, "column": 57}, "end": {"line": 124, "column": 94}}, "children": [
+          {"type": "AttributeListSyntax", "range": {"start": {"line": 124, "column": 57}, "end": {"line": 124, "column": 57}}, "children": []},
+          {"type": "DeclModifierListSyntax", "range": {"start": {"line": 124, "column": 57}, "end": {"line": 124, "column": 63}}, "children": [
+            {"type": "DeclModifierSyntax", "range": {"start": {"line": 124, "column": 57}, "end": {"line": 124, "column": 63}}, "children": [
+              {"type": "TokenSyntax", "range": {"start": {"line": 124, "column": 57}, "end": {"line": 124, "column": 63}}, "token": {"kind": "keyword", "text": "static"}, "children": []},
+            ]},
+          ]},
+          {"type": "TokenSyntax", "range": {"start": {"line": 124, "column": 64}, "end": {"line": 124, "column": 67}}, "token": {"kind": "keyword", "text": "let"}, "children": []},
+          {"type": "PatternBindingListSyntax", "range": {"start": {"line": 124, "column": 68}, "end": {"line": 124, "column": 94}}, "children": [
+            {"type": "PatternBindingSyntax", "range": {"start": {"line": 124, "column": 68}, "end": {"line": 124, "column": 94}}, "children": [
+              {"type": "IdentifierPatternSyntax", "range": {"start": {"line": 124, "column": 68}, "end": {"line": 124, "column": 74}}, "children": [
+                {"type": "TokenSyntax", "range": {"start": {"line": 124, "column": 68}, "end": {"line": 124, "column": 74}}, "token": {"kind": "identifier", "text": "animal"}, "children": []},
+              ]},
+              {"type": "InitializerClauseSyntax", "range": {"start": {"line": 124, "column": 75}, "end": {"line": 124, "column": 94}}, "children": [
+                {"type": "TokenSyntax", "range": {"start": {"line": 124, "column": 75}, "end": {"line": 124, "column": 76}}, "token": {"kind": "equal", "text": "="}, "children": []},
+                {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 124, "column": 77}, "end": {"line": 124, "column": 94}}, "children": [
+                  {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 124, "column": 77}, "end": {"line": 124, "column": 89}}, "children": [
+                    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 124, "column": 77}, "end": {"line": 124, "column": 82}}, "children": [
+                      {"type": "TokenSyntax", "range": {"start": {"line": 124, "column": 77}, "end": {"line": 124, "column": 82}}, "token": {"kind": "identifier", "text": "Fauna"}, "children": []},
+                    ]},
+                    {"type": "TokenSyntax", "range": {"start": {"line": 124, "column": 82}, "end": {"line": 124, "column": 83}}, "token": {"kind": "period", "text": "."}, "children": []},
+                    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 124, "column": 83}, "end": {"line": 124, "column": 89}}, "children": [
+                      {"type": "TokenSyntax", "range": {"start": {"line": 124, "column": 83}, "end": {"line": 124, "column": 89}}, "token": {"kind": "identifier", "text": "Animal"}, "children": []},
+                    ]},
+                  ]},
+                  {"type": "TokenSyntax", "range": {"start": {"line": 124, "column": 89}, "end": {"line": 124, "column": 90}}, "token": {"kind": "period", "text": "."}, "children": []},
+                  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 124, "column": 90}, "end": {"line": 124, "column": 94}}, "children": [
+                    {"type": "TokenSyntax", "range": {"start": {"line": 124, "column": 90}, "end": {"line": 124, "column": 94}}, "token": {"kind": "keyword", "text": "self"}, "children": []},
+                  ]},
+                ]},
+              ]},
+            ]},
+          ]},
+        ]},
+      ]},
+    ]},
+    {"type": "TokenSyntax", "range": {"start": {"line": 124, "column": 95}, "end": {"line": 124, "column": 96}}, "token": {"kind": "rightBrace", "text": "}"}, "children": []},
+  ]},
+]}
+
+# Parser output for `/** The base direction of a literal. */ enum TextDirection { case ltr, rtl }` at 127:1.
+documented_plain_enum_node := {"type": "EnumDeclSyntax", "range": {"start": {"line": 127, "column": 41}, "end": {"line": 127, "column": 77}}, "children": [
+  {"type": "AttributeListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
+  {"type": "DeclModifierListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
+  {"type": "TokenSyntax", "range": {"start": {"line": 127, "column": 41}, "end": {"line": 127, "column": 45}}, "token": {"kind": "keyword", "text": "enum", "documentation": "\/** The base direction of a literal. *\/"}, "children": []},
+  {"type": "TokenSyntax", "range": {"start": {"line": 127, "column": 46}, "end": {"line": 127, "column": 59}}, "token": {"kind": "identifier", "text": "TextDirection"}, "children": []},
+  {"type": "MemberBlockSyntax", "range": {"start": {"line": 127, "column": 60}, "end": {"line": 127, "column": 77}}, "children": [
+    {"type": "TokenSyntax", "range": {"start": {"line": 127, "column": 60}, "end": {"line": 127, "column": 61}}, "token": {"kind": "leftBrace", "text": "{"}, "children": []},
+    {"type": "MemberBlockItemListSyntax", "range": {"start": {"line": 127, "column": 62}, "end": {"line": 127, "column": 75}}, "children": [
+      {"type": "MemberBlockItemSyntax", "range": {"start": {"line": 127, "column": 62}, "end": {"line": 127, "column": 75}}, "children": [
+        {"type": "EnumCaseDeclSyntax", "range": {"start": {"line": 127, "column": 62}, "end": {"line": 127, "column": 75}}, "children": [
+          {"type": "AttributeListSyntax", "range": {"start": {"line": 127, "column": 62}, "end": {"line": 127, "column": 62}}, "children": []},
+          {"type": "DeclModifierListSyntax", "range": {"start": {"line": 127, "column": 62}, "end": {"line": 127, "column": 62}}, "children": []},
+          {"type": "TokenSyntax", "range": {"start": {"line": 127, "column": 62}, "end": {"line": 127, "column": 66}}, "token": {"kind": "keyword", "text": "case"}, "children": []},
+          {"type": "EnumCaseElementListSyntax", "range": {"start": {"line": 127, "column": 67}, "end": {"line": 127, "column": 75}}, "children": [
+            {"type": "EnumCaseElementSyntax", "range": {"start": {"line": 127, "column": 67}, "end": {"line": 127, "column": 71}}, "children": [
+              {"type": "TokenSyntax", "range": {"start": {"line": 127, "column": 67}, "end": {"line": 127, "column": 70}}, "token": {"kind": "identifier", "text": "ltr"}, "children": []},
+              {"type": "TokenSyntax", "range": {"start": {"line": 127, "column": 70}, "end": {"line": 127, "column": 71}}, "token": {"kind": "comma", "text": ","}, "children": []},
+            ]},
+            {"type": "EnumCaseElementSyntax", "range": {"start": {"line": 127, "column": 72}, "end": {"line": 127, "column": 75}}, "children": [
+              {"type": "TokenSyntax", "range": {"start": {"line": 127, "column": 72}, "end": {"line": 127, "column": 75}}, "token": {"kind": "identifier", "text": "rtl"}, "children": []},
+            ]},
+          ]},
+        ]},
+      ]},
+    ]},
+    {"type": "TokenSyntax", "range": {"start": {"line": 127, "column": 76}, "end": {"line": 127, "column": 77}}, "token": {"kind": "rightBrace", "text": "}"}, "children": []},
+  ]},
+]}
+
+# Parser output for `enum FoafA { static let knows = URL(string: "http://xmlns.com/foaf/0.1/knows")! }` at 130:1.
+iri_static_enum_node := {"type": "EnumDeclSyntax", "range": {"start": {"line": 130, "column": 1}, "end": {"line": 130, "column": 82}}, "children": [
+  {"type": "AttributeListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
+  {"type": "DeclModifierListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
+  {"type": "TokenSyntax", "range": {"start": {"line": 130, "column": 1}, "end": {"line": 130, "column": 5}}, "token": {"kind": "keyword", "text": "enum"}, "children": []},
+  {"type": "TokenSyntax", "range": {"start": {"line": 130, "column": 6}, "end": {"line": 130, "column": 11}}, "token": {"kind": "identifier", "text": "FoafA"}, "children": []},
+  {"type": "MemberBlockSyntax", "range": {"start": {"line": 130, "column": 12}, "end": {"line": 130, "column": 82}}, "children": [
+    {"type": "TokenSyntax", "range": {"start": {"line": 130, "column": 12}, "end": {"line": 130, "column": 13}}, "token": {"kind": "leftBrace", "text": "{"}, "children": []},
+    {"type": "MemberBlockItemListSyntax", "range": {"start": {"line": 130, "column": 14}, "end": {"line": 130, "column": 80}}, "children": [
+      {"type": "MemberBlockItemSyntax", "range": {"start": {"line": 130, "column": 14}, "end": {"line": 130, "column": 80}}, "children": [
+        {"type": "VariableDeclSyntax", "range": {"start": {"line": 130, "column": 14}, "end": {"line": 130, "column": 80}}, "children": [
+          {"type": "AttributeListSyntax", "range": {"start": {"line": 130, "column": 14}, "end": {"line": 130, "column": 14}}, "children": []},
+          {"type": "DeclModifierListSyntax", "range": {"start": {"line": 130, "column": 14}, "end": {"line": 130, "column": 20}}, "children": [
+            {"type": "DeclModifierSyntax", "range": {"start": {"line": 130, "column": 14}, "end": {"line": 130, "column": 20}}, "children": [
+              {"type": "TokenSyntax", "range": {"start": {"line": 130, "column": 14}, "end": {"line": 130, "column": 20}}, "token": {"kind": "keyword", "text": "static"}, "children": []},
+            ]},
+          ]},
+          {"type": "TokenSyntax", "range": {"start": {"line": 130, "column": 21}, "end": {"line": 130, "column": 24}}, "token": {"kind": "keyword", "text": "let"}, "children": []},
+          {"type": "PatternBindingListSyntax", "range": {"start": {"line": 130, "column": 25}, "end": {"line": 130, "column": 80}}, "children": [
+            {"type": "PatternBindingSyntax", "range": {"start": {"line": 130, "column": 25}, "end": {"line": 130, "column": 80}}, "children": [
+              {"type": "IdentifierPatternSyntax", "range": {"start": {"line": 130, "column": 25}, "end": {"line": 130, "column": 30}}, "children": [
+                {"type": "TokenSyntax", "range": {"start": {"line": 130, "column": 25}, "end": {"line": 130, "column": 30}}, "token": {"kind": "identifier", "text": "knows"}, "children": []},
+              ]},
+              {"type": "InitializerClauseSyntax", "range": {"start": {"line": 130, "column": 31}, "end": {"line": 130, "column": 80}}, "children": [
+                {"type": "TokenSyntax", "range": {"start": {"line": 130, "column": 31}, "end": {"line": 130, "column": 32}}, "token": {"kind": "equal", "text": "="}, "children": []},
+                {"type": "ForceUnwrapExprSyntax", "range": {"start": {"line": 130, "column": 33}, "end": {"line": 130, "column": 80}}, "children": [
+                  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 130, "column": 33}, "end": {"line": 130, "column": 79}}, "children": [
+                    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 130, "column": 33}, "end": {"line": 130, "column": 36}}, "children": [
+                      {"type": "TokenSyntax", "range": {"start": {"line": 130, "column": 33}, "end": {"line": 130, "column": 36}}, "token": {"kind": "identifier", "text": "URL"}, "children": []},
+                    ]},
+                    {"type": "TokenSyntax", "range": {"start": {"line": 130, "column": 36}, "end": {"line": 130, "column": 37}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
+                    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 130, "column": 37}, "end": {"line": 130, "column": 78}}, "children": [
+                      {"type": "LabeledExprSyntax", "range": {"start": {"line": 130, "column": 37}, "end": {"line": 130, "column": 78}}, "children": [
+                        {"type": "TokenSyntax", "range": {"start": {"line": 130, "column": 37}, "end": {"line": 130, "column": 43}}, "token": {"kind": "identifier", "text": "string"}, "children": []},
+                        {"type": "TokenSyntax", "range": {"start": {"line": 130, "column": 43}, "end": {"line": 130, "column": 44}}, "token": {"kind": "colon", "text": ":"}, "children": []},
+                        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 130, "column": 45}, "end": {"line": 130, "column": 78}}, "children": [
+                          {"type": "TokenSyntax", "range": {"start": {"line": 130, "column": 45}, "end": {"line": 130, "column": 46}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
+                          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 130, "column": 46}, "end": {"line": 130, "column": 77}}, "children": [
+                            {"type": "StringSegmentSyntax", "range": {"start": {"line": 130, "column": 46}, "end": {"line": 130, "column": 77}}, "children": [
+                              {"type": "TokenSyntax", "range": {"start": {"line": 130, "column": 46}, "end": {"line": 130, "column": 77}}, "token": {"kind": "stringSegment", "text": "http:\/\/xmlns.com\/foaf\/0.1\/knows"}, "children": []},
+                            ]},
+                          ]},
+                          {"type": "TokenSyntax", "range": {"start": {"line": 130, "column": 77}, "end": {"line": 130, "column": 78}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
+                        ]},
+                      ]},
+                    ]},
+                    {"type": "TokenSyntax", "range": {"start": {"line": 130, "column": 78}, "end": {"line": 130, "column": 79}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
+                    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 130, "column": 79}, "end": {"line": 130, "column": 79}}, "children": []},
+                  ]},
+                  {"type": "TokenSyntax", "range": {"start": {"line": 130, "column": 79}, "end": {"line": 130, "column": 80}}, "token": {"kind": "exclamationMark", "text": "!"}, "children": []},
+                ]},
+              ]},
+            ]},
+          ]},
+        ]},
+      ]},
+    ]},
+    {"type": "TokenSyntax", "range": {"start": {"line": 130, "column": 81}, "end": {"line": 130, "column": 82}}, "token": {"kind": "rightBrace", "text": "}"}, "children": []},
+  ]},
+]}
+
+# Parser output for `enum Fauna { static var count: Int { 3 } }` at 133:1.
+computed_static_enum_count_node := {"type": "EnumDeclSyntax", "range": {"start": {"line": 133, "column": 1}, "end": {"line": 133, "column": 43}}, "children": [
+  {"type": "AttributeListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
+  {"type": "DeclModifierListSyntax", "range": {"start": {"line": 1, "column": 1}, "end": {"line": 1, "column": 1}}, "children": []},
+  {"type": "TokenSyntax", "range": {"start": {"line": 133, "column": 1}, "end": {"line": 133, "column": 5}}, "token": {"kind": "keyword", "text": "enum"}, "children": []},
+  {"type": "TokenSyntax", "range": {"start": {"line": 133, "column": 6}, "end": {"line": 133, "column": 11}}, "token": {"kind": "identifier", "text": "Fauna"}, "children": []},
+  {"type": "MemberBlockSyntax", "range": {"start": {"line": 133, "column": 12}, "end": {"line": 133, "column": 43}}, "children": [
+    {"type": "TokenSyntax", "range": {"start": {"line": 133, "column": 12}, "end": {"line": 133, "column": 13}}, "token": {"kind": "leftBrace", "text": "{"}, "children": []},
+    {"type": "MemberBlockItemListSyntax", "range": {"start": {"line": 133, "column": 14}, "end": {"line": 133, "column": 41}}, "children": [
+      {"type": "MemberBlockItemSyntax", "range": {"start": {"line": 133, "column": 14}, "end": {"line": 133, "column": 41}}, "children": [
+        {"type": "VariableDeclSyntax", "range": {"start": {"line": 133, "column": 14}, "end": {"line": 133, "column": 41}}, "children": [
+          {"type": "AttributeListSyntax", "range": {"start": {"line": 133, "column": 14}, "end": {"line": 133, "column": 14}}, "children": []},
+          {"type": "DeclModifierListSyntax", "range": {"start": {"line": 133, "column": 14}, "end": {"line": 133, "column": 20}}, "children": [
+            {"type": "DeclModifierSyntax", "range": {"start": {"line": 133, "column": 14}, "end": {"line": 133, "column": 20}}, "children": [
+              {"type": "TokenSyntax", "range": {"start": {"line": 133, "column": 14}, "end": {"line": 133, "column": 20}}, "token": {"kind": "keyword", "text": "static"}, "children": []},
+            ]},
+          ]},
+          {"type": "TokenSyntax", "range": {"start": {"line": 133, "column": 21}, "end": {"line": 133, "column": 24}}, "token": {"kind": "keyword", "text": "var"}, "children": []},
+          {"type": "PatternBindingListSyntax", "range": {"start": {"line": 133, "column": 25}, "end": {"line": 133, "column": 41}}, "children": [
+            {"type": "PatternBindingSyntax", "range": {"start": {"line": 133, "column": 25}, "end": {"line": 133, "column": 41}}, "children": [
+              {"type": "IdentifierPatternSyntax", "range": {"start": {"line": 133, "column": 25}, "end": {"line": 133, "column": 30}}, "children": [
+                {"type": "TokenSyntax", "range": {"start": {"line": 133, "column": 25}, "end": {"line": 133, "column": 30}}, "token": {"kind": "identifier", "text": "count"}, "children": []},
+              ]},
+              {"type": "TypeAnnotationSyntax", "range": {"start": {"line": 133, "column": 30}, "end": {"line": 133, "column": 35}}, "children": [
+                {"type": "TokenSyntax", "range": {"start": {"line": 133, "column": 30}, "end": {"line": 133, "column": 31}}, "token": {"kind": "colon", "text": ":"}, "children": []},
+                {"type": "IdentifierTypeSyntax", "range": {"start": {"line": 133, "column": 32}, "end": {"line": 133, "column": 35}}, "children": [
+                  {"type": "TokenSyntax", "range": {"start": {"line": 133, "column": 32}, "end": {"line": 133, "column": 35}}, "token": {"kind": "identifier", "text": "Int"}, "children": []},
+                ]},
+              ]},
+              {"type": "AccessorBlockSyntax", "range": {"start": {"line": 133, "column": 36}, "end": {"line": 133, "column": 41}}, "children": [
+                {"type": "TokenSyntax", "range": {"start": {"line": 133, "column": 36}, "end": {"line": 133, "column": 37}}, "token": {"kind": "leftBrace", "text": "{"}, "children": []},
+                {"type": "CodeBlockItemListSyntax", "range": {"start": {"line": 133, "column": 38}, "end": {"line": 133, "column": 39}}, "children": [
+                  {"type": "CodeBlockItemSyntax", "range": {"start": {"line": 133, "column": 38}, "end": {"line": 133, "column": 39}}, "children": [
+                    {"type": "IntegerLiteralExprSyntax", "range": {"start": {"line": 133, "column": 38}, "end": {"line": 133, "column": 39}}, "children": [
+                      {"type": "TokenSyntax", "range": {"start": {"line": 133, "column": 38}, "end": {"line": 133, "column": 39}}, "token": {"kind": "integerLiteral", "text": "3"}, "children": []},
+                    ]},
+                  ]},
+                ]},
+                {"type": "TokenSyntax", "range": {"start": {"line": 133, "column": 40}, "end": {"line": 133, "column": 41}}, "token": {"kind": "rightBrace", "text": "}"}, "children": []},
+              ]},
+            ]},
+          ]},
+        ]},
+      ]},
+    ]},
+    {"type": "TokenSyntax", "range": {"start": {"line": 133, "column": 42}, "end": {"line": 133, "column": 43}}, "token": {"kind": "rightBrace", "text": "}"}, "children": []},
   ]},
 ]}

@@ -118,6 +118,11 @@ struct PolicyEvaluationTests {
         "no_term_registry": [
             "DictionaryTypeSyntax", "IdentifierTypeSyntax", "MemberTypeSyntax", "FunctionCallExprSyntax", "DictionaryExprSyntax",
             "ClassDeclSyntax", "StructDeclSyntax", "EnumDeclSyntax", "ActorDeclSyntax", "ProtocolDeclSyntax",
+            "DeclReferenceExprSyntax",
+        ],
+        "no_interpolated_identity": ["FunctionCallExprSyntax", "VariableDeclSyntax", "ReturnStmtSyntax"],
+        "no_content_function": [
+            "FunctionDeclSyntax", "StructDeclSyntax", "ClassDeclSyntax", "EnumDeclSyntax", "ActorDeclSyntax", "ExtensionDeclSyntax",
         ],
         "no_individual_graph": ["TokenSyntax"],
         "no_class_value_constant": ["MemberAccessExprSyntax"],

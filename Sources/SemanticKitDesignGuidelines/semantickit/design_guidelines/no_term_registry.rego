@@ -11,7 +11,8 @@ package semantickit.design_guidelines.no_term_registry
 #   (`[String: String]` headers, `[String: Int]` counts) is not a term registry;
 # - a dictionary literal keyed by IRIs (`IRI(...)`, `.iri`, `.rawValue`, or an
 #   IRI or prefixed-name string such as "http://..." or "foaf:knows");
-# - a type named `...Registry`.
+# - a type named `...Registry`, declared, extended or used:
+#   `TermRegistry.shared`, `var terms: TermRegistry`.
 # DESIGN-CONTRACT.md rule 2 (Charles): "The type is the identity. ... Types
 # never communicate through IRI strings." RDFKit DslInvariants: no registries.
 
@@ -264,6 +265,20 @@ denial_set contains finding(node) if {
   node := input
   node.type == "ProtocolDeclSyntax"
   registry_name(node)
+}
+
+# `TermRegistry.shared`, `TermRegistry()`: a registry in use.
+denial_set contains finding(node) if {
+  node := input
+  node.type == "DeclReferenceExprSyntax"
+  endswith(node.children[0].token.text, "Registry")
+}
+
+# `var terms: TermRegistry`, `extension TermRegistry`
+denial_set contains finding(node) if {
+  node := input
+  node.type == "IdentifierTypeSyntax"
+  endswith(node.children[0].token.text, "Registry")
 }
 
 registry_name(decl) if {
