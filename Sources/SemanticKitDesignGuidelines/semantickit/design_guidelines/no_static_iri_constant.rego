@@ -11,8 +11,10 @@ package semantickit.design_guidelines.no_static_iri_constant
 # - a value that holds an absolute IRI or a prefixed name as a string, passed
 #   to any initializer or held bare: `"http://…"`, `Namespace("http://…")`,
 #   `Prefix("owl", "http://…")`, `"foaf:knows"`;
-# - a value that builds a string by interpolation or by `+` with a string:
-#   `"\(ns)knows"`, `ns + "knows"`.
+# - a value that builds a string by interpolation, by `+` with a string, or
+#   by a call that builds one from a string: `"\(ns)knows"`, `ns + "knows"`,
+#   `ns.appending("knows")`, `[ns, "knows"].joined()`,
+#   `String(format: "%@knows", ns)`.
 # The one static IRI a type keeps is its own projection,
 # `static var iri: IRI { Fauna.namespace.iri }`: computed, typed IRI, and built
 # from no string. The namespace itself is declared in the ontology's
@@ -120,6 +122,48 @@ iri_value(value) if {
   operator.children[0].token.text == "+"
   some operand in list.children
   operand.type == "StringLiteralExprSyntax"
+}
+
+# `ns.appending("knows")`, `[ns, "knows"].joined()`, `String(format: "%@knows", ns)`
+iri_value(value) if {
+  walk(value, [_, call])
+  string_building_call(call)
+  walk(call, [_, literal])
+  literal.type == "StringLiteralExprSyntax"
+}
+
+# `ns.appending("knows")`, `[ns, "knows"].joined()`, `String(format: "%@knows",
+# ns)`: a string built by a call rather than by `+`. `URL.appending(path:)` and
+# `appendingPathComponent(_:)` take labels or name file paths and are not
+# string concatenation.
+string_building_call(call) if {
+  call.type == "FunctionCallExprSyntax"
+  callee := call.children[0]
+  callee.type == "MemberAccessExprSyntax"
+  callee.children[count(callee.children) - 1].children[0].token.text == "joined"
+}
+
+string_building_call(call) if {
+  call.type == "FunctionCallExprSyntax"
+  callee := call.children[0]
+  callee.type == "MemberAccessExprSyntax"
+  callee.children[count(callee.children) - 1].children[0].token.text == "appending"
+  some arguments in call.children
+  arguments.type == "LabeledExprListSyntax"
+  count(arguments.children) == 1
+  arguments.children[0].children[0].type != "TokenSyntax"
+}
+
+string_building_call(call) if {
+  call.type == "FunctionCallExprSyntax"
+  callee := call.children[0]
+  callee.type == "DeclReferenceExprSyntax"
+  callee.children[0].token.text == "String"
+  some arguments in call.children
+  arguments.type == "LabeledExprListSyntax"
+  first := arguments.children[0].children[0]
+  first.type == "TokenSyntax"
+  first.token.text == "format"
 }
 
 iri_type(type) if named_iri(type)

@@ -61,6 +61,10 @@ struct InvariantPolicyTests {
         ("func parseLiteral(_ text: String, strict: Bool) -> Literal? { nil }", "no_mode_flag_helper", 1),
         ("struct NTriplesParser { fileprivate func encodeTerm(_ term: Term, turtle: Bool) -> String { \"\" } }", "no_mode_flag_helper", 25),
         ("struct TurtleParser { func resolve(_ local: String) -> IRI? { IRI(string: namespace + local) } }", "no_interpolated_identity", 63),
+        // An IRI built by a string-building call, not only by `+` or interpolation.
+        ("let iri = IRI(string: ns.appending(\"knows\"))", "no_interpolated_identity", 11),
+        ("let iri = IRI(string: String(format: \"%@knows\", ns))", "no_interpolated_identity", 11),
+        ("struct Paths { static let knows = [ns, \"knows\"].joined() }", "no_static_iri_constant", 16),
     ]
 
     /// The same file once each banned shape is replaced by the intended one.
@@ -101,6 +105,10 @@ struct InvariantPolicyTests {
         extension Person: Encodable { func encode(to encoder: Encoder) throws { let iri = "\\(namespace)alice" } }
         extension ObjectTerm { init(token: String) throws { fatalError() } }
         struct TSVDecoder { func decode(_ text: String) throws -> [ObjectTerm] { [] } }
+        struct NTriplesDecoder { static func term(from token: String) throws -> Term { fatalError() } }
+        let names = ["a", "b"].joined(separator: ", ")
+        let file = url.appending(path: "file.txt")
+        let path = directory.appending("/file.txt")
         """
 
     private func evaluate(_ source: String, named name: String) async throws -> (status: Int32, errors: [String], path: String) {

@@ -8,7 +8,8 @@ package semantickit.design_guidelines.no_static_term_enum
 #   term (`Term(...)`, `Property(...)`, `Class(...)` and the other declaration
 #   kinds), to an instance of the type it is named after
 #   (`static let animal = Animal()`), to a string spelling its own name
-#   (`static let knows = "knows"`), or a static function returning a term;
+#   (`static let knows = "knows"`), or a static function without parameters
+#   returning a term;
 # - on any enum: a static stored property (`enum Fauna { static let animal =
 #   ... }`), or a static typed `IRI` or a term kind;
 # - an enum named or documented as a vocabulary with cases or statics:
@@ -294,16 +295,28 @@ term_constant(member) if {
 
 term_constant(member) if term_function(member)
 
-# `static func knows() -> Term`
+# `static func knows() -> Term`: a term constant spelled as a function. A
+# static function that takes parameters, such as a decoder's
+# `static func term(from token: String) -> Term`, turns its arguments into a
+# term and is not a constant.
 term_function(member) if {
   member.type == "FunctionDeclSyntax"
   is_static(member)
   some signature in member.children
   signature.type == "FunctionSignatureSyntax"
+  not has_parameters(signature)
   some clause in signature.children
   clause.type == "ReturnClauseSyntax"
   some type in clause.children
   type_name(type) in term_kinds
+}
+
+has_parameters(signature) if {
+  some clause in signature.children
+  clause.type == "FunctionParameterClauseSyntax"
+  some parameters in clause.children
+  parameters.type == "FunctionParameterListSyntax"
+  count(parameters.children) > 0
 }
 
 term_value(value, _) if iri_string(string_literal_text(value))
@@ -486,6 +499,48 @@ iri_value(value) if {
   operator.children[0].token.text == "+"
   some operand in list.children
   operand.type == "StringLiteralExprSyntax"
+}
+
+# `ns.appending("knows")`, `[ns, "knows"].joined()`, `String(format: "%@knows", ns)`
+iri_value(value) if {
+  walk(value, [_, call])
+  string_building_call(call)
+  walk(call, [_, literal])
+  literal.type == "StringLiteralExprSyntax"
+}
+
+# `ns.appending("knows")`, `[ns, "knows"].joined()`, `String(format: "%@knows",
+# ns)`: a string built by a call rather than by `+`. `URL.appending(path:)` and
+# `appendingPathComponent(_:)` take labels or name file paths and are not
+# string concatenation.
+string_building_call(call) if {
+  call.type == "FunctionCallExprSyntax"
+  callee := call.children[0]
+  callee.type == "MemberAccessExprSyntax"
+  callee.children[count(callee.children) - 1].children[0].token.text == "joined"
+}
+
+string_building_call(call) if {
+  call.type == "FunctionCallExprSyntax"
+  callee := call.children[0]
+  callee.type == "MemberAccessExprSyntax"
+  callee.children[count(callee.children) - 1].children[0].token.text == "appending"
+  some arguments in call.children
+  arguments.type == "LabeledExprListSyntax"
+  count(arguments.children) == 1
+  arguments.children[0].children[0].type != "TokenSyntax"
+}
+
+string_building_call(call) if {
+  call.type == "FunctionCallExprSyntax"
+  callee := call.children[0]
+  callee.type == "DeclReferenceExprSyntax"
+  callee.children[0].token.text == "String"
+  some arguments in call.children
+  arguments.type == "LabeledExprListSyntax"
+  first := arguments.children[0].children[0]
+  first.type == "TokenSyntax"
+  first.token.text == "format"
 }
 
 leading_text(literal) := text if {

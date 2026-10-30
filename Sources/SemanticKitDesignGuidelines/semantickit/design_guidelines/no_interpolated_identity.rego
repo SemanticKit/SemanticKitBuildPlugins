@@ -1,6 +1,7 @@
 package semantickit.design_guidelines.no_interpolated_identity
 
-# An IRI built by string interpolation or concatenation is identity built
+# An IRI built by string interpolation or concatenation (`+`, `appending(_:)`,
+# `joined()`, `String(format:)`) is identity built
 # from strings at run time. Denied anywhere in a source file except inside a
 # boundary encoder or decoder (see `boundary_coder`), where the format turns
 # text into types and types into text:
@@ -207,6 +208,14 @@ built_iri(value) if {
   iri_operand(operand)
 }
 
+# `ns.appending("knows")`, `[ns, "knows"].joined()`,
+# `String(format: "%@knows", ns)`
+built_iri(value) if {
+  string_building_call(value)
+  walk(value, [_, operand])
+  iri_operand(operand)
+}
+
 iri_operand(operand) if {
   operand.type == "StringLiteralExprSyntax"
   iri_string(leading_text(operand))
@@ -269,6 +278,45 @@ built_from_strings(arguments) if {
   walk(arguments, [_, node])
   node.type == "BinaryOperatorExprSyntax"
   node.children[0].token.text == "+"
+}
+
+built_from_strings(arguments) if {
+  walk(arguments, [_, call])
+  string_building_call(call)
+}
+
+# `ns.appending("knows")`, `[ns, "knows"].joined()`, `String(format: "%@knows",
+# ns)`: a string built by a call rather than by `+`. `URL.appending(path:)` and
+# `appendingPathComponent(_:)` take labels or name file paths and are not
+# string concatenation.
+string_building_call(call) if {
+  call.type == "FunctionCallExprSyntax"
+  callee := call.children[0]
+  callee.type == "MemberAccessExprSyntax"
+  callee.children[count(callee.children) - 1].children[0].token.text == "joined"
+}
+
+string_building_call(call) if {
+  call.type == "FunctionCallExprSyntax"
+  callee := call.children[0]
+  callee.type == "MemberAccessExprSyntax"
+  callee.children[count(callee.children) - 1].children[0].token.text == "appending"
+  some arguments in call.children
+  arguments.type == "LabeledExprListSyntax"
+  count(arguments.children) == 1
+  arguments.children[0].children[0].type != "TokenSyntax"
+}
+
+string_building_call(call) if {
+  call.type == "FunctionCallExprSyntax"
+  callee := call.children[0]
+  callee.type == "DeclReferenceExprSyntax"
+  callee.children[0].token.text == "String"
+  some arguments in call.children
+  arguments.type == "LabeledExprListSyntax"
+  first := arguments.children[0].children[0]
+  first.type == "TokenSyntax"
+  first.token.text == "format"
 }
 
 # `IRI`, `IRIKit.IRI`, `IRI.init`, `IRIKit.IRI.init`
