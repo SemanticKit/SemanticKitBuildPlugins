@@ -124,4 +124,7 @@ let byIRI2 = Dictionary(uniqueKeysWithValues: zip(people.map(\.iri), people))
 let byIRI3 = Dictionary(grouping: people, by: \.iri)
 let byIRI4 = people.reduce(into: [:]) { $0[$1.iri] = $1 }
 final class Person6 { let iri: String }
+struct TurtleDecoder4 { func decode(_ strict: Bool) throws {} }
+func parseTerm(_ quoted: Bool, forKey key: String) -> Term { fatalError() }
+final class Person7 { init(_ iri: String) {} }
 #endif

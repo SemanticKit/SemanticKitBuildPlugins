@@ -13,7 +13,10 @@ package semantickit.design_guidelines.no_stored_iri_identity
 #   IRI { get } }`;
 # - an instance property named `iri` typed `String` (`Swift.String`,
 #   optional included): an IRI held as a string, `let iri: String`;
-# - an initializer that takes the IRI: `init(iri: IRI)`, `init(_ iri: IRI)`;
+# - an initializer that takes the IRI, as an identifier or as a `String`
+#   (`Swift.String`, optional included), labelled `iri` or with `iri` as its
+#   parameter name: `init(iri: IRI)`, `init(_ iri: IRI)`, `init(iri:
+#   String)`, `init(_ iri: String)`;
 # - an individual made from an IRI: `let tweety = Bird(iri: …)`,
 #   `Person.init(iri: …)`.
 # Not reported: a format's coder (`TurtleDecoder`, a type conforming to
@@ -128,12 +131,17 @@ hand_typed(binding) if {
   regex.match(`^[A-Za-z][A-Za-z0-9+.-]*:[^\s]+$`, segment.stringSegment.content)
 }
 
-# `iri: IRI`, `iri: String`, `_ iri: IRI`
+# `iri: IRI`, `iri: String`, `_ iri: IRI`, `_ iri: String`
 iri_parameter(parameter) if parameter.firstName == "iri"
 
 iri_parameter(parameter) if {
   parameter.secondName == "iri"
   iri_type(parameter.type)
+}
+
+iri_parameter(parameter) if {
+  parameter.secondName == "iri"
+  string_type(parameter.type)
 }
 
 # A declaration around the node is a coder, a `Codable` conformance's

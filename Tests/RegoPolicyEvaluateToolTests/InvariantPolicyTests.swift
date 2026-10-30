@@ -158,6 +158,11 @@ struct InvariantPolicyTests {
         ("let byIRI3 = Dictionary(grouping: people, by: \\.iri)", "no_term_registry", 14),
         ("let byIRI4 = people.reduce(into: [:]) { $0[$1.iri] = $1 }", "no_term_registry", 14),
         ("final class Person6 { let iri: String }", "no_stored_iri_identity", 27),
+        // An unlabeled `Bool` outside a coding container's own coding
+        // methods, and an IRI taken by an initializer as a String.
+        ("struct TurtleDecoder4 { func decode(_ strict: Bool) throws {} }", "no_mode_flag_helper", 25),
+        ("func parseTerm(_ quoted: Bool, forKey key: String) -> Term { fatalError() }", "no_mode_flag_helper", 1),
+        ("final class Person7 { init(_ iri: String) {} }", "no_stored_iri_identity", 23),
     ]
 
     /// The ontologies in scope, as the target's dependencies declare them:
@@ -237,6 +242,8 @@ struct InvariantPolicyTests {
         let groups = Dictionary(grouping: people, by: \\.name)
         let totals = counts.reduce(into: [:]) { $0[$1.key, default: 0] += $1.value }
         struct Contact2: Identifiable { let id: String; let name: String }
+        extension Box: Swift.SingleValueEncodingContainer { mutating func encode(_ value: Bool) throws {} }
+        struct NTriplesDecoder { init(_ iri: String) {} }
         """
 
     private func evaluate(_ source: String, named name: String) async throws -> (status: Int32, errors: [String], path: String) {
