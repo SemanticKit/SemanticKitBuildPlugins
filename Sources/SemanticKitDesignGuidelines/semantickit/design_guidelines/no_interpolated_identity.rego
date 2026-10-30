@@ -220,8 +220,10 @@ finding_at(expression) := finding(node) if some node in expression
 identifier_types := {"IRI", "URL", "URI", "NamedNode", "IRIRef", "Namespace"}
 
 # `Range("http://…" + name)` is `no_term_reference_by_name`'s, which denies any
-# string given to these, and is not reported here too.
-term_references := {"Type", "Domain", "Range", "SeeAlso", "IsDefinedBy", "SubClassOf", "SubPropertyOf", "EquivalentClass", "EquivalentProperty", "InverseOf", "DisjointWith"}
+# string given to these, and is not reported here too. `SeeAlso` is not among
+# them: it holds a document's address, so a literal address is allowed and one
+# built from strings, `SeeAlso("http://…" + name)`, is reported here.
+term_references := {"Type", "Domain", "Range", "IsDefinedBy", "SubClassOf", "SubPropertyOf", "EquivalentClass", "EquivalentProperty", "InverseOf", "DisjointWith"}
 
 # "http://example.org/\(name)", "\(namespace)knows"
 built_iri(value) if {

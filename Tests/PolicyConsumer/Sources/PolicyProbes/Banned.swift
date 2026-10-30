@@ -81,7 +81,6 @@ struct Social7 { static func knows() -> IRI { IRI(rawValue: "http://xmlns.com/fo
 let d3 = Domain.init(Animal.self)
 let t1 = Type(Animal.self)
 let t2 = Type("Animal")
-let t3 = SeeAlso(Animal.self)
 let t4 = IsDefinedBy("http://xmlns.com/foaf/0.1/")
 let t5 = IRIAssertion<DomainDeclaration>(Animal.self)
 func f1(name: String) -> IRI { var s = ns; s += name; return IRI(string: s)! }
@@ -95,14 +94,12 @@ struct Fauna2: Ontology { var content: some Content { Namespace(ns) } }
 struct Social9 { static let knows = prefix + local }
 enum Social10 { static let knows = Foo(rawValue: base + name) }
 let t6 = Type<Animal>()
-let t7 = SeeAlso<Animal>()
 let t8 = IsDefinedBy<Foaf>()
 let t9 = Range(Habitat.self)
 let t10 = SubClassOf(Animal.self)
 let t11 = SubPropertyOf(knows.self)
 let t12 = IsDefinedBy(Foaf.self)
 let t13 = RDFKit.Domain(Animal.self)
-let t14 = RDFKit.SeeAlso<Animal>()
 final class Person4 { let iri: IRI }
 struct Animal2 { var iri: IRI; let name: String }
 final class Bird2: Identifiable { let id: IRI }
@@ -127,4 +124,5 @@ final class Person6 { let iri: String }
 struct TurtleDecoder4 { func decode(_ strict: Bool) throws {} }
 func parseTerm(_ quoted: Bool, forKey key: String) -> Term { fatalError() }
 final class Person7 { init(_ iri: String) {} }
+let seeAlso2 = SeeAlso("https://venue.example.org/" + name)
 #endif

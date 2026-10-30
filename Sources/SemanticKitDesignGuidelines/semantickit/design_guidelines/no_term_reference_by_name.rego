@@ -28,7 +28,7 @@ denial_set contains finding(call) if {
 }
 
 # `Domain<Fauna.Animal>()`, `SubClassOf<Fauna.Animal>.init()`,
-# `RDFKit.SeeAlso<Animal>()`
+# `RDFKit.Type<Animal>()`
 denial_set contains finding(call) if {
   some call in input.functionCallExprs
   some specialization in specializations(call.calledExpression)
@@ -109,13 +109,15 @@ by_name(value) if {
 }
 
 # The DSL's term references: RDFKit's `IRIAssertion` typealiases (`Type`,
-# `Domain`, `Range`, `SeeAlso`, `SubClassOf`, `SubPropertyOf`,
-# `IsDefinedBy`) and the OWL axioms that refer to a term.
+# `Domain`, `Range`, `SubClassOf`, `SubPropertyOf`, `IsDefinedBy`) and
+# the OWL axioms that refer to a term. Not `SeeAlso`: since RDFKit #14 it is
+# an annotation holding the address of an outside document
+# (`public let document: IRI`; RDF Schema 1.2 §5.4.1, rdfs:seeAlso), so
+# `SeeAlso("https://venue.example.org/halls")` names no term.
 term_references := {
   "Type",
   "Domain",
   "Range",
-  "SeeAlso",
   "IsDefinedBy",
   "SubClassOf",
   "SubPropertyOf",
