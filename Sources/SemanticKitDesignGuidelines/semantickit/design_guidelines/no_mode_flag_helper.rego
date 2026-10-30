@@ -9,6 +9,11 @@ package semantickit.design_guidelines.no_mode_flag_helper
 # `private func decodeTerm(_ token: String, tsvMode: Bool)` and
 # `public struct TurtleDecoder { public func decode(_ text: String, strict: Bool) }`.
 # Each format, and each variant of one, is its own coder type.
+# Not reported: the `Bool` that is the value being coded, the one unlabeled
+# parameter beside at most a `forKey:` key, as the Encoder containers of
+# SE-0166/0167 declare it: `encode(_ value: Bool)`, `encode(_ value: Bool,
+# forKey key: Key)`, `encodeIfPresent(_ value: Bool?)` (DESIGN-CONTRACT.md
+# rule 13 makes those containers the shape of a format coder).
 # DESIGN-CONTRACT.md rule 15 (Charles): "Turning text into a term is an
 # initializer on the term type, or its `Decodable` conformance, used by the
 # format's decoder. It is not a free or private helper on a parser. A format
@@ -39,7 +44,21 @@ flagged_coding_helper(function) if {
   regex.match(`^(decode|encode|parse)([A-Z_].*)?$`, function.name)
   some parameter in function.signature.parameterClause.parameters
   bool_type(parameter.type)
+  not coded_value(function, parameter)
 }
+
+# `encode(_ value: Bool)`, `encode(_ value: Bool, forKey key: Key)`: the Bool
+# is the value, unlabeled, and every other parameter is the `forKey:` key.
+coded_value(function, parameter) if {
+  parameter.firstName == "_"
+  every other in function.signature.parameterClause.parameters {
+    key_or_value(other, parameter)
+  }
+}
+
+key_or_value(other, parameter) if other == parameter
+
+key_or_value(other, _) if other.firstName == "forKey"
 
 # `Bool`, `Swift.Bool`, `Bool?`, `Bool!`, `inout Bool`
 bool_type(type) if {

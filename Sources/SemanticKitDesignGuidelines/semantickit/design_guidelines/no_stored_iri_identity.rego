@@ -11,6 +11,8 @@ package semantickit.design_guidelines.no_stored_iri_identity
 #   protocol's requirement of one: `let iri: IRI`, `var iri: IRIKit.IRI?`,
 #   `var id: IRI` on an `Identifiable` class, `protocol Resource { var iri:
 #   IRI { get } }`;
+# - an instance property named `iri` typed `String` (`Swift.String`,
+#   optional included): an IRI held as a string, `let iri: String`;
 # - an initializer that takes the IRI: `init(iri: IRI)`, `init(_ iri: IRI)`;
 # - an individual made from an IRI: `let tweety = Bird(iri: …)`,
 #   `Person.init(iri: …)`.
@@ -50,9 +52,19 @@ denial_set contains finding(binding) if {
   member(decl)
   not in_boundary(decl)
   some binding in decl.bindings
+  identity_binding(binding)
+  not hand_typed(binding)
+}
+
+identity_binding(binding) if {
   binding.pattern.identifierPattern.identifier in identity_names
   iri_binding(binding)
-  not hand_typed(binding)
+}
+
+# `let iri: String`, `var iri: Swift.String?`
+identity_binding(binding) if {
+  binding.pattern.identifierPattern.identifier == "iri"
+  string_type(binding.typeAnnotation.type)
 }
 
 # `init(iri: IRI)`, `init(_ iri: IRI)`
@@ -189,6 +201,12 @@ iri_type(type) if named_iri(type.optionalType.wrappedType)
 iri_type(type) if named_iri(type.implicitlyUnwrappedOptionalType.wrappedType)
 
 named_iri(type) if type_name(type) in identifier_types
+
+string_type(type) if type_name(type) == "String"
+
+string_type(type) if type_name(type.optionalType.wrappedType) == "String"
+
+string_type(type) if type_name(type.implicitlyUnwrappedOptionalType.wrappedType) == "String"
 
 identifier_types := {"IRI", "URL", "URI", "NamedNode", "IRIRef"}
 

@@ -120,4 +120,8 @@ var animals = [String: Fauna.Animal]()
 struct Social11 { static let person = Person.self }
 extension Zoo { static var animal: Any.Type { Fauna.Animal.self } }
 final class Social12 { static let agent = Agent.self }
+let byIRI2 = Dictionary(uniqueKeysWithValues: zip(people.map(\.iri), people))
+let byIRI3 = Dictionary(grouping: people, by: \.iri)
+let byIRI4 = people.reduce(into: [:]) { $0[$1.iri] = $1 }
+final class Person6 { let iri: String }
 #endif

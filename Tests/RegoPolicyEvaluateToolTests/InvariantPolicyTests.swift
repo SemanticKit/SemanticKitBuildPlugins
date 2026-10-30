@@ -152,6 +152,12 @@ struct InvariantPolicyTests {
         ("struct Social11 { static let person = Person.self }", "no_static_term_enum", 1),
         ("extension Zoo { static var animal: Any.Type { Fauna.Animal.self } }", "no_static_term_enum", 1),
         ("final class Social12 { static let agent = Agent.self }", "no_static_term_enum", 1),
+        // Registries keyed by a key path to the IRI or filled by
+        // `reduce(into:)` under it, and an IRI stored as a String.
+        ("let byIRI2 = Dictionary(uniqueKeysWithValues: zip(people.map(\\.iri), people))", "no_term_registry", 14),
+        ("let byIRI3 = Dictionary(grouping: people, by: \\.iri)", "no_term_registry", 14),
+        ("let byIRI4 = people.reduce(into: [:]) { $0[$1.iri] = $1 }", "no_term_registry", 14),
+        ("final class Person6 { let iri: String }", "no_stored_iri_identity", 27),
     ]
 
     /// The ontologies in scope, as the target's dependencies declare them:
@@ -225,6 +231,12 @@ struct InvariantPolicyTests {
         let dataset2 = Dataset.init().addGraph(graph)
         struct Zoo { static let kind = Int.self }
         func render(_ text: String, compact: Bool) -> String { text }
+        struct BoolContainer: SingleValueEncodingContainer { mutating func encode(_ value: Bool) throws {} }
+        struct KeyedBools: KeyedEncodingContainerProtocol { mutating func encode(_ value: Bool, forKey key: Key) throws {} }
+        struct UnkeyedBools: UnkeyedEncodingContainer { mutating func encodeIfPresent(_ value: Bool?) throws {} }
+        let groups = Dictionary(grouping: people, by: \\.name)
+        let totals = counts.reduce(into: [:]) { $0[$1.key, default: 0] += $1.value }
+        struct Contact2: Identifiable { let id: String; let name: String }
         """
 
     private func evaluate(_ source: String, named name: String) async throws -> (status: Int32, errors: [String], path: String) {

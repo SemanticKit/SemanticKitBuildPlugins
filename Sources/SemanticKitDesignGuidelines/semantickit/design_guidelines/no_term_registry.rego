@@ -14,7 +14,11 @@ package semantickit.design_guidelines.no_term_registry
 # - a dictionary built from a sequence keyed by IRI, whatever the dictionary
 #   is spelled as: `Dictionary(uniqueKeysWithValues: terms.map { ($0.iri,
 #   $0) })`,
-#   `Swift.Dictionary(terms.map { ($0.iri, $0) }, uniquingKeysWith: …)`;
+#   `Swift.Dictionary(terms.map { ($0.iri, $0) }, uniquingKeysWith: …)`,
+#   and with key paths, `Dictionary(uniqueKeysWithValues: zip(people.map(\.iri),
+#   people))`, `Dictionary(grouping: people, by: \.iri)`;
+# - a dictionary filled by `reduce(into:)` under each element's IRI:
+#   `people.reduce(into: [:]) { $0[$1.iri] = $1 }`;
 # - a cache keyed by String or IRI whose value type is a term an ontology in
 #   scope declares (`input.vocabulary`): `var people: [String: Person]`,
 #   `Dictionary<String, Fauna.Animal>`, `[String: Person]()`;
@@ -103,6 +107,51 @@ iri_keyed(expression) if {
   walk(expression, [_, node])
   node.memberAccessExpr.declName.baseName == "iri"
 }
+
+# `\.iri`, `\Person.iri`: a key path with an `iri` component. A component's
+# name is a `declReferenceExpr` within the key path's range.
+iri_keyed(expression) if {
+  walk(expression, [_, node])
+  key_path := node.keyPathExpr
+  some reference in input.declReferenceExprs
+  reference.baseName == "iri"
+  within(reference.range, key_path.range)
+}
+
+within(inner, outer) if {
+  not before(inner.start, outer.start)
+  not before(outer.end, inner.end)
+}
+
+before(a, b) if a.line < b.line
+
+before(a, b) if {
+  a.line == b.line
+  a.column < b.column
+}
+
+# `people.reduce(into: [:]) { $0[$1.iri] = $1 }`,
+# `people.reduce(into: [IRI: Person]()) { … }`: a dictionary filled under
+# each element's IRI.
+denial_set contains finding(call) if {
+  some call in input.functionCallExprs
+  call.calledExpression.memberAccessExpr.declName.baseName == "reduce"
+  some seed in call.arguments
+  seed.label == "into"
+  dictionary_seed(seed.expression)
+  walk(call, [_, node])
+  some key in node.subscriptCallExpr.arguments
+  iri_keyed(key.expression)
+}
+
+dictionary_seed(expression) if expression.dictionaryExpr
+
+dictionary_seed(expression) if {
+  some dictionary in dictionary_expressions(expression.functionCallExpr.calledExpression)
+  dictionary.dictionaryExpr
+}
+
+dictionary_seed(expression) if dictionary_callee(expression.functionCallExpr.calledExpression)
 
 # `["knows": Knows(), "name": Name()]`, `[Foaf.knows.iri: ...]`,
 # `["http://xmlns.com/foaf/0.1/knows": ...]`: a registry written as a literal.

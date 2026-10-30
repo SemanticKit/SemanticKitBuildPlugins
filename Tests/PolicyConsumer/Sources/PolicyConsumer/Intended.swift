@@ -59,4 +59,10 @@ var contacts: [String: Contact] = [:]
 let dataset2 = Dataset.init().addGraph(graph)
 struct Zoo { static let kind = Int.self }
 func render(_ text: String, compact: Bool) -> String { text }
+struct BoolContainer: SingleValueEncodingContainer { mutating func encode(_ value: Bool) throws {} }
+struct KeyedBools: KeyedEncodingContainerProtocol { mutating func encode(_ value: Bool, forKey key: Key) throws {} }
+struct UnkeyedBools: UnkeyedEncodingContainer { mutating func encodeIfPresent(_ value: Bool?) throws {} }
+let groups = Dictionary(grouping: people, by: \.name)
+let totals = counts.reduce(into: [:]) { $0[$1.key, default: 0] += $1.value }
+struct Contact2: Identifiable { let id: String; let name: String }
 #endif
