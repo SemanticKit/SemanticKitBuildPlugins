@@ -1,8 +1,9 @@
 package semantickit.design_guidelines.no_interpolated_identity
 
 # An IRI built by string interpolation or concatenation is identity built
-# from strings at run time. Denied anywhere in a target the rules run on
-# (boundary encoders and decoders live in targets they do not run on):
+# from strings at run time. Denied anywhere in a source file except inside a
+# boundary encoder or decoder (see `boundary_coder`), where the format turns
+# text into types and types into text:
 # - an identifier's initializer given an interpolated or concatenated string,
 #   however it is spelled: `IRI(rawValue: "\(namespace)\(name)")`,
 #   `IRI.init(string: namespace + name)`, `URL(string: "\(base)knows")`,
@@ -17,9 +18,12 @@ package semantickit.design_guidelines.no_interpolated_identity
 # A built string bound to a static (`static let knows = "\(ns)knows"`) is
 # `no_static_iri_constant`'s, and is not reported here too. An identifier's
 # initializer built from strings is reported wherever it is, in a static too.
+# The policy reads the whole file (`SourceFileSyntax`) so that it can tell
+# whether a node sits inside a boundary coder.
 # DESIGN-CONTRACT.md rule 2 (Charles): "Types never communicate through IRI
-# strings." Binding identity rule: "identity built by string interpolation
-# [is a] design error." An IRI on a type is a projection computed from its
+# strings. IRIs exist only at the boundary: serialization and translation".
+# Binding identity rule: "identity built by string interpolation [is a]
+# design error." An IRI on a type is a projection computed from its
 # namespace, read only at the boundary.
 
 default decision := {"deny": [], "warn": [], "note": []}
@@ -39,18 +43,23 @@ denial_set contains {
   "column": call.range.start.column,
   "severity": "error",
 } if {
-  call := input
+  file := input
+  file.type == "SourceFileSyntax"
+  walk(file, [path, call])
   call.type == "FunctionCallExprSyntax"
   callee_name(call.children[0]) in identifier_types
   some arguments in call.children
   arguments.type == "LabeledExprListSyntax"
   built_from_strings(arguments)
+  not in_boundary_coder(file, path)
 }
 
 # `Term("http://example.org/" + name)`, `print("\(ns)knows")`: a built IRI
 # string given to a call that is not an identifier's initializer.
 denial_set contains finding(call) if {
-  call := input
+  file := input
+  file.type == "SourceFileSyntax"
+  walk(file, [path, call])
   call.type == "FunctionCallExprSyntax"
   not callee_name(call.children[0]) in identifier_types
   not callee_name(call.children[0]) in term_references
@@ -59,11 +68,14 @@ denial_set contains finding(call) if {
   some argument in arguments.children
   some value in argument.children
   built_iri(value)
+  not in_boundary_coder(file, path)
 }
 
 # `let v = "\(namespace)knows"`, `var u = ns + name`; not a static.
 denial_set contains finding(value) if {
-  decl := input
+  file := input
+  file.type == "SourceFileSyntax"
+  walk(file, [path, decl])
   decl.type == "VariableDeclSyntax"
   not is_static(decl)
   some bindings in decl.children
@@ -73,14 +85,86 @@ denial_set contains finding(value) if {
   initializer.type == "InitializerClauseSyntax"
   some value in initializer.children
   built_iri(value)
+  not in_boundary_coder(file, path)
 }
 
 # `return "\(ns)\(name)"`
 denial_set contains finding(value) if {
-  statement := input
+  file := input
+  file.type == "SourceFileSyntax"
+  walk(file, [path, statement])
   statement.type == "ReturnStmtSyntax"
   some value in statement.children
   built_iri(value)
+  not in_boundary_coder(file, path)
+}
+
+# A node's path from `walk` alternates "children" and an index, so every
+# prefix of even length is the path of an enclosing node.
+in_boundary_coder(file, path) if {
+  count(path) >= 2
+  some half in numbers.range(1, count(path) / 2)
+  boundary_coder(object.get(file, array.slice(path, 0, half * 2), {}))
+}
+
+# A format's coder type, named as Swift names coders (`TurtleDecoder`,
+# `NTriplesEncoder`) or conforming to `Encoder`, `Decoder`,
+# `TopLevelEncoder` or `TopLevelDecoder`; an extension of one; and a
+# type's own `Codable` conformance: `encode(to:)` and `init(from:)`.
+# DESIGN-CONTRACT.md rule 13: "Don't call things a serializer when they
+# should be called encoder, decoder, and codable."
+boundary_coder(decl) if {
+  decl.type in {"StructDeclSyntax", "ClassDeclSyntax", "EnumDeclSyntax", "ActorDeclSyntax"}
+  some token in decl.children
+  token.type == "TokenSyntax"
+  token.token.kind == "identifier"
+  coder_name(token.token.text)
+}
+
+boundary_coder(decl) if {
+  decl.type == "ExtensionDeclSyntax"
+  some type in decl.children
+  type.type in {"IdentifierTypeSyntax", "MemberTypeSyntax"}
+  coder_name(type.children[count(type.children) - 1].token.text)
+}
+
+boundary_coder(decl) if {
+  decl.type in {"StructDeclSyntax", "ClassDeclSyntax", "EnumDeclSyntax", "ActorDeclSyntax", "ExtensionDeclSyntax"}
+  some clause in decl.children
+  clause.type == "InheritanceClauseSyntax"
+  walk(clause, [_, type])
+  type.type in {"IdentifierTypeSyntax", "MemberTypeSyntax"}
+  type.children[count(type.children) - 1].token.text in {"Encoder", "Decoder", "TopLevelEncoder", "TopLevelDecoder"}
+}
+
+# `func encode(to encoder: Encoder)`
+boundary_coder(decl) if {
+  decl.type == "FunctionDeclSyntax"
+  some name in decl.children
+  name.type == "TokenSyntax"
+  name.token.kind == "identifier"
+  name.token.text == "encode"
+  first_parameter_label(decl) == "to"
+}
+
+# `init(from decoder: Decoder)`
+boundary_coder(decl) if {
+  decl.type == "InitializerDeclSyntax"
+  first_parameter_label(decl) == "from"
+}
+
+coder_name(name) if regex.match(`(Encoder|Decoder)$`, name)
+
+first_parameter_label(decl) := label if {
+  some signature in decl.children
+  signature.type == "FunctionSignatureSyntax"
+  some clause in signature.children
+  clause.type == "FunctionParameterClauseSyntax"
+  some parameters in clause.children
+  parameters.type == "FunctionParameterListSyntax"
+  parameter := parameters.children[0]
+  tokens := [token.token.text | some token in parameter.children; token.type == "TokenSyntax"]
+  label := tokens[0]
 }
 
 finding(node) := {

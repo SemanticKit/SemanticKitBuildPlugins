@@ -57,6 +57,10 @@ struct InvariantPolicyTests {
         ("struct Fauna: Ontology { func content() -> some Content { Namespace(\"https://fauna.example.org/ontology#\") } }", "no_content_function", 26),
         ("let subclass = SubClassOf<Animal>()", "no_term_reference_by_name", 16),
         ("let domain = Domain(Animal.self)", "no_term_reference_by_name", 14),
+        ("private func decodeTerm(_ token: String, tsvMode: Bool) throws -> ObjectTerm { fatalError() }", "no_mode_flag_helper", 1),
+        ("func parseLiteral(_ text: String, strict: Bool) -> Literal? { nil }", "no_mode_flag_helper", 1),
+        ("struct NTriplesParser { fileprivate func encodeTerm(_ term: Term, turtle: Bool) -> String { \"\" } }", "no_mode_flag_helper", 25),
+        ("struct TurtleParser { func resolve(_ local: String) -> IRI? { IRI(string: namespace + local) } }", "no_interpolated_identity", 63),
     ]
 
     /// The same file once each banned shape is replaced by the intended one.
@@ -92,6 +96,11 @@ struct InvariantPolicyTests {
         let boundary = IRI(rawValue: "http://xmlns.com/foaf/0.1/")
         let subclass = SubClassOf(Fauna.Animal)
         func content(of url: URL) -> Data { Data() }
+        struct TurtleDecoder { func resolve(_ local: String) -> IRI? { IRI(string: namespace + local) } }
+        extension NTriplesEncoder { func subject(_ name: String) -> String { return "\\(ns)\\(name)" } }
+        extension Person: Encodable { func encode(to encoder: Encoder) throws { let iri = "\\(namespace)alice" } }
+        extension ObjectTerm { init(token: String) throws { fatalError() } }
+        struct TSVDecoder { func decode(_ text: String) throws -> [ObjectTerm] { [] } }
         """
 
     private func evaluate(_ source: String, named name: String) async throws -> (status: Int32, errors: [String], path: String) {

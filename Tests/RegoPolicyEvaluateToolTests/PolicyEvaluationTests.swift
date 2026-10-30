@@ -120,13 +120,14 @@ struct PolicyEvaluationTests {
             "ClassDeclSyntax", "StructDeclSyntax", "EnumDeclSyntax", "ActorDeclSyntax", "ProtocolDeclSyntax",
             "DeclReferenceExprSyntax",
         ],
-        "no_interpolated_identity": ["FunctionCallExprSyntax", "VariableDeclSyntax", "ReturnStmtSyntax"],
+        "no_interpolated_identity": ["SourceFileSyntax"],
         "no_content_function": [
             "FunctionDeclSyntax", "StructDeclSyntax", "ClassDeclSyntax", "EnumDeclSyntax", "ActorDeclSyntax", "ExtensionDeclSyntax",
         ],
         "no_individual_graph": ["TokenSyntax"],
         "no_class_value_constant": ["MemberAccessExprSyntax"],
         "no_values_of_lookup": ["FunctionCallExprSyntax", "FunctionDeclSyntax"],
+        "no_mode_flag_helper": ["FunctionDeclSyntax", "CodeBlockItemSyntax"],
     ]
 
     @Test("Every policy in the libraries is planned, loads, and tests the node type it matches")
