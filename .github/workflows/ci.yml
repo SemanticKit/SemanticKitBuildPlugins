@@ -18,6 +18,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # The Rego build plugins run the OPA CLI.
+      - uses: open-policy-agent/setup-opa@v2
+        with:
+          version: latest
+
       - name: Build
         run: swift build --build-tests
 
