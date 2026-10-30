@@ -564,7 +564,7 @@ static_iri_function_left_to_static_iri_constant_node := {"declReferenceExprs": [
 # The vocabularies in scope are the ontology declarations of the target and
 # of the targets it depends on (`input.vocabulary`); no term name is typed in
 # the policy. These tests put the declarations a FOAF, RDFS and Schema module
-# translated from their published RDF holds in scope, or the project's own
+# declare in scope, or the project's own
 # Fauna fixture ontology.
 in_scope(node) := object.union(node, {"vocabulary": scope_vocabulary})
 

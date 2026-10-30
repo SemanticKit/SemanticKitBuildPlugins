@@ -120,7 +120,7 @@ struct InvariantPolicyTests {
     ]
 
     /// The ontologies in scope, as the target's dependencies declare them:
-    /// the terms a FOAF module translated from its published RDF holds, and
+    /// the FOAF terms a dependency's ontology declares, and
     /// the project's own Fauna fixture ontology. The plugin collects them
     /// from the Swift of the target and of every target it depends on.
     static let vocabulary = """

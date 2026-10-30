@@ -17,8 +17,10 @@ import SwiftSyntax
 ///   types declared inside an ontology or an extension of one;
 /// - `prefixes`: the prefixes their `Prefix("foaf", …)` declarations bind.
 ///
-/// A vocabulary translated from its published RDF reaches a target the same
-/// way, as the ontology declarations its module holds.
+/// The declarations are read from the Swift source files of the target and
+/// of the targets it depends on. SwiftPM does not show a plugin the files
+/// other plugins generate, so Swift that a translator plugin writes at build
+/// time is not read.
 struct OntologyVocabulary: Codable, Equatable {
     var ontologies: Set<String> = []
     var terms: Set<String> = []

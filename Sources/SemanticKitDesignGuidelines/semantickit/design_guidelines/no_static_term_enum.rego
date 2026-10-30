@@ -30,9 +30,8 @@ package semantickit.design_guidelines.no_static_term_enum
 # `"\(ns)knows"`) is `no_static_iri_constant`'s, and is not reported here too.
 # The ontologies in scope, the terms they declare and the prefixes they bind
 # are `input.vocabulary`, which the evaluator reads from the ontology
-# declarations of the target and of the targets it depends on; a vocabulary
-# translated from its published RDF is in scope as the declarations its
-# module holds. No term name is typed here (DESIGN-CONTRACT.md rule 0).
+# declarations in the Swift source files of the target and of the targets it
+# depends on. No term name is typed here (DESIGN-CONTRACT.md rule 0).
 # Not denied: String-raw enums that are not term mappings, such as
 # `CodingKeys` (Codable, contract rule 13) and spec value sets such as RDF 1.2
 # base direction (`enum TextDirection: String { case ltr, rtl }`); string
