@@ -32,6 +32,13 @@ struct InvariantPolicyTests {
         ("let mode = ACL.readClass", "no_class_value_constant", 12),
         ("let domain = Domain(Fauna.Animal.iri)", "no_term_reference_by_name", 14),
         ("let range = Range(try! IRI(validating: \"http://example.org/fauna#Habitat\"))", "no_term_reference_by_name", 13),
+        ("let terms = [\"knows\": Knows(), \"name\": Name()]", "no_term_registry", 13),
+        ("var byURL: [URL: Term] = [:]", "no_term_registry", 12),
+        ("let terms = [IRI(\"http://xmlns.com/foaf/0.1/knows\"): Knows()]", "no_term_registry", 13),
+        ("let iri = IRI.init(rawValue: \"\\(namespace)\\(name)\")", "no_interpolated_identity", 11),
+        ("let iri = IRIKit.IRI(rawValue: \"\\(namespace)\\(name)\")", "no_interpolated_identity", 11),
+        ("let range = Range(\"http://www.w3.org/2001/XMLSchema#\" + \"nonNegativeInteger\")", "no_term_reference_by_name", 13),
+        ("enum Foaf: String { case knows = \"http://xmlns.com/foaf/0.1/knows\" }", "no_static_term_enum", 1),
     ]
 
     /// The same file once each banned shape is replaced by the intended one.
@@ -52,6 +59,13 @@ struct InvariantPolicyTests {
         let mode = authorization.mode
         let agentClass = authorization.agentClass
         let range = Range(Fauna.Habitat)
+        struct Person: Codable { let name: String; enum CodingKeys: String, CodingKey { case name = "foaf_name" } }
+        public enum BaseDirection: String, Sendable, Codable { case ltr, rtl }
+        struct Format { static let mediaType = "text/turtle" }
+        var headers: [String: String] = [:]
+        let accept = ["Accept": "text/turtle"]
+        var tally: [String: Int] = [:]
+        let dataset = Dataset().addGraph(graph)
         """
 
     private func evaluate(_ source: String, named name: String) async throws -> (status: Int32, errors: [String], path: String) {

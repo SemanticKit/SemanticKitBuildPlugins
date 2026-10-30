@@ -116,7 +116,7 @@ struct PolicyEvaluationTests {
         "no_static_term_enum": ["EnumDeclSyntax", "ExtensionDeclSyntax", "StructDeclSyntax", "ClassDeclSyntax", "ActorDeclSyntax"],
         "no_static_iri_constant": ["VariableDeclSyntax"],
         "no_term_registry": [
-            "DictionaryTypeSyntax", "IdentifierTypeSyntax", "MemberTypeSyntax", "FunctionCallExprSyntax",
+            "DictionaryTypeSyntax", "IdentifierTypeSyntax", "MemberTypeSyntax", "FunctionCallExprSyntax", "DictionaryExprSyntax",
             "ClassDeclSyntax", "StructDeclSyntax", "EnumDeclSyntax", "ActorDeclSyntax", "ProtocolDeclSyntax",
         ],
         "no_individual_graph": ["TokenSyntax"],

@@ -345,3 +345,38 @@ add_on_instance_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"
   {"type": "TokenSyntax", "range": {"start": {"line": 25, "column": 33}, "end": {"line": 25, "column": 34}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
   {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 25, "column": 34}, "end": {"line": 25, "column": 34}}, "children": []},
 ]}
+
+test_allows_add_on_initialized_instance if {
+  result := decision with input as add_on_initialized_instance_node
+
+  count(result.deny) == 0
+}
+
+# Parser output for `Dataset().addGraph(g)` at 29:9.
+add_on_initialized_instance_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 29, "column": 9}, "end": {"line": 29, "column": 30}}, "children": [
+  {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 29, "column": 9}, "end": {"line": 29, "column": 27}}, "children": [
+    {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 29, "column": 9}, "end": {"line": 29, "column": 18}}, "children": [
+      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 29, "column": 9}, "end": {"line": 29, "column": 16}}, "children": [
+        {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 9}, "end": {"line": 29, "column": 16}}, "token": {"kind": "identifier", "text": "Dataset"}, "children": []},
+      ]},
+      {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 16}, "end": {"line": 29, "column": 17}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
+      {"type": "LabeledExprListSyntax", "range": {"start": {"line": 29, "column": 17}, "end": {"line": 29, "column": 17}}, "children": []},
+      {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 17}, "end": {"line": 29, "column": 18}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
+      {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 29, "column": 18}, "end": {"line": 29, "column": 18}}, "children": []},
+    ]},
+    {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 18}, "end": {"line": 29, "column": 19}}, "token": {"kind": "period", "text": "."}, "children": []},
+    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 29, "column": 19}, "end": {"line": 29, "column": 27}}, "children": [
+      {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 19}, "end": {"line": 29, "column": 27}}, "token": {"kind": "identifier", "text": "addGraph"}, "children": []},
+    ]},
+  ]},
+  {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 27}, "end": {"line": 29, "column": 28}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
+  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 29, "column": 28}, "end": {"line": 29, "column": 29}}, "children": [
+    {"type": "LabeledExprSyntax", "range": {"start": {"line": 29, "column": 28}, "end": {"line": 29, "column": 29}}, "children": [
+      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 29, "column": 28}, "end": {"line": 29, "column": 29}}, "children": [
+        {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 28}, "end": {"line": 29, "column": 29}}, "token": {"kind": "identifier", "text": "g"}, "children": []},
+      ]},
+    ]},
+  ]},
+  {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 29}, "end": {"line": 29, "column": 30}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
+  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 29, "column": 30}, "end": {"line": 29, "column": 30}}, "children": []},
+]}

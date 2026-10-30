@@ -42,7 +42,12 @@ denial_set contains finding(call) if {
   callee.children[0].token.text in term_references
 }
 
-by_name(value) if value.type == "StringLiteralExprSyntax"
+# `"Animal"`, `"http://www.w3.org/2001/XMLSchema#" + "nonNegativeInteger"`,
+# `"\(xsd)nonNegativeInteger"`: any argument built from a string.
+by_name(value) if {
+  walk(value, [_, node])
+  node.type == "StringLiteralExprSyntax"
+}
 
 # `IRI("…")`, `try! IRI(validating: "…")`
 by_name(value) if {

@@ -36,12 +36,26 @@ type_modifier(name) if regex.match(`^add[A-Z]`, name)
 
 type_modifier("isDeclaredBy")
 
-# The chain starts with a declaration such as `Class("Foo")`: a call of a
-# capitalized name at the very start of the chain.
+# The chain starts with an ontology declaration such as `Class("Foo")`: a call
+# of a declaration kind at the very start of the chain. A chain on any other
+# value, `Dataset().addGraph(g)`, modifies an instance, which Charles allows:
+# "SwiftUI modifiers modify instances" (rule 6).
 declaration_chain(base) if {
   walk(base, [_, node])
   node.type == "FunctionCallExprSyntax"
   node.range.start == base.range.start
   node.children[0].type == "DeclReferenceExprSyntax"
-  regex.match(`^[A-Z]`, node.children[0].children[0].token.text)
+  node.children[0].children[0].token.text in declaration_kinds
+}
+
+declaration_kinds := {
+  "Class",
+  "Property",
+  "ObjectProperty",
+  "DatatypeProperty",
+  "AnnotationProperty",
+  "Datatype",
+  "Individual",
+  "NamedIndividual",
+  "Ontology",
 }

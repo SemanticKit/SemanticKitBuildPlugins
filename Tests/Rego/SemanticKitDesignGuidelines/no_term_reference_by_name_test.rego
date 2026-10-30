@@ -383,3 +383,102 @@ domain_by_qualified_type_node := {"type": "FunctionCallExprSyntax", "range": {"s
   {"type": "TokenSyntax", "range": {"start": {"line": 39, "column": 45}, "end": {"line": 39, "column": 46}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
   {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 39, "column": 46}, "end": {"line": 39, "column": 46}}, "children": []},
 ]}
+
+test_denies_range_by_concatenated_string if {
+  result := decision with input as range_by_concatenated_string_node
+
+  count(result.deny) == 1
+  result.deny[0].rule_id == "semantickit.design_guidelines.no_term_reference_by_name"
+  result.deny[0].line == 42
+  result.deny[0].column == 13
+  result.deny[0].severity == "error"
+  count(result.warn) == 0
+}
+
+test_denies_range_by_interpolated_string if {
+  result := decision with input as range_by_interpolated_string_node
+
+  count(result.deny) == 1
+  result.deny[0].rule_id == "semantickit.design_guidelines.no_term_reference_by_name"
+  result.deny[0].line == 45
+  result.deny[0].column == 13
+  result.deny[0].severity == "error"
+  count(result.warn) == 0
+}
+
+# Parser output for `Range("http://www.w3.org/2001/XMLSchema#" + "nonNegativeInteger")` at 42:13.
+range_by_concatenated_string_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 42, "column": 13}, "end": {"line": 42, "column": 78}}, "children": [
+  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 42, "column": 13}, "end": {"line": 42, "column": 18}}, "children": [
+    {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 13}, "end": {"line": 42, "column": 18}}, "token": {"kind": "identifier", "text": "Range"}, "children": []},
+  ]},
+  {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 18}, "end": {"line": 42, "column": 19}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
+  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 42, "column": 19}, "end": {"line": 42, "column": 77}}, "children": [
+    {"type": "LabeledExprSyntax", "range": {"start": {"line": 42, "column": 19}, "end": {"line": 42, "column": 77}}, "children": [
+      {"type": "SequenceExprSyntax", "range": {"start": {"line": 42, "column": 19}, "end": {"line": 42, "column": 77}}, "children": [
+        {"type": "ExprListSyntax", "range": {"start": {"line": 42, "column": 19}, "end": {"line": 42, "column": 77}}, "children": [
+          {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 42, "column": 19}, "end": {"line": 42, "column": 54}}, "children": [
+            {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 19}, "end": {"line": 42, "column": 20}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
+            {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 42, "column": 20}, "end": {"line": 42, "column": 53}}, "children": [
+              {"type": "StringSegmentSyntax", "range": {"start": {"line": 42, "column": 20}, "end": {"line": 42, "column": 53}}, "children": [
+                {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 20}, "end": {"line": 42, "column": 53}}, "token": {"kind": "stringSegment", "text": "http:\/\/www.w3.org\/2001\/XMLSchema#"}, "children": []},
+              ]},
+            ]},
+            {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 53}, "end": {"line": 42, "column": 54}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
+          ]},
+          {"type": "BinaryOperatorExprSyntax", "range": {"start": {"line": 42, "column": 55}, "end": {"line": 42, "column": 56}}, "children": [
+            {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 55}, "end": {"line": 42, "column": 56}}, "token": {"kind": "binaryOperator", "text": "+"}, "children": []},
+          ]},
+          {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 42, "column": 57}, "end": {"line": 42, "column": 77}}, "children": [
+            {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 57}, "end": {"line": 42, "column": 58}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
+            {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 42, "column": 58}, "end": {"line": 42, "column": 76}}, "children": [
+              {"type": "StringSegmentSyntax", "range": {"start": {"line": 42, "column": 58}, "end": {"line": 42, "column": 76}}, "children": [
+                {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 58}, "end": {"line": 42, "column": 76}}, "token": {"kind": "stringSegment", "text": "nonNegativeInteger"}, "children": []},
+              ]},
+            ]},
+            {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 76}, "end": {"line": 42, "column": 77}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
+          ]},
+        ]},
+      ]},
+    ]},
+  ]},
+  {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 77}, "end": {"line": 42, "column": 78}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
+  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 42, "column": 78}, "end": {"line": 42, "column": 78}}, "children": []},
+]}
+
+# Parser output for `Range("\(xsd)nonNegativeInteger")` at 45:13.
+range_by_interpolated_string_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 45, "column": 13}, "end": {"line": 45, "column": 46}}, "children": [
+  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 45, "column": 13}, "end": {"line": 45, "column": 18}}, "children": [
+    {"type": "TokenSyntax", "range": {"start": {"line": 45, "column": 13}, "end": {"line": 45, "column": 18}}, "token": {"kind": "identifier", "text": "Range"}, "children": []},
+  ]},
+  {"type": "TokenSyntax", "range": {"start": {"line": 45, "column": 18}, "end": {"line": 45, "column": 19}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
+  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 45, "column": 19}, "end": {"line": 45, "column": 45}}, "children": [
+    {"type": "LabeledExprSyntax", "range": {"start": {"line": 45, "column": 19}, "end": {"line": 45, "column": 45}}, "children": [
+      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 45, "column": 19}, "end": {"line": 45, "column": 45}}, "children": [
+        {"type": "TokenSyntax", "range": {"start": {"line": 45, "column": 19}, "end": {"line": 45, "column": 20}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
+        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 45, "column": 20}, "end": {"line": 45, "column": 44}}, "children": [
+          {"type": "StringSegmentSyntax", "range": {"start": {"line": 45, "column": 20}, "end": {"line": 45, "column": 20}}, "children": [
+            {"type": "TokenSyntax", "range": {"start": {"line": 45, "column": 20}, "end": {"line": 45, "column": 20}}, "token": {"kind": "stringSegment", "text": ""}, "children": []},
+          ]},
+          {"type": "ExpressionSegmentSyntax", "range": {"start": {"line": 45, "column": 20}, "end": {"line": 45, "column": 26}}, "children": [
+            {"type": "TokenSyntax", "range": {"start": {"line": 45, "column": 20}, "end": {"line": 45, "column": 21}}, "token": {"kind": "backslash", "text": "\\"}, "children": []},
+            {"type": "TokenSyntax", "range": {"start": {"line": 45, "column": 21}, "end": {"line": 45, "column": 22}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
+            {"type": "LabeledExprListSyntax", "range": {"start": {"line": 45, "column": 22}, "end": {"line": 45, "column": 25}}, "children": [
+              {"type": "LabeledExprSyntax", "range": {"start": {"line": 45, "column": 22}, "end": {"line": 45, "column": 25}}, "children": [
+                {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 45, "column": 22}, "end": {"line": 45, "column": 25}}, "children": [
+                  {"type": "TokenSyntax", "range": {"start": {"line": 45, "column": 22}, "end": {"line": 45, "column": 25}}, "token": {"kind": "identifier", "text": "xsd"}, "children": []},
+                ]},
+              ]},
+            ]},
+            {"type": "TokenSyntax", "range": {"start": {"line": 45, "column": 25}, "end": {"line": 45, "column": 26}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
+          ]},
+          {"type": "StringSegmentSyntax", "range": {"start": {"line": 45, "column": 26}, "end": {"line": 45, "column": 44}}, "children": [
+            {"type": "TokenSyntax", "range": {"start": {"line": 45, "column": 26}, "end": {"line": 45, "column": 44}}, "token": {"kind": "stringSegment", "text": "nonNegativeInteger"}, "children": []},
+          ]},
+        ]},
+        {"type": "TokenSyntax", "range": {"start": {"line": 45, "column": 44}, "end": {"line": 45, "column": 45}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
+      ]},
+    ]},
+  ]},
+  {"type": "TokenSyntax", "range": {"start": {"line": 45, "column": 45}, "end": {"line": 45, "column": 46}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
+  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 45, "column": 46}, "end": {"line": 45, "column": 46}}, "children": []},
+]}

@@ -2,14 +2,22 @@ package semantickit.design_guidelines.no_static_term_enum
 
 # Terms held as static constants on a type are a static container of terms. A
 # term is declared in the ontology and becomes its own type; it is never a
-# constant on an enum, a struct, a class or an extension.
-# - An enum with any static property, a static function returning a term, or a
-#   String raw value (explicit, `case animal = "Animal"`, or implicit,
-#   `enum FoafTerm: String { case knows }`) is denied.
-# - A struct, class, actor or extension with a static stored property set to a
-#   term (`Term(…)`, `Property(…)`, `Class(…)` and the other declaration
-#   kinds) or to a string literal, or a static function returning a term, is
-#   denied. Statics IRI-typed are no_static_iri_constant's.
+# constant on an enum, a struct, a class or an extension. Denied:
+# - on any enum, struct, class, actor or extension: a static property set to a
+#   term (`Term(...)`, `Property(...)`, `Class(...)` and the other declaration
+#   kinds), to an IRI or prefixed-name string ("http://...", "foaf:knows"), or
+#   to a string spelling its own name (`static let knows = "knows"`), or a
+#   static function returning a term;
+# - on an enum, a static property typed `IRI` or a term kind;
+# - an enum named as a term container (`FoafTerm`, `FoafTerms`,
+#   `FoafVocabulary`, `FoafProperties`, `FoafClasses`, ...) with cases or
+#   statics: `enum FoafTerm: String { case knows, person }`;
+# - a String-raw enum whose raw values are IRIs or prefixed names, or the
+#   term's local name (`case animal = "Animal"`).
+# Not denied: String-raw enums that are not term mappings, such as
+# `CodingKeys` (Codable, contract rule 13) and spec value sets such as RDF 1.2
+# base direction (`enum TextDirection: String { case ltr, rtl }`); string
+# constants that are not terms (`static let mediaType = "text/turtle"`).
 # DESIGN-CONTRACT.md rule 3 (Charles): "No static mapping onto enums, structs
 # and statics." RDFKit DslInvariants: no static enum-style term containers.
 
@@ -33,9 +41,18 @@ denial_set contains finding(decl) if {
 denial_set contains finding(decl) if {
   decl := input
   decl.type == "EnumDeclSyntax"
-  string_raw_type(decl)
+  term_container_name(decl)
   some member in members(decl)
-  member.type == "EnumCaseDeclSyntax"
+  container_member(member)
+}
+
+denial_set contains finding(decl) if {
+  decl := input
+  decl.type == "EnumDeclSyntax"
+  inherits(decl, "String")
+  not inherits(decl, "CodingKey")
+  some member in members(decl)
+  term_raw_value(member)
 }
 
 denial_set contains finding(decl) if {
@@ -84,16 +101,36 @@ members(decl) := [member |
   member := item.children[0]
 ]
 
-# On an enum, any static property is a constant hung on the enum.
+enum_term_constant(member) if term_constant(member)
+
+# `static var readClass: IRI { ... }`, `static let knows: Property`: but not
+# the type's own projection, `static var iri: IRI { ... }`.
 enum_term_constant(member) if {
   member.type == "VariableDeclSyntax"
   is_static(member)
+  some bindings in member.children
+  bindings.type == "PatternBindingListSyntax"
+  some binding in bindings.children
+  binding_name(binding) != "iri"
+  some annotation in binding.children
+  annotation.type == "TypeAnnotationSyntax"
+  some type in annotation.children
+  type_name(type) in term_types
 }
 
-enum_term_constant(member) if term_function(member)
+# `enum FoafTerm`, `enum FoafVocabulary`, `enum Properties`
+term_container_name(decl) if regex.match(`(Term|Terms|Vocabulary|Vocabularies|Vocab|Property|Properties|Predicate|Predicates|Class|Classes|Concept|Concepts)$`, declared_name(decl))
 
+container_member(member) if member.type == "EnumCaseDeclSyntax"
+
+container_member(member) if {
+  member.type in {"VariableDeclSyntax", "FunctionDeclSyntax"}
+  is_static(member)
+}
+
+# `case knows = "http://xmlns.com/foaf/0.1/knows"`, `case knows = "foaf:knows"`,
 # `case animal = "Animal"`
-enum_term_constant(member) if {
+term_raw_value(member) if {
   member.type == "EnumCaseDeclSyntax"
   some elements in member.children
   elements.type == "EnumCaseElementListSyntax"
@@ -101,8 +138,21 @@ enum_term_constant(member) if {
   some raw in element.children
   raw.type == "InitializerClauseSyntax"
   some value in raw.children
-  value.type == "StringLiteralExprSyntax"
+  text := string_literal_text(value)
+  term_string(text, element.children[0].token.text)
 }
+
+term_string(text, _) if iri_string(text)
+
+# The case's own name, as a class's local name: `animal` = "Animal".
+term_string(text, name) if {
+  text != name
+  lower(text) == lower(name)
+  regex.match(`^[A-Z]`, text)
+}
+
+# "http://xmlns.com/foaf/0.1/knows", "foaf:knows"
+iri_string(text) if regex.match(`^[A-Za-z][A-Za-z0-9+.-]*:[^\s]+$`, text)
 
 # `static let knows = Term("knows")`, `static let knows = "knows"`
 term_constant(member) if {
@@ -115,7 +165,7 @@ term_constant(member) if {
   initializer.type == "InitializerClauseSyntax"
   some value in initializer.children
   some form in forms(value)
-  term_value(form)
+  term_value(form, binding_name(binding))
 }
 
 term_constant(member) if term_function(member)
@@ -132,9 +182,12 @@ term_function(member) if {
   type_name(type) in term_kinds
 }
 
-term_value(value) if value.type == "StringLiteralExprSyntax"
+term_value(value, _) if iri_string(string_literal_text(value))
 
-term_value(value) if {
+# `static let knows = "knows"`: the term's name as its value.
+term_value(value, name) if string_literal_text(value) == name
+
+term_value(value, _) if {
   value.type == "FunctionCallExprSyntax"
   callee_name(value.children[0]) in term_kinds
 }
@@ -146,14 +199,33 @@ is_static(decl) if {
   modifier.children[0].token.text in {"static", "class"}
 }
 
-# `enum X: String`, `enum X: Swift.String, Sendable`
-string_raw_type(decl) if {
+# `enum X: String`, `enum X: Swift.String, Sendable`, `enum CodingKeys: String, CodingKey`
+inherits(decl, name) if {
   some clause in decl.children
   clause.type == "InheritanceClauseSyntax"
   some list in clause.children
   list.type == "InheritedTypeListSyntax"
   some inherited in list.children
-  type_name(inherited.children[0]) == "String"
+  type_name(inherited.children[0]) == name
+}
+
+declared_name(decl) := name.token.text if {
+  some name in decl.children
+  name.type == "TokenSyntax"
+  name.token.kind == "identifier"
+}
+
+binding_name(binding) := binding.children[0].children[0].token.text if binding.children[0].type == "IdentifierPatternSyntax"
+
+# The text of a string literal with one plain segment.
+string_literal_text(literal) := text if {
+  literal.type == "StringLiteralExprSyntax"
+  some segments in literal.children
+  segments.type == "StringLiteralSegmentListSyntax"
+  count(segments.children) == 1
+  segment := segments.children[0]
+  segment.type == "StringSegmentSyntax"
+  text := segment.children[0].token.text
 }
 
 type_name(type) := type.children[0].token.text if type.type == "IdentifierTypeSyntax"
@@ -164,6 +236,8 @@ type_name(type) := name.token.text if {
   name.type == "TokenSyntax"
   name.token.kind == "identifier"
 }
+
+term_types := term_kinds | {"IRI"}
 
 term_kinds := {
   "Term",
