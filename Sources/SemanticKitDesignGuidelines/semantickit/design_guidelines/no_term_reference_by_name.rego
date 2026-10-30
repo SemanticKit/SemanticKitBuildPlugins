@@ -18,7 +18,7 @@ denials := [denial | denial := denial_set[_]]
 message := "Refer to a term by its type, as in Domain(Fauna.Animal); not by a string, an IRI, an .iri projection, .self or explicit generic arguments."
 
 # `Domain("Animal")`, `Range(IRI("…"))`, `Domain(Fauna.Animal.iri)`,
-# `SubClassOf(Animal.self)`, `Domain((Animal.self))`
+# `SubClassOf(Animal.self)`, `Domain((Animal.self))`, `RDFKit.Domain(Animal.self)`
 denial_set contains finding(call) if {
   some call in input.functionCallExprs
   term_reference_call(call)
@@ -27,11 +27,12 @@ denial_set contains finding(call) if {
   by_name(form)
 }
 
-# `Domain<Fauna.Animal>()`, `SubClassOf<Fauna.Animal>.init()`
+# `Domain<Fauna.Animal>()`, `SubClassOf<Fauna.Animal>.init()`,
+# `RDFKit.SeeAlso<Animal>()`
 denial_set contains finding(call) if {
   some call in input.functionCallExprs
   some specialization in specializations(call.calledExpression)
-  name := specialization.expression.declReferenceExpr.baseName
+  name := term_name(specialization.expression)
   name in term_references
   dsl_generic(name, call)
 }
@@ -42,13 +43,13 @@ denial_set contains finding(call) if {
 denial_set contains finding(call) if {
   some call in input.functionCallExprs
   some specialization in specializations(call.calledExpression)
-  regex.match(`^[A-Z][A-Za-z]*Assertion$`, specialization.expression.declReferenceExpr.baseName)
+  regex.match(`^[A-Z][A-Za-z]*Assertion$`, term_name(specialization.expression))
 }
 
 # A call of a term reference, spelled `Domain(…)` or `Domain.init(…)`.
 term_reference_call(call) if {
   some callee in callees(call.calledExpression)
-  name := callee.declReferenceExpr.baseName
+  name := term_name(callee)
   name in term_references
   dsl_arguments(name, call)
 }
@@ -57,6 +58,18 @@ term_reference_call(call) if {
 callees(callee) := {callee} | {base |
   callee.memberAccessExpr.declName.baseName == "init"
   base := callee.memberAccessExpr.base
+}
+
+# `Domain`, and the module-qualified `RDFKit.Domain`; not `Swift.Range` or
+# `Foundation.Range`.
+term_name(expression) := expression.declReferenceExpr.baseName
+
+term_name(expression) := name if {
+  access := expression.memberAccessExpr
+  name := access.declName.baseName
+  name != "init"
+  not access.base.declReferenceExpr.baseName in {"Swift", "Foundation"}
+  access.base.declReferenceExpr
 }
 
 specializations(callee) := {specialization | some form in callees(callee); specialization := form.genericSpecializationExpr}

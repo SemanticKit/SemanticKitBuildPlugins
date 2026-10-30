@@ -117,6 +117,17 @@ struct InvariantPolicyTests {
         // A static named after a term in scope, built by `+` from any names.
         ("struct Social9 { static let knows = prefix + local }", "no_static_iri_constant", 18),
         ("enum Social10 { static let knows = Foo(rawValue: base + name) }", "no_static_iri_constant", 17),
+        // Every IRIAssertion typealias with `.self` and with its generic
+        // argument, and spelled with its module.
+        ("let t6 = Type<Animal>()", "no_term_reference_by_name", 10),
+        ("let t7 = SeeAlso<Animal>()", "no_term_reference_by_name", 10),
+        ("let t8 = IsDefinedBy<Foaf>()", "no_term_reference_by_name", 10),
+        ("let t9 = Range(Habitat.self)", "no_term_reference_by_name", 10),
+        ("let t10 = SubClassOf(Animal.self)", "no_term_reference_by_name", 11),
+        ("let t11 = SubPropertyOf(knows.self)", "no_term_reference_by_name", 11),
+        ("let t12 = IsDefinedBy(Foaf.self)", "no_term_reference_by_name", 11),
+        ("let t13 = RDFKit.Domain(Animal.self)", "no_term_reference_by_name", 11),
+        ("let t14 = RDFKit.SeeAlso<Animal>()", "no_term_reference_by_name", 11),
     ]
 
     /// The ontologies in scope, as the target's dependencies declare them:
@@ -181,6 +192,8 @@ struct InvariantPolicyTests {
         func query(_ terms: [String]) -> String { var text = ""; for term in terms { text += term }; return text }
         struct Person { let name: String; var greeting: String { "Hello, " + name } }
         struct Totals { static let total = a + b }
+        let d4 = RDFKit.Domain(Fauna.Animal)
+        let r4 = Swift.Range(bounds)
         """
 
     private func evaluate(_ source: String, named name: String) async throws -> (status: Int32, errors: [String], path: String) {

@@ -94,4 +94,13 @@ enum Kinds { case animal, habitat }
 struct Fauna2: Ontology { var content: some Content { Namespace(ns) } }
 struct Social9 { static let knows = prefix + local }
 enum Social10 { static let knows = Foo(rawValue: base + name) }
+let t6 = Type<Animal>()
+let t7 = SeeAlso<Animal>()
+let t8 = IsDefinedBy<Foaf>()
+let t9 = Range(Habitat.self)
+let t10 = SubClassOf(Animal.self)
+let t11 = SubPropertyOf(knows.self)
+let t12 = IsDefinedBy(Foaf.self)
+let t13 = RDFKit.Domain(Animal.self)
+let t14 = RDFKit.SeeAlso<Animal>()
 #endif
