@@ -99,7 +99,6 @@ struct InvariantPolicyTests {
         // generic argument.
         ("let t1 = Type(Animal.self)", "no_term_reference_by_name", 10),
         ("let t2 = Type(\"Animal\")", "no_term_reference_by_name", 10),
-        ("let t3 = SeeAlso(Animal.self)", "no_term_reference_by_name", 10),
         ("let t4 = IsDefinedBy(\"http://xmlns.com/foaf/0.1/\")", "no_term_reference_by_name", 10),
         ("let t5 = IRIAssertion<DomainDeclaration>(Animal.self)", "no_term_reference_by_name", 10),
         // Concatenation by `+=` and `append(_:)`.
@@ -120,14 +119,12 @@ struct InvariantPolicyTests {
         // Every IRIAssertion typealias with `.self` and with its generic
         // argument, and spelled with its module.
         ("let t6 = Type<Animal>()", "no_term_reference_by_name", 10),
-        ("let t7 = SeeAlso<Animal>()", "no_term_reference_by_name", 10),
         ("let t8 = IsDefinedBy<Foaf>()", "no_term_reference_by_name", 10),
         ("let t9 = Range(Habitat.self)", "no_term_reference_by_name", 10),
         ("let t10 = SubClassOf(Animal.self)", "no_term_reference_by_name", 11),
         ("let t11 = SubPropertyOf(knows.self)", "no_term_reference_by_name", 11),
         ("let t12 = IsDefinedBy(Foaf.self)", "no_term_reference_by_name", 11),
         ("let t13 = RDFKit.Domain(Animal.self)", "no_term_reference_by_name", 11),
-        ("let t14 = RDFKit.SeeAlso<Animal>()", "no_term_reference_by_name", 11),
         // A stored IRI identity, an `iri:` initializer and an individual made
         // from an IRI (DESIGN-CONTRACT.md rule 17).
         ("final class Person4 { let iri: IRI }", "no_stored_iri_identity", 27),
@@ -163,6 +160,8 @@ struct InvariantPolicyTests {
         ("struct TurtleDecoder4 { func decode(_ strict: Bool) throws {} }", "no_mode_flag_helper", 25),
         ("func parseTerm(_ quoted: Bool, forKey key: String) -> Term { fatalError() }", "no_mode_flag_helper", 1),
         ("final class Person7 { init(_ iri: String) {} }", "no_stored_iri_identity", 23),
+        // A document address given to `SeeAlso`, built from strings.
+        ("let seeAlso2 = SeeAlso(\"https://venue.example.org/\" + name)", "no_interpolated_identity", 16),
     ]
 
     /// The ontologies in scope, as the target's dependencies declare them:
@@ -244,6 +243,7 @@ struct InvariantPolicyTests {
         struct Contact2: Identifiable { let id: String; let name: String }
         extension Box: Swift.SingleValueEncodingContainer { mutating func encode(_ value: Bool) throws {} }
         struct NTriplesDecoder { init(_ iri: String) {} }
+        let seeAlso = SeeAlso("https://venue.example.org/halls")
         """
 
     private func evaluate(_ source: String, named name: String) async throws -> (status: Int32, errors: [String], path: String) {

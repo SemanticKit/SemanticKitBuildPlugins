@@ -67,4 +67,5 @@ let totals = counts.reduce(into: [:]) { $0[$1.key, default: 0] += $1.value }
 struct Contact2: Identifiable { let id: String; let name: String }
 extension Box: Swift.SingleValueEncodingContainer { mutating func encode(_ value: Bool) throws {} }
 struct NTriplesDecoder { init(_ iri: String) {} }
+let seeAlso = SeeAlso("https://venue.example.org/halls")
 #endif
