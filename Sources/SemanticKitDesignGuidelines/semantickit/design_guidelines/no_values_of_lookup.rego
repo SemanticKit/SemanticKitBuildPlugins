@@ -19,21 +19,24 @@ message := "Do not read properties through values(of:); a property is read on th
 denial_set contains finding(call) if {
   some call in input.functionCallExprs
   call.calledExpression.memberAccessExpr.declName.baseName == "values"
-  call.arguments[0].label == "of"
+  some argument in call.arguments
+  argument.label == "of"
 }
 
 # `values(of: alice)`: a bare call, on `self` or a free function
 denial_set contains finding(call) if {
   some call in input.functionCallExprs
   call.calledExpression.declReferenceExpr.baseName == "values"
-  call.arguments[0].label == "of"
+  some argument in call.arguments
+  argument.label == "of"
 }
 
 # `func values(of subject: …)`
 denial_set contains finding(decl) if {
   some decl in input.functionDecls
   decl.name == "values"
-  decl.signature.parameterClause.parameters[0].firstName == "of"
+  some parameter in decl.signature.parameterClause.parameters
+  parameter.firstName == "of"
 }
 
 finding(node) := {

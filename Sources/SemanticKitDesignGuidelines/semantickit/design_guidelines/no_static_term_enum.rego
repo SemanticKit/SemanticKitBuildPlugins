@@ -15,16 +15,24 @@ package semantickit.design_guidelines.no_static_term_enum
 # - an enum named or documented as a vocabulary with cases or statics:
 #   `enum Foaf { case knows, person, agent }`, `enum FoafTerm: String { case
 #   knows }`, `/// The FOAF vocabulary.` on `enum Friend { case knows }`. A
-#   vocabulary name is a prefix of a published vocabulary (`Foaf`, `RDFS`,
-#   `Schema`, ...) or ends in `Term(s)`, `Vocabulary`, `Vocab`, `Ontology`,
-#   `Namespace`, `Properties`, `Classes`, ...; vocabulary documentation names
-#   a vocabulary, an ontology or a namespace;
+#   vocabulary name is the name of an ontology in scope or a prefix one binds
+#   (`Fauna`, `Foaf`, `RDFS`), or ends in `Term(s)`, `Vocabulary`, `Vocab`,
+#   `Ontology`, `Namespace`, `Properties`, `Classes`, ...; vocabulary
+#   documentation names a vocabulary, an ontology or a namespace;
+# - a case-only enum most of whose cases name terms an ontology in scope
+#   declares, whatever the enum is called: `enum Fauna { case animal,
+#   habitat, bird }`, `enum Relation { case knows, person, agent }`;
 # - a struct, class, actor or extension named or documented as a vocabulary
 #   with a static stored property: `extension Foaf { static let knows = ... }`;
 # - a String-raw enum whose raw values are IRIs or prefixed names, or the
 #   term's local name (`case animal = "Animal"`).
 # A static whose value is an IRI however built (`URL(string: "...")`,
 # `"\(ns)knows"`) is `no_static_iri_constant`'s, and is not reported here too.
+# The ontologies in scope, the terms they declare and the prefixes they bind
+# are `input.vocabulary`, which the evaluator reads from the ontology
+# declarations of the target and of the targets it depends on; a vocabulary
+# translated from its published RDF is in scope as the declarations its
+# module holds. No term name is typed here (DESIGN-CONTRACT.md rule 0).
 # Not denied: String-raw enums that are not term mappings, such as
 # `CodingKeys` (Codable, contract rule 13) and spec value sets such as RDF 1.2
 # base direction (`enum TextDirection: String { case ltr, rtl }`); string
@@ -83,9 +91,9 @@ denial_set contains finding(decl) if {
 }
 
 # `enum Relation { case knows, person, agent }`, `enum Social: String { case
-# knows, person }`: a case-only enum most of whose cases name terms of a
-# published vocabulary. `CodingKeys` name a type's own properties and are
-# not term containers.
+# knows, person }`, `enum Kinds { case animal, habitat }`: a case-only enum
+# most of whose cases name terms an ontology in scope declares. `CodingKeys`
+# name a type's own properties and are not term containers.
 denial_set contains finding(decl) if {
   some decl in input.enumDecls
   not coding_keys(decl)
@@ -147,6 +155,8 @@ term_container_name(name) if regex.match(`(Term|Terms|Vocabulary|Vocabularies|Vo
 
 term_container_name(name) if lower(name) in vocabulary_prefixes
 
+term_container_name(name) if lower(name) in vocabulary_ontologies
+
 vocabulary_type(decl) if term_container_name(decl.name)
 
 vocabulary_type(decl) if vocabulary_documentation(decl)
@@ -157,63 +167,27 @@ vocabulary_name(name) if regex.match(`(Term|Terms|Vocabulary|Vocabularies|Vocab|
 
 vocabulary_name(name) if lower(name) in vocabulary_prefixes
 
+vocabulary_name(name) if lower(name) in vocabulary_ontologies
+
 # The declaration's documentation names a vocabulary, an ontology or a
 # namespace: `/// The FOAF vocabulary.`
 vocabulary_documentation(decl) if regex.match(`(?i)\b(vocabular(y|ies)|ontolog(y|ies)|namespaces?)\b`, decl.documentation)
 
-# The prefixes of published vocabularies: the W3C RDFa initial context, and the
-# vocabularies Solid, WebID and ActivityPub use.
-vocabulary_prefixes := {
-  "as", "acl", "cc", "cert", "csvw", "ctag", "dc", "dcat", "dcterms", "dct", "doap",
-  "dqv", "duv", "foaf", "geo", "gr", "grddl", "ical", "interact", "ldp", "ma",
-  "oa", "odrl", "og", "org", "owl", "pim", "prov", "qb", "rdf", "rdfa", "rdfs",
-  "rev", "rif", "rr", "schema", "sd", "sh", "shacl", "sioc", "skos", "skosxl",
-  "solid", "sosa", "ssn", "time", "vcard", "void", "wdr", "wdrs", "xhv", "xml",
-  "xsd", "activitystreams",
-}
+# The vocabulary of the ontologies in scope, the target's and its
+# dependencies': their names, the terms they declare and the prefixes they
+# bind, each in lower case. Nothing here is typed by hand: the evaluator
+# reads them from the ontology declarations (`input.vocabulary`).
+vocabulary_ontologies := {lower(name) | some name in object.get(input, ["vocabulary", "ontologies"], [])}
+
+vocabulary_terms := {lower(name) | some name in object.get(input, ["vocabulary", "terms"], [])}
+
+vocabulary_prefixes := {lower(name) | some name in object.get(input, ["vocabulary", "prefixes"], [])}
 
 coding_keys(decl) if decl.name == "CodingKeys"
 
 coding_keys(decl) if inherits(decl, "CodingKey")
 
 case_names(decl) := [element.name | some member in members(decl); some element in member.enumCaseDecl.elements]
-
-# Local names of the published vocabularies' classes and properties, in lower
-# case, that are not also everyday Swift words: FOAF, RDF, RDFS, OWL, SKOS,
-# ACL, Solid, LDP, cert, vCard and ActivityStreams.
-vocabulary_terms := {
-  # FOAF
-  "knows", "person", "agent", "organization", "mbox", "mboxsha1sum",
-  "homepage", "nick", "depiction", "img", "interest", "topicinterest",
-  "onlineaccount", "accountname", "accountservicehomepage", "givenname",
-  "familyname", "firstname", "lastname", "weblog", "workplacehomepage",
-  "schoolhomepage", "primarytopic", "isprimarytopicof", "maker", "made",
-  "openid", "membershipclass", "basednear",
-  # RDF, RDFS
-  "subclassof", "subpropertyof", "domain", "range", "seealso", "isdefinedby",
-  "langstring", "plainliteral", "xmlliteral",
-  # OWL
-  "sameas", "differentfrom", "equivalentclass", "equivalentproperty",
-  "inverseof", "disjointwith", "thing", "nothing", "imports", "versioninfo",
-  "versioniri", "priorversion", "objectproperty", "datatypeproperty",
-  "annotationproperty", "namedindividual", "restriction", "onproperty",
-  "somevaluesfrom", "allvaluesfrom", "hasvalue", "mincardinality",
-  "maxcardinality", "cardinality", "unionof", "intersectionof", "complementof",
-  "oneof", "functionalproperty", "inversefunctionalproperty",
-  "transitiveproperty", "symmetricproperty",
-  # SKOS
-  "concept", "conceptscheme", "preflabel", "altlabel", "hiddenlabel",
-  "broader", "narrower", "inscheme", "topconceptof",
-  "hastopconcept", "exactmatch", "closematch", "broadmatch", "narrowmatch",
-  # ACL, Solid, LDP, cert
-  "authorization", "accessto", "agentclass", "agentgroup", "accesscontrol",
-  "oidcissuer", "inbox", "outbox", "webid", "basiccontainer",
-  "directcontainer", "indirectcontainer", "rsapublickey", "modulus",
-  "exponent",
-  # vCard, ActivityStreams
-  "hasemail", "hastelephone", "hasaddress", "fn", "followers", "following",
-  "liked", "attributedto", "inreplyto",
-}
 
 # A stored static property: `static let`, or `static var` with a value and no
 # accessors.
@@ -417,7 +391,7 @@ iri_value(value) if {
 
 iri_value(value) if {
   walk(value, [_, node])
-  iri_string(node.stringLiteralExpr.segments[0].stringSegment.content)
+  iri_string(leading_text(node.stringLiteralExpr))
 }
 
 iri_value(value) if {
@@ -470,5 +444,24 @@ string_building_call(call) if {
 
 string_building_call(call) if {
   call.calledExpression.declReferenceExpr.baseName == "String"
-  call.arguments[0].label == "format"
+  some argument in call.arguments
+  argument.label == "format"
+}
+
+# The text before any interpolation: "http://example.org/" in
+# "http://example.org/\(name)".
+leading_text(literal) := segment.stringSegment.content if {
+  some segment in literal.segments
+  every other in literal.segments {
+    not starts_before(other, segment)
+  }
+}
+
+starts_before(a, b) if object.get(a, "stringSegment", object.get(a, "expressionSegment", {})).range.start.line < object.get(b, "stringSegment", object.get(b, "expressionSegment", {})).range.start.line
+
+starts_before(a, b) if {
+  start_a := object.get(a, "stringSegment", object.get(a, "expressionSegment", {})).range.start
+  start_b := object.get(b, "stringSegment", object.get(b, "expressionSegment", {})).range.start
+  start_a.line == start_b.line
+  start_a.column < start_b.column
 }

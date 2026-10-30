@@ -72,6 +72,75 @@ denial_set contains finding_at(statement.expression) if {
   not in_boundary_coder(statement)
 }
 
+# `var s = ns; s += name; return IRI(string: s)!`,
+# `var s = "http://xmlns.com/foaf/0.1/"; s.append(name)`: a local string
+# built by `+=`, `append(_:)` or `append(contentsOf:)` is concatenation too.
+# Denied at the variable's declaration when, in the same function, it starts
+# as or is given an IRI string or a namespace, or it is passed to an
+# identifier's initializer.
+denial_set contains finding(binding) if {
+  some decl in input.variableDecls
+  not is_static(decl)
+  some binding in decl.bindings
+  name := binding.pattern.identifierPattern.identifier
+  some mutation in mutations(name)
+  same_scope(decl, mutation.node)
+  built_by_mutation(name, binding, mutation, decl)
+  not in_boundary_coder(decl)
+}
+
+# Each `name += operand`, `name.append(operand)` and
+# `name.append(contentsOf: operand)` in the file.
+mutations(name) := {{"node": operation, "operand": operation.rightOperand} |
+  some operation in input.infixOperatorExprs
+  operation.operator.binaryOperatorExpr.operator == "+="
+  operation.leftOperand.declReferenceExpr.baseName == name
+} | {{"node": call, "operand": argument.expression} |
+  some call in input.functionCallExprs
+  access := call.calledExpression.memberAccessExpr
+  access.declName.baseName == "append"
+  access.base.declReferenceExpr.baseName == name
+  some argument in call.arguments
+  object.get(argument, "label", "contentsOf") == "contentsOf"
+}
+
+built_by_mutation(_, binding, _, _) if iri_operand(binding.initializer.value)
+
+built_by_mutation(_, _, mutation, _) if iri_operand(mutation.operand)
+
+# `IRI(string: s)` in the same function.
+built_by_mutation(name, _, _, decl) if {
+  some call in input.functionCallExprs
+  callee_name(call) in identifier_types
+  same_scope(decl, call)
+  walk(call.arguments, [_, node])
+  node.declReferenceExpr.baseName == name
+}
+
+# Two nodes are in the same function, initializer or accessor when the
+# innermost of these around them is the same declaration; at file scope when
+# neither has one.
+same_scope(a, b) if scope(a) == scope(b)
+
+scope(node) := object.get(last_function(node), "range", "file")
+
+last_function(node) := declarations[count(declarations) - 1] if {
+  declarations := [function |
+    some declaration in object.get(node, "context", [])
+    some kind in {"functionDecl", "initializerDecl"}
+    function := declaration[kind]
+  ]
+  count(declarations) > 0
+}
+
+last_function(node) := {} if {
+  count([declaration |
+    some declaration in object.get(node, "context", [])
+    some kind in {"functionDecl", "initializerDecl"}
+    declaration[kind]
+  ]) == 0
+}
+
 in_boundary_coder(node) if {
   some declaration in node.context
   boundary_coder(declaration)
@@ -152,7 +221,7 @@ identifier_types := {"IRI", "URL", "URI", "NamedNode", "IRIRef", "Namespace"}
 
 # `Range("http://…" + name)` is `no_term_reference_by_name`'s, which denies any
 # string given to these, and is not reported here too.
-term_references := {"Domain", "Range", "SubClassOf", "SubPropertyOf", "EquivalentClass", "EquivalentProperty", "InverseOf", "DisjointWith"}
+term_references := {"Type", "Domain", "Range", "SeeAlso", "IsDefinedBy", "SubClassOf", "SubPropertyOf", "EquivalentClass", "EquivalentProperty", "InverseOf", "DisjointWith"}
 
 # "http://example.org/\(name)", "\(namespace)knows"
 built_iri(value) if {
@@ -212,7 +281,21 @@ interpolated(literal) if {
 
 # The text before any interpolation: "http://example.org/" in
 # "http://example.org/\(name)".
-leading_text(literal) := literal.segments[0].stringSegment.content
+leading_text(literal) := segment.stringSegment.content if {
+  some segment in literal.segments
+  every other in literal.segments {
+    not starts_before(other, segment)
+  }
+}
+
+starts_before(a, b) if object.get(a, "stringSegment", object.get(a, "expressionSegment", {})).range.start.line < object.get(b, "stringSegment", object.get(b, "expressionSegment", {})).range.start.line
+
+starts_before(a, b) if {
+  start_a := object.get(a, "stringSegment", object.get(a, "expressionSegment", {})).range.start
+  start_b := object.get(b, "stringSegment", object.get(b, "expressionSegment", {})).range.start
+  start_a.line == start_b.line
+  start_a.column < start_b.column
+}
 
 # "http://xmlns.com/foaf/0.1/", "urn:", "foaf:"
 iri_string(text) if regex.match(`^[A-Za-z][A-Za-z0-9+.-]*:[^\s]*$`, text)
@@ -251,7 +334,8 @@ string_building_call(call) if {
 
 string_building_call(call) if {
   call.calledExpression.declReferenceExpr.baseName == "String"
-  call.arguments[0].label == "format"
+  some argument in call.arguments
+  argument.label == "format"
 }
 
 # `IRI`, `IRIKit.IRI`, `IRI.init`, `IRIKit.IRI.init`

@@ -223,7 +223,8 @@ string_building_call(call) if {
 
 string_building_call(call) if {
   call.calledExpression.declReferenceExpr.baseName == "String"
-  call.arguments[0].label == "format"
+  some argument in call.arguments
+  argument.label == "format"
 }
 
 iri_type(type) if named_iri(type)
@@ -251,7 +252,21 @@ inner(value) := (({child | child := value.tryExpr.expression} | {child | child :
 
 # The text before any interpolation: "http://example.org/" in
 # "http://example.org/\(name)".
-leading_text(literal) := literal.segments[0].stringSegment.content
+leading_text(literal) := segment.stringSegment.content if {
+  some segment in literal.segments
+  every other in literal.segments {
+    not starts_before(other, segment)
+  }
+}
+
+starts_before(a, b) if object.get(a, "stringSegment", object.get(a, "expressionSegment", {})).range.start.line < object.get(b, "stringSegment", object.get(b, "expressionSegment", {})).range.start.line
+
+starts_before(a, b) if {
+  start_a := object.get(a, "stringSegment", object.get(a, "expressionSegment", {})).range.start
+  start_b := object.get(b, "stringSegment", object.get(b, "expressionSegment", {})).range.start
+  start_a.line == start_b.line
+  start_a.column < start_b.column
+}
 
 # "http://xmlns.com/foaf/0.1/knows", "urn:isbn:…", "foaf:knows"
 iri_string(text) if regex.match(`^[A-Za-z][A-Za-z0-9+.-]*:[^\s]+$`, text)

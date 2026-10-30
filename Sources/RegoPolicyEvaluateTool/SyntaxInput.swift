@@ -31,19 +31,27 @@ import SwiftSyntax
 /// outermost first, each `{"<case>": {...}}` as in a member block, without
 /// its `memberBlock`, `body` or the values of its bindings. A list with no
 /// nodes is left out.
+///
+/// Given the ``OntologyVocabulary`` of the target and its dependencies,
+/// `input.vocabulary` holds it: `ontologies`, `terms` and `prefixes`, the
+/// names the ontologies in scope declare.
 struct SyntaxInput {
     let value: AST.RegoValue
 
-    init(contentsOf url: URL) throws {
-        try self.init(source: String(contentsOf: url, encoding: .utf8), fileName: url.path)
+    init(contentsOf url: URL, vocabulary: OntologyVocabulary? = nil) throws {
+        try self.init(source: String(contentsOf: url, encoding: .utf8), fileName: url.path, vocabulary: vocabulary)
     }
 
-    init(source: String, fileName: String) {
+    init(source: String, fileName: String, vocabulary: OntologyVocabulary? = nil) {
         let parsed = Parser.parse(source: source)
         // A sequence the standard operators cannot fold stays a `sequenceExpr`.
         let tree = OperatorTable.standardOperators.foldAll(parsed) { _ in }
         let visitor = SyntaxInputVisitor(locations: SourceLocationConverter(fileName: fileName, tree: tree))
         visitor.walk(tree)
-        value = visitor.input
+        if let vocabulary, !vocabulary.isEmpty {
+            value = visitor.input.setting("vocabulary", vocabulary.regoValue)
+        } else {
+            value = visitor.input
+        }
     }
 }

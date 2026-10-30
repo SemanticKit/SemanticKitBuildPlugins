@@ -9,8 +9,13 @@ import PackagePlugin
 /// not show a plugin the files other plugins generate for other targets, so
 /// one command plans the policies itself (`opa build --target plan`) into
 /// the plugin work directory; it runs again only when a `.rego` file
-/// changes. Each Swift file then gets its own evaluate command, which runs
-/// again only when that file or the plans change.
+/// changes. A second command collects the vocabulary the ontologies of the
+/// target and of every target it depends on declare (`Class("Animal")`,
+/// `Property("knows")`, the ontology types themselves), which policies read
+/// as `input.vocabulary`; it runs again when one of those Swift files
+/// changes, and rewrites its record only when the vocabulary does. Each Swift
+/// file then gets its own evaluate command, which runs again only when that
+/// file, the plans or the vocabulary change.
 ///
 /// Each command's declared output is a Swift file holding one comment line,
 /// so SwiftPM runs the commands and the target gets no resources from them.
@@ -24,6 +29,7 @@ struct RegoPolicyEvaluate: BuildToolPlugin {
         let swiftFiles = sourceTarget.sourceFiles(withSuffix: ".swift").map(\.url)
         let policyTargets = [sourceTarget] + target.recursiveTargetDependencies.compactMap { $0 as? SourceModuleTarget }
         let policies = policyTargets.flatMap { $0.sourceFiles(withSuffix: ".rego").map(\.url) }
+        let vocabularySources = policyTargets.flatMap { $0.sourceFiles(withSuffix: ".swift").map(\.url) }
         guard !swiftFiles.isEmpty, !policies.isEmpty else { return [] }
 
         let tool = try context.tool(named: "RegoPolicyEvaluateTool")
@@ -31,6 +37,7 @@ struct RegoPolicyEvaluate: BuildToolPlugin {
         let work = context.pluginWorkDirectoryURL
         let plans = work.appendingPathComponent("plans", isDirectory: true)
         let plansRecord = work.appendingPathComponent("RegoPolicyPlans.swift")
+        let vocabularyRecord = work.appendingPathComponent("RegoPolicyVocabulary.swift")
         let targetComponents = sourceTarget.directoryURL.standardizedFileURL.pathComponents
 
         let plan = Command.buildCommand(
@@ -40,6 +47,14 @@ struct RegoPolicyEvaluate: BuildToolPlugin {
                 + policies.flatMap { ["--policy", $0.path] },
             inputFiles: policies,
             outputFiles: [plansRecord]
+        )
+
+        let vocabulary = Command.buildCommand(
+            displayName: "Collect the ontology vocabulary of \(target.name)",
+            executable: tool.url,
+            arguments: ["vocabulary", "--record", vocabularyRecord.path] + vocabularySources.flatMap { ["--source", $0.path] },
+            inputFiles: vocabularySources,
+            outputFiles: [vocabularyRecord]
         )
 
         let evaluations = swiftFiles.map { swiftFile in
@@ -54,12 +69,13 @@ struct RegoPolicyEvaluate: BuildToolPlugin {
             return Command.buildCommand(
                 displayName: "Evaluate Rego policies \(swiftFile.lastPathComponent)",
                 executable: tool.url,
-                arguments: ["evaluate", "--plans", plans.path, "--record", record.path, "--source", swiftFile.path],
-                inputFiles: [swiftFile, plansRecord],
+                arguments: ["evaluate", "--plans", plans.path, "--record", record.path,
+                            "--vocabulary", vocabularyRecord.path, "--source", swiftFile.path],
+                inputFiles: [swiftFile, plansRecord, vocabularyRecord],
                 outputFiles: [record]
             )
         }
-        return [plan] + evaluations
+        return [plan, vocabulary] + evaluations
     }
 }
 

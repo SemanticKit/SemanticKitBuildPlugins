@@ -36,6 +36,15 @@ denial_set contains finding(call) if {
   dsl_generic(name, call)
 }
 
+# `IRIAssertion<DomainDeclaration>(Animal.self)`, `TextAssertion<…>.init(…)`:
+# the generic assertion the DSL's term references are typealiases of,
+# spelled with its generic argument.
+denial_set contains finding(call) if {
+  some call in input.functionCallExprs
+  some specialization in specializations(call.calledExpression)
+  regex.match(`^[A-Z][A-Za-z]*Assertion$`, specialization.expression.declReferenceExpr.baseName)
+}
+
 # A call of a term reference, spelled `Domain(…)` or `Domain.init(…)`.
 term_reference_call(call) if {
   some callee in callees(call.calledExpression)
@@ -86,9 +95,15 @@ by_name(value) if {
   node.memberAccessExpr.declName.baseName == "self"
 }
 
+# The DSL's term references: RDFKit's `IRIAssertion` typealiases (`Type`,
+# `Domain`, `Range`, `SeeAlso`, `SubClassOf`, `SubPropertyOf`,
+# `IsDefinedBy`) and the OWL axioms that refer to a term.
 term_references := {
+  "Type",
   "Domain",
   "Range",
+  "SeeAlso",
+  "IsDefinedBy",
   "SubClassOf",
   "SubPropertyOf",
   "EquivalentClass",

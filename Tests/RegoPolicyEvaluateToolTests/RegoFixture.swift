@@ -11,12 +11,17 @@ import Foundation
 /// # Parser output for `Button("OK")` at 22:9.
 /// some_test_node := {"functionCallExprs": [...], ...}
 /// ```
+///
+/// A vocabulary fixture, the `input.vocabulary` of a target whose ontologies
+/// are the Swift named, follows a `# Vocabulary of `<swift>`.` comment.
 struct RegoFixture: CustomStringConvertible {
     struct Origin {
         /// The Swift the node was parsed from; `nil` for an empty file.
         let swift: String?
         let line: Int
         let column: Int
+        /// The fixture is the ``OntologyVocabulary`` of the Swift, not its input.
+        var vocabulary = false
 
         /// The Swift placed so that it starts at `line`:`column`.
         var source: String {
@@ -63,8 +68,13 @@ struct RegoFixture: CustomStringConvertible {
         return fixtures
     }
 
-    /// The origin a `# Parser output for `<swift>` at <line>:<column>.` comment names.
+    /// The origin a `# Parser output for `<swift>` at <line>:<column>.` or
+    /// `# Vocabulary of `<swift>`.` comment names.
     private static func origin(of line: Substring) -> Origin? {
+        let vocabularyPrefix = "# Vocabulary of `"
+        if line.hasPrefix(vocabularyPrefix), line.hasSuffix("`.") {
+            return Origin(swift: String(line.dropFirst(vocabularyPrefix.count).dropLast(2)), line: 1, column: 1, vocabulary: true)
+        }
         let prefix = "# Parser output for `"
         guard line.hasPrefix(prefix) else { return nil }
         if line == "# Parser output for `(an empty file)`" {

@@ -95,7 +95,35 @@ struct InvariantPolicyTests {
         ("struct Social6 { static let friend = Knows() }", "no_static_term_enum", 1),
         ("struct Social7 { static func knows() -> IRI { IRI(rawValue: \"http://xmlns.com/foaf/0.1/knows\") } }", "no_static_iri_constant", 18),
         ("let d3 = Domain.init(Animal.self)", "no_term_reference_by_name", 10),
+        // Every IRIAssertion of the DSL, and IRIAssertion spelled with its
+        // generic argument.
+        ("let t1 = Type(Animal.self)", "no_term_reference_by_name", 10),
+        ("let t2 = Type(\"Animal\")", "no_term_reference_by_name", 10),
+        ("let t3 = SeeAlso(Animal.self)", "no_term_reference_by_name", 10),
+        ("let t4 = IsDefinedBy(\"http://xmlns.com/foaf/0.1/\")", "no_term_reference_by_name", 10),
+        ("let t5 = IRIAssertion<DomainDeclaration>(Animal.self)", "no_term_reference_by_name", 10),
+        // Concatenation by `+=` and `append(_:)`.
+        ("func f1(name: String) -> IRI { var s = ns; s += name; return IRI(string: s)! }", "no_interpolated_identity", 36),
+        ("func f2(name: String) -> IRI { var s = \"http://xmlns.com/foaf/0.1/\"; s.append(name); return IRI(string: s)! }", "no_interpolated_identity", 36),
+        // A hand-typed IRI on an instance property.
+        ("struct Person { let iri = IRI(\"http://xmlns.com/foaf/0.1/Person\") }", "no_hand_typed_iri_member", 21),
+        ("struct Person2 { var iri: IRI { IRI(\"http://xmlns.com/foaf/0.1/Person\") } }", "no_hand_typed_iri_member", 22),
+        ("final class Person3: Identifiable { var id: IRI { IRI(\"http://xmlns.com/foaf/0.1/Person\") } }", "no_hand_typed_iri_member", 41),
+        // The project's own fixture ontology, and its terms, as enum cases.
+        ("enum Fauna { case animal, habitat, bird }", "no_static_term_enum", 1),
+        ("enum Kinds { case animal, habitat }", "no_static_term_enum", 1),
+        // `var content` in place of `var body`.
+        ("struct Fauna2: Ontology { var content: some Content { Namespace(ns) } }", "no_content_function", 31),
     ]
+
+    /// The ontologies in scope, as the target's dependencies declare them:
+    /// the terms a FOAF module translated from its published RDF holds, and
+    /// the project's own Fauna fixture ontology. The plugin collects them
+    /// from the Swift of the target and of every target it depends on.
+    static let vocabulary = """
+        @Ontology struct Foaf { var body: some Content { Class("Person"); Class("Agent"); Property("knows") } }
+        @Ontology struct Fauna { var body: some Content { Class("Animal"); Class("Habitat"); Class("Bird"); Property("habitat") } }
+        """
 
     /// The same file once each banned shape is replaced by the intended one.
     static let intended = """
@@ -146,6 +174,9 @@ struct InvariantPolicyTests {
         let names = ["a", "b"].joined(separator: ", ")
         let file = url.appending(path: "file.txt")
         let path = directory.appending("/file.txt")
+        enum Axis { case domain, range }
+        func query(_ terms: [String]) -> String { var text = ""; for term in terms { text += term }; return text }
+        struct Person { let name: String; var greeting: String { "Hello, " + name } }
         """
 
     private func evaluate(_ source: String, named name: String) async throws -> (status: Int32, errors: [String], path: String) {
@@ -156,7 +187,10 @@ struct InvariantPolicyTests {
         )).compactMap { $0 as? URL }.filter { $0.pathExtension == "rego" }
         let file = directory.appendingPathComponent(name)
         try Data(source.utf8).write(to: file)
+        let ontologies = directory.appendingPathComponent("Ontologies.swift")
+        try Data(Self.vocabulary.utf8).write(to: ontologies)
         let plans = directory.appendingPathComponent("plans").path
+        let vocabulary = directory.appendingPathComponent("RegoPolicyVocabulary.swift").path
 
         let planned = await RegoPolicyEvaluateTool.run(
             ["plan", "--opa", try Repository.opa.path, "--plans", plans,
@@ -165,9 +199,17 @@ struct InvariantPolicyTests {
         )
         try #require(planned.status == 0, "\(planned.diagnostics)")
 
+        // The plugin collects the vocabulary from the target's files and
+        // its dependencies', then evaluates each file with it.
+        let collected = await RegoPolicyEvaluateTool.run(
+            ["vocabulary", "--record", vocabulary, "--source", ontologies.path, "--source", file.path]
+        )
+        try #require(collected.status == 0, "\(collected.diagnostics)")
+
         let evaluated = await RegoPolicyEvaluateTool.run(
             ["evaluate", "--plans", plans,
              "--record", directory.appendingPathComponent("RegoPolicyFindings.swift").path,
+             "--vocabulary", vocabulary,
              "--source", file.path]
         )
         return (evaluated.status, evaluated.diagnostics.filter { $0.contains(": error: ") }, file.path)

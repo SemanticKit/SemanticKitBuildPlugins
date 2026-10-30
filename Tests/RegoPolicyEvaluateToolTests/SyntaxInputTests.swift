@@ -24,7 +24,9 @@ struct SyntaxInputTests {
             try #require(expected.count == fixture.origins.count, "\(fixture) has \(expected.count) inputs for \(fixture.origins.count) comments")
 
             for (document, origin) in zip(expected, fixture.origins) {
-                let parsed = SyntaxInput(source: origin.source, fileName: "Fixture.swift").value
+                let parsed = origin.vocabulary
+                    ? OntologyVocabulary(source: origin.source).regoValue
+                    : SyntaxInput(source: origin.source, fileName: "Fixture.swift").value
                 #expect(parsed == document, "\(fixture): the input for `\(origin.swift ?? "")` at \(origin.line):\(origin.column) differs from the fixture")
             }
         }

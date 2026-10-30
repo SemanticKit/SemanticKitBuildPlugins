@@ -3,7 +3,9 @@ package semantickit.design_guidelines.no_content_function
 # An ontology is authored as `var body`, as a SwiftUI view is: never as
 # `func content()`. Denied: a `func content()` that returns `Content` (also
 # `some Content`, `any Content`, `RDFKit.Content`), and any `func content` of
-# a type that is an ontology (`@Ontology`, or conforming to `Ontology`).
+# a type that is an ontology (`@Ontology`, or conforming to `Ontology`); the
+# same spelled as a property, `var content: some Content { … }`, or any
+# `content` property of an ontology.
 # DESIGN-CONTRACT.md rule 14 (Charles): "It was var body, just like Swift UI
 # for the same fucking reason." An ontology is authored as `var body`, never
 # `func content()`.
@@ -38,6 +40,24 @@ denial_set contains finding(member.functionDecl) if {
   some item in decl.memberBlock.members
   member := item.decl
   member.functionDecl.name == "content"
+}
+
+# `var content: some Content { … }`: the same ontology spelled as a property
+# named `content`.
+denial_set contains finding(binding) if {
+  some decl in input.variableDecls
+  some binding in decl.bindings
+  binding.pattern.identifierPattern.identifier == "content"
+  content_type(binding.typeAnnotation.type)
+}
+
+# `struct Fauna: Ontology { var content: … }`
+denial_set contains finding(binding) if {
+  some decl in groups
+  ontology(decl)
+  some item in decl.memberBlock.members
+  some binding in item.decl.variableDecl.bindings
+  binding.pattern.identifierPattern.identifier == "content"
 }
 
 # The structs, classes, enums, actors and extensions of the file.

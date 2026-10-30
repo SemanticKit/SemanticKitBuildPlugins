@@ -277,7 +277,7 @@ media_type_constant_node := {"stringLiteralExprs": [{"context": [{"structDecl": 
 namespace_enum_node := {"declReferenceExprs": [{"baseName": "Namespace", "context": [{"enumDecl": {"name": "Fauna", "range": {"end": {"column": 77, "line": 81}, "start": {"column": 1, "line": 81}}}}, {"variableDecl": {"bindingSpecifier": "let", "bindings": [{"pattern": {"identifierPattern": {"identifier": "namespace", "range": {"end": {"column": 34, "line": 81}, "start": {"column": 25, "line": 81}}}}, "range": {"end": {"column": 75, "line": 81}, "start": {"column": 25, "line": 81}}}], "modifiers": [{"name": "static", "range": {"end": {"column": 20, "line": 81}, "start": {"column": 14, "line": 81}}}], "range": {"end": {"column": 75, "line": 81}, "start": {"column": 14, "line": 81}}}}], "range": {"end": {"column": 46, "line": 81}, "start": {"column": 37, "line": 81}}}], "enumDecls": [{"memberBlock": {"members": [{"decl": {"variableDecl": {"bindingSpecifier": "let", "bindings": [{"initializer": {"range": {"end": {"column": 75, "line": 81}, "start": {"column": 35, "line": 81}}, "value": {"functionCallExpr": {"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 74, "line": 81}, "start": {"column": 47, "line": 81}}, "segments": [{"stringSegment": {"content": "http://example.org/fauna#", "range": {"end": {"column": 73, "line": 81}, "start": {"column": 48, "line": 81}}}}]}}, "range": {"end": {"column": 74, "line": 81}, "start": {"column": 47, "line": 81}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Namespace", "range": {"end": {"column": 46, "line": 81}, "start": {"column": 37, "line": 81}}}}, "range": {"end": {"column": 75, "line": 81}, "start": {"column": 37, "line": 81}}}}}, "pattern": {"identifierPattern": {"identifier": "namespace", "range": {"end": {"column": 34, "line": 81}, "start": {"column": 25, "line": 81}}}}, "range": {"end": {"column": 75, "line": 81}, "start": {"column": 25, "line": 81}}}], "modifiers": [{"name": "static", "range": {"end": {"column": 20, "line": 81}, "start": {"column": 14, "line": 81}}}], "range": {"end": {"column": 75, "line": 81}, "start": {"column": 14, "line": 81}}}}, "range": {"end": {"column": 75, "line": 81}, "start": {"column": 14, "line": 81}}}], "range": {"end": {"column": 77, "line": 81}, "start": {"column": 12, "line": 81}}}, "name": "Fauna", "range": {"end": {"column": 77, "line": 81}, "start": {"column": 1, "line": 81}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 74, "line": 81}, "start": {"column": 47, "line": 81}}, "segments": [{"stringSegment": {"content": "http://example.org/fauna#", "range": {"end": {"column": 73, "line": 81}, "start": {"column": 48, "line": 81}}}}]}}, "range": {"end": {"column": 74, "line": 81}, "start": {"column": 47, "line": 81}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Namespace", "range": {"end": {"column": 46, "line": 81}, "start": {"column": 37, "line": 81}}}}, "context": [{"enumDecl": {"name": "Fauna", "range": {"end": {"column": 77, "line": 81}, "start": {"column": 1, "line": 81}}}}, {"variableDecl": {"bindingSpecifier": "let", "bindings": [{"pattern": {"identifierPattern": {"identifier": "namespace", "range": {"end": {"column": 34, "line": 81}, "start": {"column": 25, "line": 81}}}}, "range": {"end": {"column": 75, "line": 81}, "start": {"column": 25, "line": 81}}}], "modifiers": [{"name": "static", "range": {"end": {"column": 20, "line": 81}, "start": {"column": 14, "line": 81}}}], "range": {"end": {"column": 75, "line": 81}, "start": {"column": 14, "line": 81}}}}], "range": {"end": {"column": 75, "line": 81}, "start": {"column": 37, "line": 81}}}], "stringLiteralExprs": [{"context": [{"enumDecl": {"name": "Fauna", "range": {"end": {"column": 77, "line": 81}, "start": {"column": 1, "line": 81}}}}, {"variableDecl": {"bindingSpecifier": "let", "bindings": [{"pattern": {"identifierPattern": {"identifier": "namespace", "range": {"end": {"column": 34, "line": 81}, "start": {"column": 25, "line": 81}}}}, "range": {"end": {"column": 75, "line": 81}, "start": {"column": 25, "line": 81}}}], "modifiers": [{"name": "static", "range": {"end": {"column": 20, "line": 81}, "start": {"column": 14, "line": 81}}}], "range": {"end": {"column": 75, "line": 81}, "start": {"column": 14, "line": 81}}}}], "range": {"end": {"column": 74, "line": 81}, "start": {"column": 47, "line": 81}}, "segments": [{"stringSegment": {"content": "http://example.org/fauna#", "range": {"end": {"column": 73, "line": 81}, "start": {"column": 48, "line": 81}}}}]}], "variableDecls": [{"bindingSpecifier": "let", "bindings": [{"initializer": {"range": {"end": {"column": 75, "line": 81}, "start": {"column": 35, "line": 81}}, "value": {"functionCallExpr": {"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 74, "line": 81}, "start": {"column": 47, "line": 81}}, "segments": [{"stringSegment": {"content": "http://example.org/fauna#", "range": {"end": {"column": 73, "line": 81}, "start": {"column": 48, "line": 81}}}}]}}, "range": {"end": {"column": 74, "line": 81}, "start": {"column": 47, "line": 81}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Namespace", "range": {"end": {"column": 46, "line": 81}, "start": {"column": 37, "line": 81}}}}, "range": {"end": {"column": 75, "line": 81}, "start": {"column": 37, "line": 81}}}}}, "pattern": {"identifierPattern": {"identifier": "namespace", "range": {"end": {"column": 34, "line": 81}, "start": {"column": 25, "line": 81}}}}, "range": {"end": {"column": 75, "line": 81}, "start": {"column": 25, "line": 81}}}], "context": [{"enumDecl": {"name": "Fauna", "range": {"end": {"column": 77, "line": 81}, "start": {"column": 1, "line": 81}}}}], "modifiers": [{"name": "static", "range": {"end": {"column": 20, "line": 81}, "start": {"column": 14, "line": 81}}}], "range": {"end": {"column": 75, "line": 81}, "start": {"column": 14, "line": 81}}}]}
 
 test_denies_case_only_vocabulary_enum if {
-  result := decision with input as case_only_vocabulary_enum_node
+  result := decision with input as in_scope(case_only_vocabulary_enum_node)
 
   count(result.deny) == 1
   result.deny[0].rule_id == "semantickit.design_guidelines.no_static_term_enum"
@@ -288,7 +288,7 @@ test_denies_case_only_vocabulary_enum if {
 }
 
 test_denies_case_only_rdfs_enum if {
-  result := decision with input as case_only_rdfs_enum_node
+  result := decision with input as in_scope(case_only_rdfs_enum_node)
 
   count(result.deny) == 1
   result.deny[0].rule_id == "semantickit.design_guidelines.no_static_term_enum"
@@ -332,7 +332,7 @@ test_denies_stored_static_enum if {
 }
 
 test_denies_caseless_vocabulary_enum if {
-  result := decision with input as caseless_vocabulary_enum_node
+  result := decision with input as in_scope(caseless_vocabulary_enum_node)
 
   count(result.deny) == 1
   result.deny[0].rule_id == "semantickit.design_guidelines.no_static_term_enum"
@@ -354,7 +354,7 @@ test_denies_own_type_struct_constant if {
 }
 
 test_denies_vocabulary_extension_static if {
-  result := decision with input as vocabulary_extension_static_node
+  result := decision with input as in_scope(vocabulary_extension_static_node)
 
   count(result.deny) == 1
   result.deny[0].rule_id == "semantickit.design_guidelines.no_static_term_enum"
@@ -481,7 +481,7 @@ test_denies_term_factory_static if {
 }
 
 test_denies_vocabulary_case_names if {
-  result := decision with input as vocabulary_case_names_node
+  result := decision with input as in_scope(vocabulary_case_names_node)
 
   count(result.deny) == 1
   result.deny[0].rule_id == "semantickit.design_guidelines.no_static_term_enum"
@@ -492,7 +492,7 @@ test_denies_vocabulary_case_names if {
 }
 
 test_denies_string_enum_vocabulary_case_names if {
-  result := decision with input as string_enum_vocabulary_case_names_node
+  result := decision with input as in_scope(string_enum_vocabulary_case_names_node)
 
   count(result.deny) == 1
   result.deny[0].rule_id == "semantickit.design_guidelines.no_static_term_enum"
@@ -503,7 +503,7 @@ test_denies_string_enum_vocabulary_case_names if {
 }
 
 test_denies_vocabulary_instance_static if {
-  result := decision with input as vocabulary_instance_static_node
+  result := decision with input as in_scope(vocabulary_instance_static_node)
 
   count(result.deny) == 1
   result.deny[0].rule_id == "semantickit.design_guidelines.no_static_term_enum"
@@ -560,3 +560,73 @@ everyday_cases_node := {"enumCaseDecls": [{"context": [{"enumDecl": {"name": "So
 
 # Parser output for `enum Foaf { static func knows() -> IRI { IRI(rawValue: "http://xmlns.com/foaf/0.1/knows") } }` at 1:1.
 static_iri_function_left_to_static_iri_constant_node := {"declReferenceExprs": [{"baseName": "IRI", "context": [{"enumDecl": {"name": "Foaf", "range": {"end": {"column": 94, "line": 1}, "start": {"column": 1, "line": 1}}}}, {"functionDecl": {"modifiers": [{"name": "static", "range": {"end": {"column": 19, "line": 1}, "start": {"column": 13, "line": 1}}}], "name": "knows", "range": {"end": {"column": 92, "line": 1}, "start": {"column": 13, "line": 1}}, "signature": {"parameterClause": {"range": {"end": {"column": 32, "line": 1}, "start": {"column": 30, "line": 1}}}, "range": {"end": {"column": 39, "line": 1}, "start": {"column": 30, "line": 1}}, "returnClause": {"range": {"end": {"column": 39, "line": 1}, "start": {"column": 33, "line": 1}}, "type": {"identifierType": {"name": "IRI", "range": {"end": {"column": 39, "line": 1}, "start": {"column": 36, "line": 1}}}}}}}}], "range": {"end": {"column": 45, "line": 1}, "start": {"column": 42, "line": 1}}}], "enumDecls": [{"memberBlock": {"members": [{"decl": {"functionDecl": {"body": {"range": {"end": {"column": 92, "line": 1}, "start": {"column": 40, "line": 1}}, "statements": [{"item": {"expr": {"functionCallExpr": {"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 89, "line": 1}, "start": {"column": 56, "line": 1}}, "segments": [{"stringSegment": {"content": "http://xmlns.com/foaf/0.1/knows", "range": {"end": {"column": 88, "line": 1}, "start": {"column": 57, "line": 1}}}}]}}, "label": "rawValue", "range": {"end": {"column": 89, "line": 1}, "start": {"column": 46, "line": 1}}}], "calledExpression": {"declReferenceExpr": {"baseName": "IRI", "range": {"end": {"column": 45, "line": 1}, "start": {"column": 42, "line": 1}}}}, "range": {"end": {"column": 90, "line": 1}, "start": {"column": 42, "line": 1}}}}}, "range": {"end": {"column": 90, "line": 1}, "start": {"column": 42, "line": 1}}}]}, "modifiers": [{"name": "static", "range": {"end": {"column": 19, "line": 1}, "start": {"column": 13, "line": 1}}}], "name": "knows", "range": {"end": {"column": 92, "line": 1}, "start": {"column": 13, "line": 1}}, "signature": {"parameterClause": {"range": {"end": {"column": 32, "line": 1}, "start": {"column": 30, "line": 1}}}, "range": {"end": {"column": 39, "line": 1}, "start": {"column": 30, "line": 1}}, "returnClause": {"range": {"end": {"column": 39, "line": 1}, "start": {"column": 33, "line": 1}}, "type": {"identifierType": {"name": "IRI", "range": {"end": {"column": 39, "line": 1}, "start": {"column": 36, "line": 1}}}}}}}}, "range": {"end": {"column": 92, "line": 1}, "start": {"column": 13, "line": 1}}}], "range": {"end": {"column": 94, "line": 1}, "start": {"column": 11, "line": 1}}}, "name": "Foaf", "range": {"end": {"column": 94, "line": 1}, "start": {"column": 1, "line": 1}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 89, "line": 1}, "start": {"column": 56, "line": 1}}, "segments": [{"stringSegment": {"content": "http://xmlns.com/foaf/0.1/knows", "range": {"end": {"column": 88, "line": 1}, "start": {"column": 57, "line": 1}}}}]}}, "label": "rawValue", "range": {"end": {"column": 89, "line": 1}, "start": {"column": 46, "line": 1}}}], "calledExpression": {"declReferenceExpr": {"baseName": "IRI", "range": {"end": {"column": 45, "line": 1}, "start": {"column": 42, "line": 1}}}}, "context": [{"enumDecl": {"name": "Foaf", "range": {"end": {"column": 94, "line": 1}, "start": {"column": 1, "line": 1}}}}, {"functionDecl": {"modifiers": [{"name": "static", "range": {"end": {"column": 19, "line": 1}, "start": {"column": 13, "line": 1}}}], "name": "knows", "range": {"end": {"column": 92, "line": 1}, "start": {"column": 13, "line": 1}}, "signature": {"parameterClause": {"range": {"end": {"column": 32, "line": 1}, "start": {"column": 30, "line": 1}}}, "range": {"end": {"column": 39, "line": 1}, "start": {"column": 30, "line": 1}}, "returnClause": {"range": {"end": {"column": 39, "line": 1}, "start": {"column": 33, "line": 1}}, "type": {"identifierType": {"name": "IRI", "range": {"end": {"column": 39, "line": 1}, "start": {"column": 36, "line": 1}}}}}}}}], "range": {"end": {"column": 90, "line": 1}, "start": {"column": 42, "line": 1}}}], "functionDecls": [{"body": {"range": {"end": {"column": 92, "line": 1}, "start": {"column": 40, "line": 1}}, "statements": [{"item": {"expr": {"functionCallExpr": {"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 89, "line": 1}, "start": {"column": 56, "line": 1}}, "segments": [{"stringSegment": {"content": "http://xmlns.com/foaf/0.1/knows", "range": {"end": {"column": 88, "line": 1}, "start": {"column": 57, "line": 1}}}}]}}, "label": "rawValue", "range": {"end": {"column": 89, "line": 1}, "start": {"column": 46, "line": 1}}}], "calledExpression": {"declReferenceExpr": {"baseName": "IRI", "range": {"end": {"column": 45, "line": 1}, "start": {"column": 42, "line": 1}}}}, "range": {"end": {"column": 90, "line": 1}, "start": {"column": 42, "line": 1}}}}}, "range": {"end": {"column": 90, "line": 1}, "start": {"column": 42, "line": 1}}}]}, "context": [{"enumDecl": {"name": "Foaf", "range": {"end": {"column": 94, "line": 1}, "start": {"column": 1, "line": 1}}}}], "modifiers": [{"name": "static", "range": {"end": {"column": 19, "line": 1}, "start": {"column": 13, "line": 1}}}], "name": "knows", "range": {"end": {"column": 92, "line": 1}, "start": {"column": 13, "line": 1}}, "signature": {"parameterClause": {"range": {"end": {"column": 32, "line": 1}, "start": {"column": 30, "line": 1}}}, "range": {"end": {"column": 39, "line": 1}, "start": {"column": 30, "line": 1}}, "returnClause": {"range": {"end": {"column": 39, "line": 1}, "start": {"column": 33, "line": 1}}, "type": {"identifierType": {"name": "IRI", "range": {"end": {"column": 39, "line": 1}, "start": {"column": 36, "line": 1}}}}}}}], "identifierTypes": [{"context": [{"enumDecl": {"name": "Foaf", "range": {"end": {"column": 94, "line": 1}, "start": {"column": 1, "line": 1}}}}, {"functionDecl": {"modifiers": [{"name": "static", "range": {"end": {"column": 19, "line": 1}, "start": {"column": 13, "line": 1}}}], "name": "knows", "range": {"end": {"column": 92, "line": 1}, "start": {"column": 13, "line": 1}}, "signature": {"parameterClause": {"range": {"end": {"column": 32, "line": 1}, "start": {"column": 30, "line": 1}}}, "range": {"end": {"column": 39, "line": 1}, "start": {"column": 30, "line": 1}}, "returnClause": {"range": {"end": {"column": 39, "line": 1}, "start": {"column": 33, "line": 1}}, "type": {"identifierType": {"name": "IRI", "range": {"end": {"column": 39, "line": 1}, "start": {"column": 36, "line": 1}}}}}}}}], "name": "IRI", "range": {"end": {"column": 39, "line": 1}, "start": {"column": 36, "line": 1}}}], "stringLiteralExprs": [{"context": [{"enumDecl": {"name": "Foaf", "range": {"end": {"column": 94, "line": 1}, "start": {"column": 1, "line": 1}}}}, {"functionDecl": {"modifiers": [{"name": "static", "range": {"end": {"column": 19, "line": 1}, "start": {"column": 13, "line": 1}}}], "name": "knows", "range": {"end": {"column": 92, "line": 1}, "start": {"column": 13, "line": 1}}, "signature": {"parameterClause": {"range": {"end": {"column": 32, "line": 1}, "start": {"column": 30, "line": 1}}}, "range": {"end": {"column": 39, "line": 1}, "start": {"column": 30, "line": 1}}, "returnClause": {"range": {"end": {"column": 39, "line": 1}, "start": {"column": 33, "line": 1}}, "type": {"identifierType": {"name": "IRI", "range": {"end": {"column": 39, "line": 1}, "start": {"column": 36, "line": 1}}}}}}}}], "range": {"end": {"column": 89, "line": 1}, "start": {"column": 56, "line": 1}}, "segments": [{"stringSegment": {"content": "http://xmlns.com/foaf/0.1/knows", "range": {"end": {"column": 88, "line": 1}, "start": {"column": 57, "line": 1}}}}]}]}
+
+# The vocabularies in scope are the ontology declarations of the target and
+# of the targets it depends on (`input.vocabulary`); no term name is typed in
+# the policy. These tests put the declarations a FOAF, RDFS and Schema module
+# translated from their published RDF holds in scope, or the project's own
+# Fauna fixture ontology.
+in_scope(node) := object.union(node, {"vocabulary": scope_vocabulary})
+
+in_fauna_scope(node) := object.union(node, {"vocabulary": fauna_vocabulary})
+
+# Vocabulary of `@Ontology struct Foaf { var body: some Content { Prefix("foaf", foaf); Class("Person"); Class("Agent"); Property("knows") } }; struct RDFS: Ontology { var body: some Content { Property("label"); Property("comment") } }; @Ontology struct Schema { var body: some Content { Class("Name") } }`.
+scope_vocabulary := {"ontologies": ["Foaf", "RDFS", "Schema"], "prefixes": ["foaf"], "terms": ["Agent", "Name", "Person", "comment", "knows", "label"]}
+
+# Vocabulary of `@Ontology struct Fauna { var body: some Content { Class("Animal"); Class("Habitat"); Class("Bird"); Property("habitat") } }`.
+fauna_vocabulary := {"ontologies": ["Fauna"], "terms": ["Animal", "Bird", "Habitat", "habitat"]}
+
+# `enum Fauna { case animal, habitat, bird }`: the project's own fixture
+# ontology, mapped onto enum cases.
+test_denies_case_only_enum_of_authored_ontology if {
+  result := decision with input as in_fauna_scope(fauna_case_enum_node)
+
+  count(result.deny) == 1
+  result.deny[0].rule_id == "semantickit.design_guidelines.no_static_term_enum"
+  result.deny[0].line == 1
+  result.deny[0].column == 1
+}
+
+# `enum Kinds { case animal, habitat }`: any name, cases that are its terms.
+test_denies_case_only_enum_of_authored_terms if {
+  result := decision with input as in_fauna_scope(kinds_case_enum_node)
+
+  count(result.deny) == 1
+  result.deny[0].line == 1
+  result.deny[0].column == 1
+}
+
+# The same cases with no ontology in scope that declares them are ordinary
+# enum cases: `enum Axis { case domain, range }`, `enum Phase { case agent,
+# person, thing }`.
+test_allows_case_only_enum_outside_any_ontology if {
+  every node in [axis_case_enum_node, phase_case_enum_node, fauna_case_enum_node] {
+    result := decision with input as node
+    count(result.deny) == 0
+  }
+}
+
+test_allows_ordinary_cases_with_ontologies_in_scope if {
+  result := decision with input as in_fauna_scope(axis_case_enum_node)
+
+  count(result.deny) == 0
+}
+
+# `CodingKeys` stay allowed when their cases are terms in scope.
+test_allows_coding_keys_named_after_terms_in_scope if {
+  result := decision with input as in_scope(coding_keys_with_term_names_node)
+
+  count(result.deny) == 0
+}
+
+# Parser output for `enum Fauna { case animal, habitat, bird }` at 1:1.
+fauna_case_enum_node := {"enumCaseDecls":[{"context":[{"enumDecl":{"name":"Fauna","range":{"end":{"column":42,"line":1},"start":{"column":1,"line":1}}}}],"elements":[{"name":"animal","range":{"end":{"column":26,"line":1},"start":{"column":19,"line":1}}},{"name":"habitat","range":{"end":{"column":35,"line":1},"start":{"column":27,"line":1}}},{"name":"bird","range":{"end":{"column":40,"line":1},"start":{"column":36,"line":1}}}],"range":{"end":{"column":40,"line":1},"start":{"column":14,"line":1}}}],"enumDecls":[{"memberBlock":{"members":[{"decl":{"enumCaseDecl":{"elements":[{"name":"animal","range":{"end":{"column":26,"line":1},"start":{"column":19,"line":1}}},{"name":"habitat","range":{"end":{"column":35,"line":1},"start":{"column":27,"line":1}}},{"name":"bird","range":{"end":{"column":40,"line":1},"start":{"column":36,"line":1}}}],"range":{"end":{"column":40,"line":1},"start":{"column":14,"line":1}}}},"range":{"end":{"column":40,"line":1},"start":{"column":14,"line":1}}}],"range":{"end":{"column":42,"line":1},"start":{"column":12,"line":1}}},"name":"Fauna","range":{"end":{"column":42,"line":1},"start":{"column":1,"line":1}}}]}
+
+# Parser output for `enum Kinds { case animal, habitat }` at 1:1.
+kinds_case_enum_node := {"enumCaseDecls":[{"context":[{"enumDecl":{"name":"Kinds","range":{"end":{"column":36,"line":1},"start":{"column":1,"line":1}}}}],"elements":[{"name":"animal","range":{"end":{"column":26,"line":1},"start":{"column":19,"line":1}}},{"name":"habitat","range":{"end":{"column":34,"line":1},"start":{"column":27,"line":1}}}],"range":{"end":{"column":34,"line":1},"start":{"column":14,"line":1}}}],"enumDecls":[{"memberBlock":{"members":[{"decl":{"enumCaseDecl":{"elements":[{"name":"animal","range":{"end":{"column":26,"line":1},"start":{"column":19,"line":1}}},{"name":"habitat","range":{"end":{"column":34,"line":1},"start":{"column":27,"line":1}}}],"range":{"end":{"column":34,"line":1},"start":{"column":14,"line":1}}}},"range":{"end":{"column":34,"line":1},"start":{"column":14,"line":1}}}],"range":{"end":{"column":36,"line":1},"start":{"column":12,"line":1}}},"name":"Kinds","range":{"end":{"column":36,"line":1},"start":{"column":1,"line":1}}}]}
+
+# Parser output for `enum Axis { case domain, range }` at 1:1.
+axis_case_enum_node := {"enumCaseDecls":[{"context":[{"enumDecl":{"name":"Axis","range":{"end":{"column":33,"line":1},"start":{"column":1,"line":1}}}}],"elements":[{"name":"domain","range":{"end":{"column":25,"line":1},"start":{"column":18,"line":1}}},{"name":"range","range":{"end":{"column":31,"line":1},"start":{"column":26,"line":1}}}],"range":{"end":{"column":31,"line":1},"start":{"column":13,"line":1}}}],"enumDecls":[{"memberBlock":{"members":[{"decl":{"enumCaseDecl":{"elements":[{"name":"domain","range":{"end":{"column":25,"line":1},"start":{"column":18,"line":1}}},{"name":"range","range":{"end":{"column":31,"line":1},"start":{"column":26,"line":1}}}],"range":{"end":{"column":31,"line":1},"start":{"column":13,"line":1}}}},"range":{"end":{"column":31,"line":1},"start":{"column":13,"line":1}}}],"range":{"end":{"column":33,"line":1},"start":{"column":11,"line":1}}},"name":"Axis","range":{"end":{"column":33,"line":1},"start":{"column":1,"line":1}}}]}
+
+# Parser output for `enum Phase { case agent, person, thing }` at 1:1.
+phase_case_enum_node := {"enumCaseDecls":[{"context":[{"enumDecl":{"name":"Phase","range":{"end":{"column":41,"line":1},"start":{"column":1,"line":1}}}}],"elements":[{"name":"agent","range":{"end":{"column":25,"line":1},"start":{"column":19,"line":1}}},{"name":"person","range":{"end":{"column":33,"line":1},"start":{"column":26,"line":1}}},{"name":"thing","range":{"end":{"column":39,"line":1},"start":{"column":34,"line":1}}}],"range":{"end":{"column":39,"line":1},"start":{"column":14,"line":1}}}],"enumDecls":[{"memberBlock":{"members":[{"decl":{"enumCaseDecl":{"elements":[{"name":"agent","range":{"end":{"column":25,"line":1},"start":{"column":19,"line":1}}},{"name":"person","range":{"end":{"column":33,"line":1},"start":{"column":26,"line":1}}},{"name":"thing","range":{"end":{"column":39,"line":1},"start":{"column":34,"line":1}}}],"range":{"end":{"column":39,"line":1},"start":{"column":14,"line":1}}}},"range":{"end":{"column":39,"line":1},"start":{"column":14,"line":1}}}],"range":{"end":{"column":41,"line":1},"start":{"column":12,"line":1}}},"name":"Phase","range":{"end":{"column":41,"line":1},"start":{"column":1,"line":1}}}]}
