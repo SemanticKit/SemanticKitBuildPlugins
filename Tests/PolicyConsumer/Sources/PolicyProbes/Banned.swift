@@ -92,4 +92,6 @@ final class Person3: Identifiable { var id: IRI { IRI("http://xmlns.com/foaf/0.1
 enum Fauna { case animal, habitat, bird }
 enum Kinds { case animal, habitat }
 struct Fauna2: Ontology { var content: some Content { Namespace(ns) } }
+struct Social9 { static let knows = prefix + local }
+enum Social10 { static let knows = Foo(rawValue: base + name) }
 #endif

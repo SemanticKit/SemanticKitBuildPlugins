@@ -49,4 +49,5 @@ let path = directory.appending("/file.txt")
 enum Axis { case domain, range }
 func query(_ terms: [String]) -> String { var text = ""; for term in terms { text += term }; return text }
 struct Person { let name: String; var greeting: String { "Hello, " + name } }
+struct Totals { static let total = a + b }
 #endif

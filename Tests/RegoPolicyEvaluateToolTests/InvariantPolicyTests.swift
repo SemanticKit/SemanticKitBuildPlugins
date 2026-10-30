@@ -114,6 +114,9 @@ struct InvariantPolicyTests {
         ("enum Kinds { case animal, habitat }", "no_static_term_enum", 1),
         // `var content` in place of `var body`.
         ("struct Fauna2: Ontology { var content: some Content { Namespace(ns) } }", "no_content_function", 31),
+        // A static named after a term in scope, built by `+` from any names.
+        ("struct Social9 { static let knows = prefix + local }", "no_static_iri_constant", 18),
+        ("enum Social10 { static let knows = Foo(rawValue: base + name) }", "no_static_iri_constant", 17),
     ]
 
     /// The ontologies in scope, as the target's dependencies declare them:
@@ -177,6 +180,7 @@ struct InvariantPolicyTests {
         enum Axis { case domain, range }
         func query(_ terms: [String]) -> String { var text = ""; for term in terms { text += term }; return text }
         struct Person { let name: String; var greeting: String { "Hello, " + name } }
+        struct Totals { static let total = a + b }
         """
 
     private func evaluate(_ source: String, named name: String) async throws -> (status: Int32, errors: [String], path: String) {

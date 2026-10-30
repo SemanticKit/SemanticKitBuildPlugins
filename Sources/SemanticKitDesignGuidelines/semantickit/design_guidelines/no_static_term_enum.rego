@@ -359,6 +359,15 @@ iri_binding(binding) if {
   iri_value(value)
 }
 
+# `struct Social { static let knows = prefix + local }`,
+# `Foo(rawValue: base + name)`: a static named after a term an ontology in
+# scope declares, built by `+` whatever its operands are called.
+iri_binding(binding) if {
+  lower(binding.pattern.identifierPattern.identifier) in {lower(name) | some name in object.get(input, ["vocabulary", "terms"], [])}
+  walk(binding.initializer.value, [_, node])
+  node.infixOperatorExpr.operator.binaryOperatorExpr.operator == "+"
+}
+
 # A static function without parameters returning an identifier built as
 # above: `no_static_iri_constant`'s.
 iri_function(function) if {
