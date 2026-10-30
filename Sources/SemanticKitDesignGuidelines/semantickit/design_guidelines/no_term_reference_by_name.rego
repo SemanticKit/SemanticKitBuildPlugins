@@ -18,20 +18,53 @@ denials := [denial | denial := denial_set[_]]
 message := "Refer to a term by its type, as in Domain(Fauna.Animal); not by a string, an IRI, an .iri projection, .self or explicit generic arguments."
 
 # `Domain("Animal")`, `Range(IRI("…"))`, `Domain(Fauna.Animal.iri)`,
-# `SubClassOf(Animal.self)`
+# `SubClassOf(Animal.self)`, `Domain((Animal.self))`
 denial_set contains finding(call) if {
   some call in input.functionCallExprs
-  call.calledExpression.declReferenceExpr.baseName in term_references
+  term_reference_call(call)
   some argument in call.arguments
   some form in forms(argument.expression)
   by_name(form)
 }
 
-# `Domain<Fauna.Animal>()`
+# `Domain<Fauna.Animal>()`, `SubClassOf<Fauna.Animal>.init()`
 denial_set contains finding(call) if {
   some call in input.functionCallExprs
-  call.calledExpression.genericSpecializationExpr.expression.declReferenceExpr.baseName in term_references
+  some specialization in specializations(call.calledExpression)
+  name := specialization.expression.declReferenceExpr.baseName
+  name in term_references
+  dsl_generic(name, call)
 }
+
+# A call of a term reference, spelled `Domain(…)` or `Domain.init(…)`.
+term_reference_call(call) if {
+  some callee in callees(call.calledExpression)
+  name := callee.declReferenceExpr.baseName
+  name in term_references
+  dsl_arguments(name, call)
+}
+
+# The callee, and the type a `.init` is called on.
+callees(callee) := {callee} | {base |
+  callee.memberAccessExpr.declName.baseName == "init"
+  base := callee.memberAccessExpr.base
+}
+
+specializations(callee) := {specialization | some form in callees(callee); specialization := form.genericSpecializationExpr}
+
+# `Range` is also Swift's own `Range`: `Range<Int>(uncheckedBounds: (0, 4))`,
+# `Range(nsRange, in: text)`. The DSL's `Range(Fauna.Habitat)` takes one
+# unlabelled argument, and spelled with a generic argument it takes none.
+dsl_arguments(name, _) if name != "Range"
+
+dsl_arguments("Range", call) if {
+  [argument] := call.arguments
+  not argument.label
+}
+
+dsl_generic(name, _) if name != "Range"
+
+dsl_generic("Range", call) if count(object.get(call, "arguments", [])) == 0
 
 # `"Animal"`, `"http://www.w3.org/2001/XMLSchema#" + "nonNegativeInteger"`,
 # `"\(xsd)nonNegativeInteger"`: any argument built from a string.
@@ -46,7 +79,12 @@ by_name(value) if callee_name(value.functionCallExpr) == "IRI"
 # `Fauna.Animal.iri`, `term.rawValue`: the IRI projection in place of the type.
 by_name(value) if value.memberAccessExpr.declName.baseName in {"iri", "rawValue"}
 
-by_name(value) if value.memberAccessExpr.declName.baseName == "self"
+# `Animal.self`, `(Animal.self)`, `Animal.self as Any.Type`: a metatype
+# anywhere in the argument.
+by_name(value) if {
+  walk(value, [_, node])
+  node.memberAccessExpr.declName.baseName == "self"
+}
 
 term_references := {
   "Domain",

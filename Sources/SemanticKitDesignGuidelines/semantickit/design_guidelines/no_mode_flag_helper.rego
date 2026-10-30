@@ -3,11 +3,13 @@ package semantickit.design_guidelines.no_mode_flag_helper
 # Turning text into a term, or a term into text, is behaviour of the term
 # type and of the format's own coder type: never a free or private helper
 # that takes a `Bool` mode. Denied: a function named `decode…`, `encode…` or
-# `parse…` that takes a `Bool` (or `Swift.Bool`) parameter and is either
-# free (declared as a statement, not as a member of a type or extension: the
-# innermost declaration around it is not a type or an extension) or
-# `private`/`fileprivate`,
-# as in `private func decodeTerm(_ token: String, tsvMode: Bool)`.
+# `parse…` that takes a `Bool` parameter (`Bool`, `Swift.Bool`, `Bool?`,
+# `Bool!`, `inout Bool`) and is either free (declared as a statement, not as a
+# member of a type or extension: the innermost declaration around it is not a
+# type or an extension) or private: `private`/`fileprivate` itself, or a
+# member of a `private`/`fileprivate` type or extension, as in
+# `private func decodeTerm(_ token: String, tsvMode: Bool)` and
+# `private extension TSVParser { func decodeTerm(_ token: String, tsvMode: Bool) }`.
 # DESIGN-CONTRACT.md rule 15 (Charles): "Turning text into a term is an
 # initializer on the term type, or its `Decodable` conformance, used by the
 # format's decoder. It is not a free or private helper on a parser. A format
@@ -67,12 +69,33 @@ flagged_coding_helper(function) if {
   bool_type(parameter.type)
 }
 
-# `Bool`, `Swift.Bool`
-bool_type(type) if type.identifierType.name == "Bool"
+# `Bool`, `Swift.Bool`, `Bool?`, `Bool!`, `inout Bool`
+bool_type(type) if {
+  some form in type_forms(type)
+  named_bool(form)
+}
 
-bool_type(type) if type.memberType.name == "Bool"
+named_bool(type) if type.identifierType.name == "Bool"
 
+named_bool(type) if type.memberType.name == "Bool"
+
+# The type, and what `?`, `!` and `inout` wrap, two levels deep.
+type_forms(type) := {type} | wrapped(type) | {deeper | some form in wrapped(type); some deeper in wrapped(form)}
+
+wrapped(type) := ({child | child := type.optionalType.wrappedType} | {child | child := type.implicitlyUnwrappedOptionalType.wrappedType}) | {child | child := type.attributedType.baseType}
+
+restricted(function) if private_declaration(function)
+
+# `private extension TSVParser { func decodeTerm(…) }`: the innermost type or
+# extension around the function is private, so the function is too.
 restricted(function) if {
-  some modifier in function.modifiers
+  member(function)
+  declaration := function.context[count(function.context) - 1]
+  some enclosing in declaration
+  private_declaration(enclosing)
+}
+
+private_declaration(declaration) if {
+  some modifier in declaration.modifiers
   modifier.name in {"private", "fileprivate"}
 }

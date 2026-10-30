@@ -65,6 +65,36 @@ struct InvariantPolicyTests {
         ("let iri = IRI(string: ns.appending(\"knows\"))", "no_interpolated_identity", 11),
         ("let iri = IRI(string: String(format: \"%@knows\", ns))", "no_interpolated_identity", 11),
         ("struct Paths { static let knows = [ns, \"knows\"].joined() }", "no_static_iri_constant", 16),
+        // A file-scope IRI constant, a type's own static IRI (DESIGN-CONTRACT.md
+        // rule 17), static factories and URL paths, `.init` and nested `.self`
+        // spellings, String-labelled coders, private-extension and optional
+        // flags, other IRI and String key types, and vocabulary case names.
+        ("let knows = IRI(rawValue: \"http://xmlns.com/foaf/0.1/knows\")", "no_static_iri_constant", 1),
+        ("let knowsURL = URL(string: \"http://xmlns.com/foaf/0.1/knows\")!", "no_static_iri_constant", 1),
+        ("func knows() -> IRI { IRI(rawValue: \"http://xmlns.com/foaf/0.1/knows\") }", "no_static_iri_constant", 1),
+        ("struct Social { static let knows = IRI.foaf(\"knows\") }", "no_static_iri_constant", 17),
+        ("struct Social8 { static let knows = Term.named(\"knows\") }", "no_static_term_enum", 1),
+        ("struct Social2 { static let knows = ns + local }", "no_static_iri_constant", 18),
+        ("struct Social3 { static let knows = ns.appending(path: \"knows\") }", "no_static_iri_constant", 18),
+        ("struct Social4 { static let knows = ns.appendingPathComponent(\"knows\") }", "no_static_iri_constant", 18),
+        ("extension Fauna.Animal { static var iri: IRI { Fauna.namespace.iri } }", "no_static_iri_constant", 26),
+        ("let s = SubClassOf<Fauna.Animal>.init()", "no_term_reference_by_name", 9),
+        ("let p = SubPropertyOf<Fauna.knows>.init()", "no_term_reference_by_name", 9),
+        ("let d = Domain((Animal.self))", "no_term_reference_by_name", 9),
+        ("let d2 = Domain(Animal.self as Any.Type)", "no_term_reference_by_name", 10),
+        ("extension Person { init(from name: String) { self.id = IRI(rawValue: \"\\(ns)\\(name)\") } }", "no_interpolated_identity", 56),
+        ("extension Person { func encode(to name: String) -> IRI { IRI(rawValue: \"\\(ns)\\(name)\") } }", "no_interpolated_identity", 58),
+        ("private extension TSVParser { func decodeTerm(_ token: String, tsvMode: Bool) -> Term { fatalError() } }", "no_mode_flag_helper", 31),
+        ("func decodeTerm(_ token: String, tsvMode: Bool?) -> Term { fatalError() }", "no_mode_flag_helper", 1),
+        ("var byNode: [NamedNode: Term] = [:]", "no_term_registry", 13),
+        ("var byURI: [URI: Term] = [:]", "no_term_registry", 12),
+        ("var registry = [String: any Term.Type]()", "no_term_registry", 16),
+        ("var bySubstring: [Substring: Term] = [:]", "no_term_registry", 18),
+        ("enum Relation { case knows, person, agent }", "no_static_term_enum", 1),
+        ("enum Social5: String { case knows, person }", "no_static_term_enum", 1),
+        ("struct Social6 { static let friend = Knows() }", "no_static_term_enum", 1),
+        ("struct Social7 { static func knows() -> IRI { IRI(rawValue: \"http://xmlns.com/foaf/0.1/knows\") } }", "no_static_iri_constant", 18),
+        ("let d3 = Domain.init(Animal.self)", "no_term_reference_by_name", 10),
     ]
 
     /// The same file once each banned shape is replaced by the intended one.
@@ -73,13 +103,11 @@ struct InvariantPolicyTests {
         struct ACL: Ontology {}
         var counts: [Fauna.Habitat: Int] = [:]
         final class Fauna {}
-        let iri = Fauna.Animal.iri
         let graph = Graph()
         let keys = alice.key
         let foo = Class("Foo") { Label("Foo"); Comment("A foo.") }
         let domain = Domain(Fauna.Animal)
         enum TextDirection { case ltr, rtl }
-        extension Fauna.Animal { static var iri: IRI { Fauna.namespace.iri } }
         extension Graph { static let empty = Graph() }
         var counts = [Fauna.Habitat: Int]()
         let mode = authorization.mode
@@ -97,7 +125,16 @@ struct InvariantPolicyTests {
         enum Limits { static var depth: Int { 64 } }
         let greeting = "Hello, \\(name)"
         let path = directory + "/file.txt"
-        let boundary = IRI(rawValue: "http://xmlns.com/foaf/0.1/")
+        let r = Range<Int>(uncheckedBounds: (0, 4))
+        let r2 = Range<String.Index>(range, in: text)
+        let r3 = Range(NSRange(location: 0, length: 2), in: "hello")
+        struct TurtleDecoder { func base() -> IRI { IRI(rawValue: "http://xmlns.com/foaf/0.1/")! } }
+        extension Person: Decodable { init(from decoder: any Decoder) throws { let iri = "\\(namespace)alice" } }
+        struct Contact: Codable { let knows: [Contact]; let person: String; enum CodingKeys: String, CodingKey { case knows, person } }
+        enum TriplePosition { case subject, predicate, object }
+        func baseURL() -> URL { configuration.url }
+        let cache = FileManager.default.temporaryDirectory.appending(path: "cache")
+        enum Sort { case name, date }
         let subclass = SubClassOf(Fauna.Animal)
         func content(of url: URL) -> Data { Data() }
         struct TurtleDecoder { func resolve(_ local: String) -> IRI? { IRI(string: namespace + local) } }

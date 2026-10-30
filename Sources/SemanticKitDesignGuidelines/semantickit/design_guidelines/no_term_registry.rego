@@ -1,10 +1,10 @@
 package semantickit.design_guidelines.no_term_registry
 
 # A registry looks terms up by name instead of by type. Denied:
-# - a dictionary keyed by IRI (or URL, an IRI under another type name),
-#   whatever it holds: the binding identity rule (Charles) names
+# - a dictionary keyed by IRI (or by an IRI under another type name: `URL`,
+#   `URI`, `NamedNode`, `IRIRef`), whatever it holds: the binding identity rule (Charles) names
 #   "Registries or dictionaries keyed by IRI";
-# - a dictionary keyed by String whose values are terms: a term kind
+# - a dictionary keyed by String (or Substring) whose values are terms: a term kind
 #   (`Term`, `Property`, `Class`, ...), a metatype (`Term.Type`), or, in a
 #   literal, values named by their keys (`["knows": Knows()]`): "dictionaries
 #   keyed by ... string term names". A String-keyed dictionary of other values
@@ -143,6 +143,10 @@ term_value_expression(value) if reference_name(value) in term_kinds
 # `Term.Type`
 term_value_expression(value) if value.memberAccessExpr.declName.baseName == "Type"
 
+# `any Term.Type`, `Term?`: a type spelled in an expression, as in
+# `[String: any Term.Type]()`.
+term_value_expression(value) if term_value_type(value.typeExpr.type)
+
 # `IRI`, `String`, `IRIKit.IRI`, `Swift.String`, `Foundation.URL`
 named_type(type, names) if type.identifierType.name in names
 
@@ -220,9 +224,9 @@ finding(node) := {
   "severity": "error",
 }
 
-iri_keys := {"IRI", "URL"}
+iri_keys := {"IRI", "URL", "URI", "NamedNode", "IRIRef"}
 
-string_keys := {"String"}
+string_keys := {"String", "Substring"}
 
 term_kinds := {
   "Term",

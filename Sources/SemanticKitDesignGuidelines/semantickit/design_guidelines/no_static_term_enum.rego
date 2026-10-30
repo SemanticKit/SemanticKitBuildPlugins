@@ -82,6 +82,20 @@ denial_set contains finding(decl) if {
   stored_static(member)
 }
 
+# `enum Relation { case knows, person, agent }`, `enum Social: String { case
+# knows, person }`: a case-only enum most of whose cases name terms of a
+# published vocabulary. `CodingKeys` name a type's own properties and are
+# not term containers.
+denial_set contains finding(decl) if {
+  some decl in input.enumDecls
+  not coding_keys(decl)
+  names := case_names(decl)
+  count(names) >= 2
+  count(members(decl)) == count([member | some member in members(decl); member.enumCaseDecl])
+  terms := [name | some name in names; lower(name) in vocabulary_terms]
+  count(terms) * 2 > count(names)
+}
+
 denial_set contains finding(decl) if {
   some decl in input.enumDecls
   inherits(decl, "String")
@@ -118,15 +132,13 @@ members(decl) := [member.decl | some member in decl.memberBlock.members]
 
 enum_term_constant(member) if term_constant(member)
 
-# `static var readClass: IRI { ... }`, `static let knows: Property`: but not
-# the type's own projection, `static var iri: IRI { ... }`.
+# `static let knows: Property`, `static var person: Class { ... }`
 enum_term_constant(member) if {
   variable := member.variableDecl
   is_static(variable)
   not iri_valued(variable)
   some binding in variable.bindings
-  binding_name(binding) != "iri"
-  type_name(binding.typeAnnotation.type) in term_types
+  type_name(binding.typeAnnotation.type) in term_kinds
 }
 
 # `enum FoafTerm`, `enum FoafVocabulary`, `enum Properties`, `enum Foaf`,
@@ -160,6 +172,49 @@ vocabulary_prefixes := {
   "xsd", "activitystreams",
 }
 
+coding_keys(decl) if decl.name == "CodingKeys"
+
+coding_keys(decl) if inherits(decl, "CodingKey")
+
+case_names(decl) := [element.name | some member in members(decl); some element in member.enumCaseDecl.elements]
+
+# Local names of the published vocabularies' classes and properties, in lower
+# case, that are not also everyday Swift words: FOAF, RDF, RDFS, OWL, SKOS,
+# ACL, Solid, LDP, cert, vCard and ActivityStreams.
+vocabulary_terms := {
+  # FOAF
+  "knows", "person", "agent", "organization", "mbox", "mboxsha1sum",
+  "homepage", "nick", "depiction", "img", "interest", "topicinterest",
+  "onlineaccount", "accountname", "accountservicehomepage", "givenname",
+  "familyname", "firstname", "lastname", "weblog", "workplacehomepage",
+  "schoolhomepage", "primarytopic", "isprimarytopicof", "maker", "made",
+  "openid", "membershipclass", "basednear",
+  # RDF, RDFS
+  "subclassof", "subpropertyof", "domain", "range", "seealso", "isdefinedby",
+  "langstring", "plainliteral", "xmlliteral",
+  # OWL
+  "sameas", "differentfrom", "equivalentclass", "equivalentproperty",
+  "inverseof", "disjointwith", "thing", "nothing", "imports", "versioninfo",
+  "versioniri", "priorversion", "objectproperty", "datatypeproperty",
+  "annotationproperty", "namedindividual", "restriction", "onproperty",
+  "somevaluesfrom", "allvaluesfrom", "hasvalue", "mincardinality",
+  "maxcardinality", "cardinality", "unionof", "intersectionof", "complementof",
+  "oneof", "functionalproperty", "inversefunctionalproperty",
+  "transitiveproperty", "symmetricproperty",
+  # SKOS
+  "concept", "conceptscheme", "preflabel", "altlabel", "hiddenlabel",
+  "broader", "narrower", "inscheme", "topconceptof",
+  "hastopconcept", "exactmatch", "closematch", "broadmatch", "narrowmatch",
+  # ACL, Solid, LDP, cert
+  "authorization", "accessto", "agentclass", "agentgroup", "accesscontrol",
+  "oidcissuer", "inbox", "outbox", "webid", "basiccontainer",
+  "directcontainer", "indirectcontainer", "rsapublickey", "modulus",
+  "exponent",
+  # vCard, ActivityStreams
+  "hasemail", "hastelephone", "hasaddress", "fn", "followers", "following",
+  "liked", "attributedto", "inreplyto",
+}
+
 # A stored static property: `static let`, or `static var` with a value and no
 # accessors.
 stored_static(member) if {
@@ -178,7 +233,10 @@ container_member(member) if {
   not iri_valued(variable)
 }
 
-container_member(member) if is_static(member.functionDecl)
+container_member(member) if {
+  is_static(member.functionDecl)
+  not iri_function(member.functionDecl)
+}
 
 # `case knows = "http://xmlns.com/foaf/0.1/knows"`, `case knows = "foaf:knows"`,
 # `case animal = "Animal"`
@@ -229,6 +287,22 @@ term_value(value, name) if string_literal_text(value) == name
 
 term_value(value, _) if callee_name(value.functionCallExpr) in term_kinds
 
+# `Term.named("knows")`, `RDFKit.Property.make("knows")`: a static factory of
+# a term kind.
+term_value(value, _) if {
+  access := value.functionCallExpr.calledExpression.memberAccessExpr
+  access.declName.baseName != "init"
+  reference_name(access.base) in term_kinds
+}
+
+# `static let friend = Knows()`: an instance of a type named after a
+# vocabulary term.
+term_value(value, _) if {
+  callee := callee_name(value.functionCallExpr)
+  regex.match(`^[A-Z]`, callee)
+  lower(callee) in vocabulary_terms
+}
+
 # `static let animal = Animal()`: an instance of the type the constant names.
 term_value(value, name) if {
   callee := callee_name(value.functionCallExpr)
@@ -258,8 +332,6 @@ string_literal_text(expression) := segment.stringSegment.content if {
 type_name(type) := type.identifierType.name
 
 type_name(type) := type.memberType.name
-
-term_types := term_kinds | {"IRI"}
 
 term_kinds := {
   "Term",
@@ -297,28 +369,28 @@ reference_name(expression) := expression.declReferenceExpr.baseName
 reference_name(expression) := expression.memberAccessExpr.declName.baseName
 
 # The statics `no_static_iri_constant` reports: typed as an identifier, or
-# valued with an identifier's initializer, an IRI string, an interpolated
-# string or a `+` with a string. Kept in step with that policy, so that one
-# static is reported once.
+# valued with an identifier's initializer or factory, an IRI string, an
+# interpolated string, a `+` with a string or a namespace, a string-building
+# call or a URL path call. Kept in step with that policy, so that one static
+# is reported once.
 iri_valued(variable) if {
   some binding in variable.bindings
   iri_binding(binding)
 }
 
-iri_binding(binding) if {
-  not iri_projection(binding)
-  identifier_type(binding.typeAnnotation.type)
-}
+iri_binding(binding) if identifier_type(binding.typeAnnotation.type)
 
 iri_binding(binding) if {
   some value in {value | value := binding.initializer.value} | {block | block := binding.accessorBlock}
   iri_value(value)
 }
 
-iri_projection(binding) if {
-  binding_name(binding) == "iri"
-  binding.accessorBlock
-  not binding.initializer
+# A static function without parameters returning an identifier built as
+# above: `no_static_iri_constant`'s.
+iri_function(function) if {
+  not function.signature.parameterClause.parameters
+  identifier_type(function.signature.returnClause.type)
+  iri_value(function.body)
 }
 
 identifier_type(type) if named_identifier(type)
@@ -338,6 +410,13 @@ iri_value(value) if {
 
 iri_value(value) if {
   walk(value, [_, node])
+  access := node.memberAccessExpr
+  access.declName.baseName != "init"
+  reference_name(access.base) in identifier_types
+}
+
+iri_value(value) if {
+  walk(value, [_, node])
   iri_string(node.stringLiteralExpr.segments[0].stringSegment.content)
 }
 
@@ -351,10 +430,9 @@ iri_value(value) if {
   operation := node.infixOperatorExpr
   operation.operator.binaryOperatorExpr.operator == "+"
   some operand in [operation.leftOperand, operation.rightOperand]
-  operand.stringLiteralExpr
+  string_or_namespace(operand)
 }
 
-# `ns.appending("knows")`, `[ns, "knows"].joined()`, `String(format: "%@knows", ns)`
 iri_value(value) if {
   walk(value, [_, node])
   call := node.functionCallExpr
@@ -363,10 +441,25 @@ iri_value(value) if {
   literal.stringLiteralExpr
 }
 
+iri_value(value) if {
+  walk(value, [_, node])
+  node.functionCallExpr.calledExpression.memberAccessExpr.declName.baseName in {"appending", "appendingPathComponent", "appendingPathExtension"}
+}
+
+string_or_namespace(operand) if operand.stringLiteralExpr
+
+string_or_namespace(operand) if namespace_reference(operand)
+
+namespace_reference(reference) if namespace_name(reference.declReferenceExpr.baseName)
+
+namespace_reference(reference) if namespace_name(reference.memberAccessExpr.declName.baseName)
+
+namespace_name(name) if lower(name) in {"ns", "namespace", "iri", "uri", "url", "vocab", "vocabulary"}
+
+namespace_name(name) if regex.match(`[a-z0-9](Namespace|NS|IRI|Iri|URI|Uri|URL|Url)$`, name)
+
 # `ns.appending("knows")`, `[ns, "knows"].joined()`, `String(format: "%@knows",
-# ns)`: a string built by a call rather than by `+`. `URL.appending(path:)` and
-# `appendingPathComponent(_:)` take labels or name file paths and are not
-# string concatenation.
+# ns)`: a string built by a call rather than by `+`.
 string_building_call(call) if call.calledExpression.memberAccessExpr.declName.baseName == "joined"
 
 string_building_call(call) if {

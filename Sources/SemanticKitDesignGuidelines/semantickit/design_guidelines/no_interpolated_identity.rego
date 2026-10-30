@@ -97,15 +97,28 @@ boundary_coder(declaration) if {
   type_name(inherited.type) in coder_protocols
 }
 
-# `func encode(to encoder: Encoder)`
+# `func encode(to encoder: Encoder)`, `any Encoder`, `some Encoder`; not
+# `func encode(to name: String)`.
 boundary_coder(declaration) if {
   function := declaration.functionDecl
   function.name == "encode"
-  function.signature.parameterClause.parameters[0].firstName == "to"
+  [parameter] := function.signature.parameterClause.parameters
+  parameter.firstName == "to"
+  coder_parameter(parameter.type) == "Encoder"
 }
 
-# `init(from decoder: Decoder)`
-boundary_coder(declaration) if declaration.initializerDecl.signature.parameterClause.parameters[0].firstName == "from"
+# `init(from decoder: Decoder)`, `any Decoder`, `some Decoder`; not
+# `init(from name: String)`.
+boundary_coder(declaration) if {
+  [parameter] := declaration.initializerDecl.signature.parameterClause.parameters
+  parameter.firstName == "from"
+  coder_parameter(parameter.type) == "Decoder"
+}
+
+# `Encoder`, `Swift.Encoder`, `any Encoder`, `some Decoder`
+coder_parameter(type) := type_name(type)
+
+coder_parameter(type) := type_name(type.someOrAnyType.constraint)
 
 type_declaration(declaration) := declaration.structDecl
 
