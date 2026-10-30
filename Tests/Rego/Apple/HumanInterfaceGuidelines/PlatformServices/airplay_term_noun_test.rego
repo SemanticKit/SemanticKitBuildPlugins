@@ -35,72 +35,10 @@ test_does_not_warn_for_non_visible_modified_airplay_term_swift_syntax if {
 }
 
 # Parser output for `Text("AirPlaying to living room")` at 20:9.
-warns_for_modified_airplay_term_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 20, "column": 9}, "end": {"line": 20, "column": 42}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 20, "column": 9}, "end": {"line": 20, "column": 13}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 20, "column": 9}, "end": {"line": 20, "column": 13}}, "token": {"kind": "identifier", "text": "Text"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 20, "column": 13}, "end": {"line": 20, "column": 14}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 20, "column": 14}, "end": {"line": 20, "column": 41}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 20, "column": 14}, "end": {"line": 20, "column": 41}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 20, "column": 14}, "end": {"line": 20, "column": 41}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 20, "column": 14}, "end": {"line": 20, "column": 15}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 20, "column": 15}, "end": {"line": 20, "column": 40}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 20, "column": 15}, "end": {"line": 20, "column": 40}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 20, "column": 15}, "end": {"line": 20, "column": 40}}, "token": {"kind": "stringSegment", "text": "AirPlaying to living room"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 20, "column": 40}, "end": {"line": 20, "column": 41}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 20, "column": 41}, "end": {"line": 20, "column": 42}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 20, "column": 42}, "end": {"line": 20, "column": 42}}, "children": []},
-]}
+warns_for_modified_airplay_term_swift_syntax_node := {"declReferenceExprs": [{"baseName": "Text", "range": {"end": {"column": 13, "line": 20}, "start": {"column": 9, "line": 20}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 41, "line": 20}, "start": {"column": 14, "line": 20}}, "segments": [{"stringSegment": {"content": "AirPlaying to living room", "range": {"end": {"column": 40, "line": 20}, "start": {"column": 15, "line": 20}}}}]}}, "range": {"end": {"column": 41, "line": 20}, "start": {"column": 14, "line": 20}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Text", "range": {"end": {"column": 13, "line": 20}, "start": {"column": 9, "line": 20}}}}, "range": {"end": {"column": 42, "line": 20}, "start": {"column": 9, "line": 20}}}], "stringLiteralExprs": [{"range": {"end": {"column": 41, "line": 20}, "start": {"column": 14, "line": 20}}, "segments": [{"stringSegment": {"content": "AirPlaying to living room", "range": {"end": {"column": 40, "line": 20}, "start": {"column": 15, "line": 20}}}}]}]}
 
 # Parser output for `Text("Use AirPlay with speakers")` at 27:9.
-does_not_warn_for_noun_airplay_term_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 27, "column": 9}, "end": {"line": 27, "column": 42}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 27, "column": 9}, "end": {"line": 27, "column": 13}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 9}, "end": {"line": 27, "column": 13}}, "token": {"kind": "identifier", "text": "Text"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 13}, "end": {"line": 27, "column": 14}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 27, "column": 14}, "end": {"line": 27, "column": 41}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 27, "column": 14}, "end": {"line": 27, "column": 41}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 27, "column": 14}, "end": {"line": 27, "column": 41}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 14}, "end": {"line": 27, "column": 15}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 27, "column": 15}, "end": {"line": 27, "column": 40}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 27, "column": 15}, "end": {"line": 27, "column": 40}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 15}, "end": {"line": 27, "column": 40}}, "token": {"kind": "stringSegment", "text": "Use AirPlay with speakers"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 40}, "end": {"line": 27, "column": 41}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 41}, "end": {"line": 27, "column": 42}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 27, "column": 42}, "end": {"line": 27, "column": 42}}, "children": []},
-]}
+does_not_warn_for_noun_airplay_term_swift_syntax_node := {"declReferenceExprs": [{"baseName": "Text", "range": {"end": {"column": 13, "line": 27}, "start": {"column": 9, "line": 27}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 41, "line": 27}, "start": {"column": 14, "line": 27}}, "segments": [{"stringSegment": {"content": "Use AirPlay with speakers", "range": {"end": {"column": 40, "line": 27}, "start": {"column": 15, "line": 27}}}}]}}, "range": {"end": {"column": 41, "line": 27}, "start": {"column": 14, "line": 27}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Text", "range": {"end": {"column": 13, "line": 27}, "start": {"column": 9, "line": 27}}}}, "range": {"end": {"column": 42, "line": 27}, "start": {"column": 9, "line": 27}}}], "stringLiteralExprs": [{"range": {"end": {"column": 41, "line": 27}, "start": {"column": 14, "line": 27}}, "segments": [{"stringSegment": {"content": "Use AirPlay with speakers", "range": {"end": {"column": 40, "line": 27}, "start": {"column": 15, "line": 27}}}}]}]}
 
 # Parser output for `Logger(subsystem: "airplaying")` at 35:13.
-does_not_warn_for_non_visible_modified_airplay_term_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 35, "column": 13}, "end": {"line": 35, "column": 44}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 35, "column": 13}, "end": {"line": 35, "column": 19}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 35, "column": 13}, "end": {"line": 35, "column": 19}}, "token": {"kind": "identifier", "text": "Logger"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 35, "column": 19}, "end": {"line": 35, "column": 20}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 35, "column": 20}, "end": {"line": 35, "column": 43}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 35, "column": 20}, "end": {"line": 35, "column": 43}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 35, "column": 20}, "end": {"line": 35, "column": 29}}, "token": {"kind": "identifier", "text": "subsystem"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 35, "column": 29}, "end": {"line": 35, "column": 30}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 35, "column": 31}, "end": {"line": 35, "column": 43}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 35, "column": 31}, "end": {"line": 35, "column": 32}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 35, "column": 32}, "end": {"line": 35, "column": 42}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 35, "column": 32}, "end": {"line": 35, "column": 42}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 35, "column": 32}, "end": {"line": 35, "column": 42}}, "token": {"kind": "stringSegment", "text": "airplaying"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 35, "column": 42}, "end": {"line": 35, "column": 43}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 35, "column": 43}, "end": {"line": 35, "column": 44}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 35, "column": 44}, "end": {"line": 35, "column": 44}}, "children": []},
-]}
+does_not_warn_for_non_visible_modified_airplay_term_swift_syntax_node := {"declReferenceExprs": [{"baseName": "Logger", "range": {"end": {"column": 19, "line": 35}, "start": {"column": 13, "line": 35}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 43, "line": 35}, "start": {"column": 31, "line": 35}}, "segments": [{"stringSegment": {"content": "airplaying", "range": {"end": {"column": 42, "line": 35}, "start": {"column": 32, "line": 35}}}}]}}, "label": "subsystem", "range": {"end": {"column": 43, "line": 35}, "start": {"column": 20, "line": 35}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Logger", "range": {"end": {"column": 19, "line": 35}, "start": {"column": 13, "line": 35}}}}, "range": {"end": {"column": 44, "line": 35}, "start": {"column": 13, "line": 35}}}], "stringLiteralExprs": [{"range": {"end": {"column": 43, "line": 35}, "start": {"column": 31, "line": 35}}, "segments": [{"stringSegment": {"content": "airplaying", "range": {"end": {"column": 42, "line": 35}, "start": {"column": 32, "line": 35}}}}]}]}

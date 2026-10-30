@@ -22,23 +22,14 @@ game_center_term_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
-  callee := call.children[0]
+  some call in input.functionCallExprs
   # `name(...)` or the modifier form `base.name(...)`
-  reference := {callee, callee.children[count(callee.children) - 1]}[_]
-  reference.type == "DeclReferenceExprSyntax"
-  visible_string_call_names[reference.children[0].token.text]
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  labeled_argument := argument_list.children[_]
-  literal := labeled_argument.children[_]
-  literal.type == "StringLiteralExprSyntax"
-  segment_list := literal.children[_]
-  segment_list.type == "StringLiteralSegmentListSyntax"
-  segment := segment_list.children[_]
-  segment.type == "StringSegmentSyntax"
-  argument := segment.children[0].token.text
+  reference := called_reference(call)
+  visible_string_call_names[reference.baseName]
+  some labeled_argument in call.arguments
+  literal := labeled_argument.expression.stringLiteralExpr
+  segment := literal.segments[_].stringSegment
+  argument := segment.content
   lower_count := count(split(lower(argument), "game center")) - 1
   correct_count := count(split(argument, "Game Center")) - 1
   lower_count > correct_count
@@ -51,22 +42,18 @@ game_center_term_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
-  callee := call.children[0]
+  some call in input.functionCallExprs
   # `name(...)` or the modifier form `base.name(...)`
-  reference := {callee, callee.children[count(callee.children) - 1]}[_]
-  reference.type == "DeclReferenceExprSyntax"
-  visible_string_call_names[reference.children[0].token.text]
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  labeled_argument := argument_list.children[_]
-  literal := labeled_argument.children[_]
-  literal.type == "StringLiteralExprSyntax"
-  segment_list := literal.children[_]
-  segment_list.type == "StringLiteralSegmentListSyntax"
-  segment := segment_list.children[_]
-  segment.type == "StringSegmentSyntax"
-  argument := segment.children[0].token.text
+  reference := called_reference(call)
+  visible_string_call_names[reference.baseName]
+  some labeled_argument in call.arguments
+  literal := labeled_argument.expression.stringLiteralExpr
+  segment := literal.segments[_].stringSegment
+  argument := segment.content
   contains(lower(argument), "gamecenter")
 }
+
+# The name a call calls: `Text` in `Text("…")`, `help` in `.help("…")`.
+called_reference(call) := call.calledExpression.declReferenceExpr
+
+called_reference(call) := call.calledExpression.memberAccessExpr.declName

@@ -24,23 +24,15 @@ sign_in_with_apple_button_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
+  some call in input.functionCallExprs
 
-  callee := call.children[0]
-  callee.type == "DeclReferenceExprSyntax"
-  callee_name := callee.children[0].token.text
+  callee := call.calledExpression.declReferenceExpr
+  callee_name := callee.baseName
   custom_sign_in_surface_names[callee_name]
   not system_sign_in_with_apple_button_names[callee_name]
 
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  argument := argument_list.children[_]
-  literal := argument.children[_]
-  literal.type == "StringLiteralExprSyntax"
-  segment_list := literal.children[_]
-  segment_list.type == "StringLiteralSegmentListSyntax"
-  segment := segment_list.children[_]
-  segment.type == "StringSegmentSyntax"
-  sign_in_with_apple_titles[segment.children[0].token.text]
+  some argument in call.arguments
+  literal := argument.expression.stringLiteralExpr
+  segment := literal.segments[_].stringSegment
+  sign_in_with_apple_titles[segment.content]
 }

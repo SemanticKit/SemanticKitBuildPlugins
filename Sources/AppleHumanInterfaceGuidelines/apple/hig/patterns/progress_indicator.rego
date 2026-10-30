@@ -10,24 +10,16 @@ decision := {
 }
 
 warnings := [warning |
-  call := input
-  call.type == "FunctionCallExprSyntax"
-  callee := call.children[0]
-  callee.type == "DeclReferenceExprSyntax"
-  callee.children[0].token.text == "ProgressView"
+  some call in input.functionCallExprs
+  callee := call.calledExpression.declReferenceExpr
+  callee.baseName == "ProgressView"
   count([argument |
-    argument_list := call.children[_]
-    argument_list.type == "LabeledExprListSyntax"
-    argument := argument_list.children[_]
-    expression := argument.children[_]
-    {"IntegerLiteralExprSyntax", "FloatLiteralExprSyntax"}[expression.type]
+    some argument in call.arguments
+    expression := number_literal(argument.expression)
   ]) == 0
   count([argument |
-    argument_list := call.children[_]
-    argument_list.type == "LabeledExprListSyntax"
-    argument := argument_list.children[_]
-    literal := argument.children[_]
-    literal.type == "StringLiteralExprSyntax"
+    some argument in call.arguments
+    literal := argument.expression.stringLiteralExpr
   ]) == 0
 
   warning := {
@@ -38,3 +30,8 @@ warnings := [warning |
     "severity": "warning",
   }
 ]
+
+# A number written as a literal: `44`, `0.5`.
+number_literal(expression) := expression.integerLiteralExpr
+
+number_literal(expression) := expression.floatLiteralExpr

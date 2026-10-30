@@ -34,21 +34,13 @@ scene_window_terminology_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
-  callee := call.children[0]
-  callee.type == "DeclReferenceExprSyntax"
-  visible_scene_copy_call_names[callee.children[0].token.text]
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  labeled_argument := argument_list.children[_]
-  literal := labeled_argument.children[_]
-  literal.type == "StringLiteralExprSyntax"
-  segment_list := literal.children[_]
-  segment_list.type == "StringLiteralSegmentListSyntax"
-  segment := segment_list.children[_]
-  segment.type == "StringSegmentSyntax"
-  argument := lower(segment.children[0].token.text)
+  some call in input.functionCallExprs
+  callee := call.calledExpression.declReferenceExpr
+  visible_scene_copy_call_names[callee.baseName]
+  some labeled_argument in call.arguments
+  literal := labeled_argument.expression.stringLiteralExpr
+  segment := literal.segments[_].stringSegment
+  argument := lower(segment.content)
   term := scene_terms[_]
   has_term_with_boundaries(argument, term)
 }
@@ -60,23 +52,13 @@ scene_window_terminology_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
-  callee := call.children[0]
-  callee.type == "MemberAccessExprSyntax"
-  member := callee.children[count(callee.children) - 1]
-  member.type == "DeclReferenceExprSyntax"
-  visible_scene_copy_call_names[member.children[0].token.text]
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  labeled_argument := argument_list.children[_]
-  literal := labeled_argument.children[_]
-  literal.type == "StringLiteralExprSyntax"
-  segment_list := literal.children[_]
-  segment_list.type == "StringLiteralSegmentListSyntax"
-  segment := segment_list.children[_]
-  segment.type == "StringSegmentSyntax"
-  argument := lower(segment.children[0].token.text)
+  some call in input.functionCallExprs
+  member := call.calledExpression.memberAccessExpr.declName
+  visible_scene_copy_call_names[member.baseName]
+  some labeled_argument in call.arguments
+  literal := labeled_argument.expression.stringLiteralExpr
+  segment := literal.segments[_].stringSegment
+  argument := lower(segment.content)
   term := scene_terms[_]
   has_term_with_boundaries(argument, term)
 }
@@ -88,21 +70,13 @@ scene_window_terminology_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
-  callee := call.children[0]
-  callee.type == "DeclReferenceExprSyntax"
-  scene_action_label_call_names[callee.children[0].token.text]
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  labeled_argument := argument_list.children[_]
-  literal := labeled_argument.children[_]
-  literal.type == "StringLiteralExprSyntax"
-  segment_list := literal.children[_]
-  segment_list.type == "StringLiteralSegmentListSyntax"
-  segment := segment_list.children[_]
-  segment.type == "StringSegmentSyntax"
-  argument := lower(segment.children[0].token.text)
+  some call in input.functionCallExprs
+  callee := call.calledExpression.declReferenceExpr
+  scene_action_label_call_names[callee.baseName]
+  some labeled_argument in call.arguments
+  literal := labeled_argument.expression.stringLiteralExpr
+  segment := literal.segments[_].stringSegment
+  argument := lower(segment.content)
   term := scene_terms[_]
   has_term_with_boundaries(argument, term)
 }
@@ -114,23 +88,13 @@ scene_window_terminology_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
-  callee := call.children[0]
-  callee.type == "MemberAccessExprSyntax"
-  member := callee.children[count(callee.children) - 1]
-  member.type == "DeclReferenceExprSyntax"
-  scene_action_label_call_names[member.children[0].token.text]
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  labeled_argument := argument_list.children[_]
-  literal := labeled_argument.children[_]
-  literal.type == "StringLiteralExprSyntax"
-  segment_list := literal.children[_]
-  segment_list.type == "StringLiteralSegmentListSyntax"
-  segment := segment_list.children[_]
-  segment.type == "StringSegmentSyntax"
-  argument := lower(segment.children[0].token.text)
+  some call in input.functionCallExprs
+  member := call.calledExpression.memberAccessExpr.declName
+  scene_action_label_call_names[member.baseName]
+  some labeled_argument in call.arguments
+  literal := labeled_argument.expression.stringLiteralExpr
+  segment := literal.segments[_].stringSegment
+  argument := lower(segment.content)
   term := scene_terms[_]
   has_term_with_boundaries(argument, term)
 }

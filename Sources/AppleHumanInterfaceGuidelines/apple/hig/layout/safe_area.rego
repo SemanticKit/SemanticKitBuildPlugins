@@ -10,14 +10,11 @@ decision := {
 }
 
 warnings := [warning |
-  call := input
-  call.type == "FunctionCallExprSyntax"
+  some call in input.functionCallExprs
 
-  callee := call.children[0]
   # `name(...)` or the modifier form `base.name(...)`
-  reference := {callee, callee.children[count(callee.children) - 1]}[_]
-  reference.type == "DeclReferenceExprSyntax"
-  callee_name := reference.children[0].token.text
+  reference := called_reference(call)
+  callee_name := reference.baseName
   {"ignoresSafeArea", "edgesIgnoringSafeArea"}[callee_name]
 
   warning := {
@@ -28,3 +25,8 @@ warnings := [warning |
     "severity": "warning",
   }
 ]
+
+# The name a call calls: `Text` in `Text("…")`, `help` in `.help("…")`.
+called_reference(call) := call.calledExpression.declReferenceExpr
+
+called_reference(call) := call.calledExpression.memberAccessExpr.declName

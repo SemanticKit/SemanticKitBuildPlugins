@@ -21,18 +21,16 @@ dictionary_boundary_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
-  texts := token_texts(call)
+  some call in input.functionCallExprs
+  texts := token_texts(object.remove(call, {"context"}))
   not texts["decode"]
   dictionary_plumbing(texts)
 }
 
-# The text of every token in the call, read in one walk of its subtree.
+# Every name, label, operator and string in the call, read in one walk of
+# its properties.
 token_texts(call) := {text |
-  walk(call, [_, node])
-  is_object(node)
-  text := node.token.text
+  walk(call, [_, text])
   is_string(text)
 }
 

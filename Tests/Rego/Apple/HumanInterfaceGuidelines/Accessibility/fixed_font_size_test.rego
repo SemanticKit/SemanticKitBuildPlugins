@@ -35,122 +35,13 @@ test_does_not_warn_for_custom_font_size if {
 }
 
 # Parser output for `Font.system(size: 17)` at 12:19.
-fixed_system_font_size_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 12, "column": 19}, "end": {"line": 12, "column": 40}}, "children": [
-  {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 12, "column": 19}, "end": {"line": 12, "column": 30}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 12, "column": 19}, "end": {"line": 12, "column": 23}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 19}, "end": {"line": 12, "column": 23}}, "token": {"kind": "identifier", "text": "Font"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 23}, "end": {"line": 12, "column": 24}}, "token": {"kind": "period", "text": "."}, "children": []},
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 12, "column": 24}, "end": {"line": 12, "column": 30}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 24}, "end": {"line": 12, "column": 30}}, "token": {"kind": "identifier", "text": "system"}, "children": []},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 30}, "end": {"line": 12, "column": 31}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 12, "column": 31}, "end": {"line": 12, "column": 39}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 12, "column": 31}, "end": {"line": 12, "column": 39}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 31}, "end": {"line": 12, "column": 35}}, "token": {"kind": "identifier", "text": "size"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 35}, "end": {"line": 12, "column": 36}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "IntegerLiteralExprSyntax", "range": {"start": {"line": 12, "column": 37}, "end": {"line": 12, "column": 39}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 37}, "end": {"line": 12, "column": 39}}, "token": {"kind": "integerLiteral", "text": "17"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 39}, "end": {"line": 12, "column": 40}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 12, "column": 40}, "end": {"line": 12, "column": 40}}, "children": []},
-]}
+fixed_system_font_size_node := {"declReferenceExprs": [{"baseName": "Font", "range": {"end": {"column": 23, "line": 12}, "start": {"column": 19, "line": 12}}}, {"baseName": "system", "range": {"end": {"column": 30, "line": 12}, "start": {"column": 24, "line": 12}}}], "functionCallExprs": [{"arguments": [{"expression": {"integerLiteralExpr": {"literal": "17", "range": {"end": {"column": 39, "line": 12}, "start": {"column": 37, "line": 12}}}}, "label": "size", "range": {"end": {"column": 39, "line": 12}, "start": {"column": 31, "line": 12}}}], "calledExpression": {"memberAccessExpr": {"base": {"declReferenceExpr": {"baseName": "Font", "range": {"end": {"column": 23, "line": 12}, "start": {"column": 19, "line": 12}}}}, "declName": {"baseName": "system", "range": {"end": {"column": 30, "line": 12}, "start": {"column": 24, "line": 12}}}, "range": {"end": {"column": 30, "line": 12}, "start": {"column": 19, "line": 12}}}}, "range": {"end": {"column": 40, "line": 12}, "start": {"column": 19, "line": 12}}}], "memberAccessExprs": [{"base": {"declReferenceExpr": {"baseName": "Font", "range": {"end": {"column": 23, "line": 12}, "start": {"column": 19, "line": 12}}}}, "declName": {"baseName": "system", "range": {"end": {"column": 30, "line": 12}, "start": {"column": 24, "line": 12}}}, "range": {"end": {"column": 30, "line": 12}, "start": {"column": 19, "line": 12}}}]}
 
 # Parser output for `.system(size: 13.5, weight: .semibold)` at 14:19.
-fixed_system_font_size_with_weight_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 14, "column": 19}, "end": {"line": 14, "column": 57}}, "children": [
-  {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 14, "column": 19}, "end": {"line": 14, "column": 26}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 19}, "end": {"line": 14, "column": 20}}, "token": {"kind": "period", "text": "."}, "children": []},
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 14, "column": 20}, "end": {"line": 14, "column": 26}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 20}, "end": {"line": 14, "column": 26}}, "token": {"kind": "identifier", "text": "system"}, "children": []},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 26}, "end": {"line": 14, "column": 27}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 14, "column": 27}, "end": {"line": 14, "column": 56}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 14, "column": 27}, "end": {"line": 14, "column": 38}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 27}, "end": {"line": 14, "column": 31}}, "token": {"kind": "identifier", "text": "size"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 31}, "end": {"line": 14, "column": 32}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "FloatLiteralExprSyntax", "range": {"start": {"line": 14, "column": 33}, "end": {"line": 14, "column": 37}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 33}, "end": {"line": 14, "column": 37}}, "token": {"kind": "floatLiteral", "text": "13.5"}, "children": []},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 37}, "end": {"line": 14, "column": 38}}, "token": {"kind": "comma", "text": ","}, "children": []},
-    ]},
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 14, "column": 39}, "end": {"line": 14, "column": 56}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 39}, "end": {"line": 14, "column": 45}}, "token": {"kind": "identifier", "text": "weight"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 45}, "end": {"line": 14, "column": 46}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 14, "column": 47}, "end": {"line": 14, "column": 56}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 47}, "end": {"line": 14, "column": 48}}, "token": {"kind": "period", "text": "."}, "children": []},
-        {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 14, "column": 48}, "end": {"line": 14, "column": 56}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 48}, "end": {"line": 14, "column": 56}}, "token": {"kind": "identifier", "text": "semibold"}, "children": []},
-        ]},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 56}, "end": {"line": 14, "column": 57}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 14, "column": 57}, "end": {"line": 14, "column": 57}}, "children": []},
-]}
+fixed_system_font_size_with_weight_node := {"declReferenceExprs": [{"baseName": "system", "range": {"end": {"column": 26, "line": 14}, "start": {"column": 20, "line": 14}}}, {"baseName": "semibold", "range": {"end": {"column": 56, "line": 14}, "start": {"column": 48, "line": 14}}}], "functionCallExprs": [{"arguments": [{"expression": {"floatLiteralExpr": {"literal": "13.5", "range": {"end": {"column": 37, "line": 14}, "start": {"column": 33, "line": 14}}}}, "label": "size", "range": {"end": {"column": 38, "line": 14}, "start": {"column": 27, "line": 14}}}, {"expression": {"memberAccessExpr": {"declName": {"baseName": "semibold", "range": {"end": {"column": 56, "line": 14}, "start": {"column": 48, "line": 14}}}, "range": {"end": {"column": 56, "line": 14}, "start": {"column": 47, "line": 14}}}}, "label": "weight", "range": {"end": {"column": 56, "line": 14}, "start": {"column": 39, "line": 14}}}], "calledExpression": {"memberAccessExpr": {"declName": {"baseName": "system", "range": {"end": {"column": 26, "line": 14}, "start": {"column": 20, "line": 14}}}, "range": {"end": {"column": 26, "line": 14}, "start": {"column": 19, "line": 14}}}}, "range": {"end": {"column": 57, "line": 14}, "start": {"column": 19, "line": 14}}}], "memberAccessExprs": [{"declName": {"baseName": "system", "range": {"end": {"column": 26, "line": 14}, "start": {"column": 20, "line": 14}}}, "range": {"end": {"column": 26, "line": 14}, "start": {"column": 19, "line": 14}}}, {"declName": {"baseName": "semibold", "range": {"end": {"column": 56, "line": 14}, "start": {"column": 48, "line": 14}}}, "range": {"end": {"column": 56, "line": 14}, "start": {"column": 47, "line": 14}}}]}
 
 # Parser output for `Font.system(.body)` at 16:19.
-dynamic_text_style_font_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 16, "column": 19}, "end": {"line": 16, "column": 37}}, "children": [
-  {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 16, "column": 19}, "end": {"line": 16, "column": 30}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 16, "column": 19}, "end": {"line": 16, "column": 23}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 19}, "end": {"line": 16, "column": 23}}, "token": {"kind": "identifier", "text": "Font"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 23}, "end": {"line": 16, "column": 24}}, "token": {"kind": "period", "text": "."}, "children": []},
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 16, "column": 24}, "end": {"line": 16, "column": 30}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 24}, "end": {"line": 16, "column": 30}}, "token": {"kind": "identifier", "text": "system"}, "children": []},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 30}, "end": {"line": 16, "column": 31}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 16, "column": 31}, "end": {"line": 16, "column": 36}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 16, "column": 31}, "end": {"line": 16, "column": 36}}, "children": [
-      {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 16, "column": 31}, "end": {"line": 16, "column": 36}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 31}, "end": {"line": 16, "column": 32}}, "token": {"kind": "period", "text": "."}, "children": []},
-        {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 16, "column": 32}, "end": {"line": 16, "column": 36}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 32}, "end": {"line": 16, "column": 36}}, "token": {"kind": "identifier", "text": "body"}, "children": []},
-        ]},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 16, "column": 36}, "end": {"line": 16, "column": 37}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 16, "column": 37}, "end": {"line": 16, "column": 37}}, "children": []},
-]}
+dynamic_text_style_font_node := {"declReferenceExprs": [{"baseName": "Font", "range": {"end": {"column": 23, "line": 16}, "start": {"column": 19, "line": 16}}}, {"baseName": "system", "range": {"end": {"column": 30, "line": 16}, "start": {"column": 24, "line": 16}}}, {"baseName": "body", "range": {"end": {"column": 36, "line": 16}, "start": {"column": 32, "line": 16}}}], "functionCallExprs": [{"arguments": [{"expression": {"memberAccessExpr": {"declName": {"baseName": "body", "range": {"end": {"column": 36, "line": 16}, "start": {"column": 32, "line": 16}}}, "range": {"end": {"column": 36, "line": 16}, "start": {"column": 31, "line": 16}}}}, "range": {"end": {"column": 36, "line": 16}, "start": {"column": 31, "line": 16}}}], "calledExpression": {"memberAccessExpr": {"base": {"declReferenceExpr": {"baseName": "Font", "range": {"end": {"column": 23, "line": 16}, "start": {"column": 19, "line": 16}}}}, "declName": {"baseName": "system", "range": {"end": {"column": 30, "line": 16}, "start": {"column": 24, "line": 16}}}, "range": {"end": {"column": 30, "line": 16}, "start": {"column": 19, "line": 16}}}}, "range": {"end": {"column": 37, "line": 16}, "start": {"column": 19, "line": 16}}}], "memberAccessExprs": [{"base": {"declReferenceExpr": {"baseName": "Font", "range": {"end": {"column": 23, "line": 16}, "start": {"column": 19, "line": 16}}}}, "declName": {"baseName": "system", "range": {"end": {"column": 30, "line": 16}, "start": {"column": 24, "line": 16}}}, "range": {"end": {"column": 30, "line": 16}, "start": {"column": 19, "line": 16}}}, {"declName": {"baseName": "body", "range": {"end": {"column": 36, "line": 16}, "start": {"column": 32, "line": 16}}}, "range": {"end": {"column": 36, "line": 16}, "start": {"column": 31, "line": 16}}}]}
 
 # Parser output for `Font.custom("Avenir", size: 17)` at 18:19.
-custom_font_size_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 18, "column": 19}, "end": {"line": 18, "column": 50}}, "children": [
-  {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 18, "column": 19}, "end": {"line": 18, "column": 30}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 18, "column": 19}, "end": {"line": 18, "column": 23}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 19}, "end": {"line": 18, "column": 23}}, "token": {"kind": "identifier", "text": "Font"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 23}, "end": {"line": 18, "column": 24}}, "token": {"kind": "period", "text": "."}, "children": []},
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 18, "column": 24}, "end": {"line": 18, "column": 30}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 24}, "end": {"line": 18, "column": 30}}, "token": {"kind": "identifier", "text": "custom"}, "children": []},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 30}, "end": {"line": 18, "column": 31}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 18, "column": 31}, "end": {"line": 18, "column": 49}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 18, "column": 31}, "end": {"line": 18, "column": 40}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 18, "column": 31}, "end": {"line": 18, "column": 39}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 31}, "end": {"line": 18, "column": 32}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 18, "column": 32}, "end": {"line": 18, "column": 38}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 18, "column": 32}, "end": {"line": 18, "column": 38}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 32}, "end": {"line": 18, "column": 38}}, "token": {"kind": "stringSegment", "text": "Avenir"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 38}, "end": {"line": 18, "column": 39}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 39}, "end": {"line": 18, "column": 40}}, "token": {"kind": "comma", "text": ","}, "children": []},
-    ]},
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 18, "column": 41}, "end": {"line": 18, "column": 49}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 41}, "end": {"line": 18, "column": 45}}, "token": {"kind": "identifier", "text": "size"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 45}, "end": {"line": 18, "column": 46}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "IntegerLiteralExprSyntax", "range": {"start": {"line": 18, "column": 47}, "end": {"line": 18, "column": 49}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 47}, "end": {"line": 18, "column": 49}}, "token": {"kind": "integerLiteral", "text": "17"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 49}, "end": {"line": 18, "column": 50}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 18, "column": 50}, "end": {"line": 18, "column": 50}}, "children": []},
-]}
+custom_font_size_node := {"declReferenceExprs": [{"baseName": "Font", "range": {"end": {"column": 23, "line": 18}, "start": {"column": 19, "line": 18}}}, {"baseName": "custom", "range": {"end": {"column": 30, "line": 18}, "start": {"column": 24, "line": 18}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 39, "line": 18}, "start": {"column": 31, "line": 18}}, "segments": [{"stringSegment": {"content": "Avenir", "range": {"end": {"column": 38, "line": 18}, "start": {"column": 32, "line": 18}}}}]}}, "range": {"end": {"column": 40, "line": 18}, "start": {"column": 31, "line": 18}}}, {"expression": {"integerLiteralExpr": {"literal": "17", "range": {"end": {"column": 49, "line": 18}, "start": {"column": 47, "line": 18}}}}, "label": "size", "range": {"end": {"column": 49, "line": 18}, "start": {"column": 41, "line": 18}}}], "calledExpression": {"memberAccessExpr": {"base": {"declReferenceExpr": {"baseName": "Font", "range": {"end": {"column": 23, "line": 18}, "start": {"column": 19, "line": 18}}}}, "declName": {"baseName": "custom", "range": {"end": {"column": 30, "line": 18}, "start": {"column": 24, "line": 18}}}, "range": {"end": {"column": 30, "line": 18}, "start": {"column": 19, "line": 18}}}}, "range": {"end": {"column": 50, "line": 18}, "start": {"column": 19, "line": 18}}}], "memberAccessExprs": [{"base": {"declReferenceExpr": {"baseName": "Font", "range": {"end": {"column": 23, "line": 18}, "start": {"column": 19, "line": 18}}}}, "declName": {"baseName": "custom", "range": {"end": {"column": 30, "line": 18}, "start": {"column": 24, "line": 18}}}, "range": {"end": {"column": 30, "line": 18}, "start": {"column": 19, "line": 18}}}], "stringLiteralExprs": [{"range": {"end": {"column": 39, "line": 18}, "start": {"column": 31, "line": 18}}, "segments": [{"stringSegment": {"content": "Avenir", "range": {"end": {"column": 38, "line": 18}, "start": {"column": 32, "line": 18}}}}]}]}

@@ -20,25 +20,23 @@ small_hit_region_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
+  some call in input.functionCallExprs
 
-  callee := call.children[0]
-  callee.type == "MemberAccessExprSyntax"
-  member := callee.children[count(callee.children) - 1]
-  member.type == "DeclReferenceExprSyntax"
-  member.children[0].token.text == "frame"
+  member := call.calledExpression.memberAccessExpr.declName
+  member.baseName == "frame"
 
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  width_argument := argument_list.children[_]
-  width_argument.children[0].token.text == "width"
-  height_argument := argument_list.children[_]
-  height_argument.children[0].token.text == "height"
+  some width_argument in call.arguments
+  width_argument.label == "width"
+  some height_argument in call.arguments
+  height_argument.label == "height"
 
-  numeric_argument := argument_list.children[_]
-  literal := numeric_argument.children[_]
-  {"IntegerLiteralExprSyntax", "FloatLiteralExprSyntax"}[literal.type]
-  dimension := to_number(literal.children[0].token.text)
+  some numeric_argument in call.arguments
+  literal := number_literal(numeric_argument.expression)
+  dimension := to_number(literal.literal)
   dimension < 44
 }
+
+# A number written as a literal: `44`, `0.5`.
+number_literal(expression) := expression.integerLiteralExpr
+
+number_literal(expression) := expression.floatLiteralExpr

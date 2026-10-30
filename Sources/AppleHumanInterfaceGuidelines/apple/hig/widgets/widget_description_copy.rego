@@ -22,21 +22,13 @@ widget_description_lead_in_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
-  callee := call.children[0]
-  callee.type == "DeclReferenceExprSyntax"
-  callee.children[0].token.text == "description"
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  labeled_argument := argument_list.children[_]
-  literal := labeled_argument.children[_]
-  literal.type == "StringLiteralExprSyntax"
-  segment_list := literal.children[_]
-  segment_list.type == "StringLiteralSegmentListSyntax"
-  segment := segment_list.children[_]
-  segment.type == "StringSegmentSyntax"
-  string := segment.children[0].token.text
+  some call in input.functionCallExprs
+  callee := call.calledExpression.declReferenceExpr
+  callee.baseName == "description"
+  some labeled_argument in call.arguments
+  literal := labeled_argument.expression.stringLiteralExpr
+  segment := literal.segments[_].stringSegment
+  string := segment.content
   description := lower(string)
   lead_in := discouraged_widget_description_lead_ins[_]
   startswith(description, lead_in)
@@ -49,50 +41,13 @@ widget_description_lead_in_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
-  callee := call.children[0]
-  callee.type == "MemberAccessExprSyntax"
-  member := callee.children[_]
-  member.token.text == "description"
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  labeled_argument := argument_list.children[_]
-  literal := labeled_argument.children[_]
-  literal.type == "StringLiteralExprSyntax"
-  segment_list := literal.children[_]
-  segment_list.type == "StringLiteralSegmentListSyntax"
-  segment := segment_list.children[_]
-  segment.type == "StringSegmentSyntax"
-  string := segment.children[0].token.text
-  description := lower(string)
-  lead_in := discouraged_widget_description_lead_ins[_]
-  startswith(description, lead_in)
-}
-
-widget_description_lead_in_warning contains {
-  "rule_id": "apple.hig.widgets.review_widget_description_lead_in",
-  "message": "Review widget description lead-in; start with an action verb instead of boilerplate widget copy.",
-  "line": call.range.start.line,
-  "column": call.range.start.column,
-  "severity": "warning",
-} if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
-  callee := call.children[0]
-  callee.type == "MemberAccessExprSyntax"
-  member := callee.children[_]
-  member.children[0].token.text == "description"
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  labeled_argument := argument_list.children[_]
-  literal := labeled_argument.children[_]
-  literal.type == "StringLiteralExprSyntax"
-  segment_list := literal.children[_]
-  segment_list.type == "StringLiteralSegmentListSyntax"
-  segment := segment_list.children[_]
-  segment.type == "StringSegmentSyntax"
-  string := segment.children[0].token.text
+  some call in input.functionCallExprs
+  member := call.calledExpression.memberAccessExpr.declName
+  member.baseName == "description"
+  some labeled_argument in call.arguments
+  literal := labeled_argument.expression.stringLiteralExpr
+  segment := literal.segments[_].stringSegment
+  string := segment.content
   description := lower(string)
   lead_in := discouraged_widget_description_lead_ins[_]
   startswith(description, lead_in)

@@ -18,47 +18,7 @@ test_does_not_warn_for_specific_route_unavailable_text_swift_syntax if {
 }
 
 # Parser output for `Text("Error")` at 14:13.
-warns_for_generic_error_text_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 14, "column": 13}, "end": {"line": 14, "column": 26}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 14, "column": 13}, "end": {"line": 14, "column": 17}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 13}, "end": {"line": 14, "column": 17}}, "token": {"kind": "identifier", "text": "Text"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 17}, "end": {"line": 14, "column": 18}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 14, "column": 18}, "end": {"line": 14, "column": 25}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 14, "column": 18}, "end": {"line": 14, "column": 25}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 14, "column": 18}, "end": {"line": 14, "column": 25}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 18}, "end": {"line": 14, "column": 19}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 14, "column": 19}, "end": {"line": 14, "column": 24}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 14, "column": 19}, "end": {"line": 14, "column": 24}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 19}, "end": {"line": 14, "column": 24}}, "token": {"kind": "stringSegment", "text": "Error"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 24}, "end": {"line": 14, "column": 25}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 25}, "end": {"line": 14, "column": 26}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 14, "column": 26}, "end": {"line": 14, "column": 26}}, "children": []},
-]}
+warns_for_generic_error_text_swift_syntax_node := {"declReferenceExprs": [{"baseName": "Text", "range": {"end": {"column": 17, "line": 14}, "start": {"column": 13, "line": 14}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 25, "line": 14}, "start": {"column": 18, "line": 14}}, "segments": [{"stringSegment": {"content": "Error", "range": {"end": {"column": 24, "line": 14}, "start": {"column": 19, "line": 14}}}}]}}, "range": {"end": {"column": 25, "line": 14}, "start": {"column": 18, "line": 14}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Text", "range": {"end": {"column": 17, "line": 14}, "start": {"column": 13, "line": 14}}}}, "range": {"end": {"column": 26, "line": 14}, "start": {"column": 13, "line": 14}}}], "stringLiteralExprs": [{"range": {"end": {"column": 25, "line": 14}, "start": {"column": 18, "line": 14}}, "segments": [{"stringSegment": {"content": "Error", "range": {"end": {"column": 24, "line": 14}, "start": {"column": 19, "line": 14}}}}]}]}
 
 # Parser output for `Text("Route unavailable")` at 14:13.
-does_not_warn_for_specific_route_unavailable_text_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 14, "column": 13}, "end": {"line": 14, "column": 38}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 14, "column": 13}, "end": {"line": 14, "column": 17}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 13}, "end": {"line": 14, "column": 17}}, "token": {"kind": "identifier", "text": "Text"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 17}, "end": {"line": 14, "column": 18}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 14, "column": 18}, "end": {"line": 14, "column": 37}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 14, "column": 18}, "end": {"line": 14, "column": 37}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 14, "column": 18}, "end": {"line": 14, "column": 37}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 18}, "end": {"line": 14, "column": 19}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 14, "column": 19}, "end": {"line": 14, "column": 36}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 14, "column": 19}, "end": {"line": 14, "column": 36}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 19}, "end": {"line": 14, "column": 36}}, "token": {"kind": "stringSegment", "text": "Route unavailable"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 36}, "end": {"line": 14, "column": 37}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 14, "column": 37}, "end": {"line": 14, "column": 38}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 14, "column": 38}, "end": {"line": 14, "column": 38}}, "children": []},
-]}
+does_not_warn_for_specific_route_unavailable_text_swift_syntax_node := {"declReferenceExprs": [{"baseName": "Text", "range": {"end": {"column": 17, "line": 14}, "start": {"column": 13, "line": 14}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 37, "line": 14}, "start": {"column": 18, "line": 14}}, "segments": [{"stringSegment": {"content": "Route unavailable", "range": {"end": {"column": 36, "line": 14}, "start": {"column": 19, "line": 14}}}}]}}, "range": {"end": {"column": 37, "line": 14}, "start": {"column": 18, "line": 14}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Text", "range": {"end": {"column": 17, "line": 14}, "start": {"column": 13, "line": 14}}}}, "range": {"end": {"column": 38, "line": 14}, "start": {"column": 13, "line": 14}}}], "stringLiteralExprs": [{"range": {"end": {"column": 37, "line": 14}, "start": {"column": 18, "line": 14}}, "segments": [{"stringSegment": {"content": "Route unavailable", "range": {"end": {"column": 36, "line": 14}, "start": {"column": 19, "line": 14}}}}]}]}

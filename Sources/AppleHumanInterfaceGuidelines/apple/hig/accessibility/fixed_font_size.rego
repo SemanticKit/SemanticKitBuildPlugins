@@ -20,20 +20,18 @@ fixed_font_size_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
+  some call in input.functionCallExprs
 
-  callee := call.children[0]
-  callee.type == "MemberAccessExprSyntax"
-  member := callee.children[count(callee.children) - 1]
-  member.type == "DeclReferenceExprSyntax"
-  member.children[0].token.text == "system"
+  member := call.calledExpression.memberAccessExpr.declName
+  member.baseName == "system"
 
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  argument := argument_list.children[_]
-  argument.children[0].token.text == "size"
+  some argument in call.arguments
+  argument.label == "size"
 
-  literal := argument.children[_]
-  {"IntegerLiteralExprSyntax", "FloatLiteralExprSyntax"}[literal.type]
+  literal := number_literal(argument.expression)
 }
+
+# A number written as a literal: `44`, `0.5`.
+number_literal(expression) := expression.integerLiteralExpr
+
+number_literal(expression) := expression.floatLiteralExpr

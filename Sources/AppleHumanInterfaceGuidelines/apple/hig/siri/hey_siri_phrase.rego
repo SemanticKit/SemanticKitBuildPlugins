@@ -20,22 +20,14 @@ hey_siri_phrase_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
-  callee := call.children[0]
-  callee.type == "DeclReferenceExprSyntax"
-  callee.children[0].token.text == "AppShortcut"
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  labeled_argument := argument_list.children[_]
-  labeled_argument.children[0].token.text == "phrases"
-  literal := labeled_argument.children[_]
-  literal.type == "StringLiteralExprSyntax"
-  segment_list := literal.children[_]
-  segment_list.type == "StringLiteralSegmentListSyntax"
-  segment := segment_list.children[_]
-  segment.type == "StringSegmentSyntax"
-  phrase := segment.children[0].token.text
+  some call in input.functionCallExprs
+  callee := call.calledExpression.declReferenceExpr
+  callee.baseName == "AppShortcut"
+  some labeled_argument in call.arguments
+  labeled_argument.label == "phrases"
+  literal := labeled_argument.expression.stringLiteralExpr
+  segment := literal.segments[_].stringSegment
+  phrase := segment.content
   contains(lower(phrase), "hey siri")
 }
 
@@ -46,26 +38,14 @@ hey_siri_phrase_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
-  callee := call.children[0]
-  callee.type == "DeclReferenceExprSyntax"
-  callee.children[0].token.text == "AppShortcut"
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  labeled_argument := argument_list.children[_]
-  labeled_argument.children[0].token.text == "phrases"
-  array := labeled_argument.children[_]
-  array.type == "ArrayExprSyntax"
-  element_list := array.children[_]
-  element_list.type == "ArrayElementListSyntax"
-  element := element_list.children[_]
-  literal := element.children[_]
-  literal.type == "StringLiteralExprSyntax"
-  segment_list := literal.children[_]
-  segment_list.type == "StringLiteralSegmentListSyntax"
-  segment := segment_list.children[_]
-  segment.type == "StringSegmentSyntax"
-  phrase := segment.children[0].token.text
+  some call in input.functionCallExprs
+  callee := call.calledExpression.declReferenceExpr
+  callee.baseName == "AppShortcut"
+  some labeled_argument in call.arguments
+  labeled_argument.label == "phrases"
+  some element in labeled_argument.expression.arrayExpr.elements
+  literal := element.stringLiteralExpr
+  segment := literal.segments[_].stringSegment
+  phrase := segment.content
   contains(lower(phrase), "hey siri")
 }

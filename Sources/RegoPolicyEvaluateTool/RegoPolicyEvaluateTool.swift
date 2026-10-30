@@ -4,17 +4,23 @@ import Foundation
 ///
 /// ```text
 /// RegoPolicyEvaluateTool plan --opa <opa> --plans <dir> --record <file.swift> --policy <file.rego>...
-/// RegoPolicyEvaluateTool evaluate --plans <dir> --record <file.swift> --source <file.swift>...
+/// RegoPolicyEvaluateTool vocabulary --record <file.swift> --source <file.swift>...
+/// RegoPolicyEvaluateTool evaluate --plans <dir> --record <file.swift> [--vocabulary <file.swift>] --source <file.swift>...
+/// RegoPolicyEvaluateTool input [--vocabulary <file.swift>] --source <file.swift>
 /// ```
 ///
 /// `plan` plans each policy on its own with `opa build --target plan` into
-/// `<dir>`. `evaluate` gives each syntax node of each source file, as
-/// `input`, to the `decision` of every planned policy that can match a node
-/// of its type, so a policy matches the node it describes
-/// (`input.type == "FunctionCallExprSyntax"`, `input.children[0]`, ...).
-/// Each finding prints as a build diagnostic; a `deny` finding exits with
-/// status 1. `--record` names a Swift file that gets a one-line comment, the
-/// output SwiftPM tracks; it is rewritten only when the line changes.
+/// `<dir>`. `vocabulary` collects the ``OntologyVocabulary`` the ontologies
+/// in the source files declare into its record. `evaluate` gives each source file, as ``SyntaxInput``, to the
+/// `decision` of every planned policy, which reads the nodes it describes by
+/// their swift-syntax properties (`some call in input.functionCallExprs`,
+/// `call.calledExpression.declReferenceExpr.baseName`, ...). Each finding
+/// prints as a build diagnostic, with `--vocabulary`'s record as
+/// `input.vocabulary`; a `deny` finding exits with status 1.
+/// `--record` names a Swift file that gets a one-line comment, the output
+/// SwiftPM tracks; it is rewritten only when the line changes. `input`
+/// prints the `input` a policy gets for a file as JSON, for writing policies
+/// and their tests.
 @main
 struct RegoPolicyEvaluateTool {
     static func main() async {
@@ -37,14 +43,21 @@ struct RegoPolicyEvaluateTool {
     private static func run(_ arguments: [String], output: (String) -> Void) async -> Int32 {
         let usage = """
             usage: RegoPolicyEvaluateTool plan --opa <opa> --plans <dir> --record <file.swift> --policy <file.rego>...
-                   RegoPolicyEvaluateTool evaluate --plans <dir> --record <file.swift> --source <file.swift>...
+                   RegoPolicyEvaluateTool vocabulary --record <file.swift> --source <file.swift>...
+                   RegoPolicyEvaluateTool evaluate --plans <dir> --record <file.swift> [--vocabulary <file.swift>] --source <file.swift>...
+                   RegoPolicyEvaluateTool input [--vocabulary <file.swift>] --source <file.swift>
             """
-        guard let command = arguments.first, ["plan", "evaluate"].contains(command) else {
+        guard let command = arguments.first, ["plan", "vocabulary", "evaluate", "input"].contains(command) else {
             return failure(usage, status: 2)
         }
         var options: [String: [String]] = [:]
         var remaining = arguments.dropFirst().makeIterator()
-        let names = command == "plan" ? ["--opa", "--plans", "--record", "--policy"] : ["--plans", "--record", "--source"]
+        let names = switch command {
+        case "plan": ["--opa", "--plans", "--record", "--policy"]
+        case "vocabulary": ["--record", "--source"]
+        case "evaluate": ["--plans", "--record", "--vocabulary", "--source"]
+        default: ["--vocabulary", "--source"]
+        }
         while let name = remaining.next() {
             guard names.contains(name) else {
                 return failure("unknown argument: \(name)\n\(usage)", status: 2)
@@ -53,6 +66,34 @@ struct RegoPolicyEvaluateTool {
                 return failure("missing value for \(name)", status: 2)
             }
             options[name, default: []].append(value)
+        }
+        let vocabulary: OntologyVocabulary?
+        do {
+            vocabulary = try options["--vocabulary"]?.last.map { try OntologyVocabulary(record: URL(fileURLWithPath: $0)) }
+        } catch {
+            return failure("error: \(error)", status: 1)
+        }
+        if command == "input" {
+            guard let source = options["--source"]?.last else { return failure(usage, status: 2) }
+            do {
+                let encoder = JSONEncoder()
+                encoder.outputFormatting = [.sortedKeys, .withoutEscapingSlashes]
+                let input = try SyntaxInput(contentsOf: URL(fileURLWithPath: source), vocabulary: vocabulary).value
+                output(String(decoding: try encoder.encode(input), as: UTF8.self))
+                return 0
+            } catch {
+                return failure("error: \(error)", status: 1)
+            }
+        }
+        if command == "vocabulary" {
+            guard let record = options["--record"]?.last.map({ URL(fileURLWithPath: $0) }) else { return failure(usage, status: 2) }
+            do {
+                let collected = try OntologyVocabulary(sources: (options["--source"] ?? []).map { URL(fileURLWithPath: $0) })
+                try write(collected.record, to: record)
+                return 0
+            } catch {
+                return failure("error: \(error)", status: 1)
+            }
         }
         guard let plans = options["--plans"]?.last.map({ URL(fileURLWithPath: $0, isDirectory: true) }),
               let record = options["--record"]?.last.map({ URL(fileURLWithPath: $0) })
@@ -74,7 +115,7 @@ struct RegoPolicyEvaluateTool {
             var findingCount = 0
             var denied = false
             for source in sources {
-                for finding in try await evaluation.findings(in: SyntaxInput(contentsOf: URL(fileURLWithPath: source))) {
+                for finding in try await evaluation.findings(in: SyntaxInput(contentsOf: URL(fileURLWithPath: source), vocabulary: vocabulary)) {
                     output(finding.diagnostic(in: source))
                     findingCount += 1
                     denied = denied || finding.level == .error

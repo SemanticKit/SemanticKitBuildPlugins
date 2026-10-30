@@ -45,117 +45,13 @@ test_does_not_warn_for_non_visible_airplay_string_swift_syntax if {
 }
 
 # Parser output for `Text("Open airplay settings")` at 18:11.
-warns_for_lowercase_airplay_term_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 18, "column": 11}, "end": {"line": 18, "column": 40}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 18, "column": 11}, "end": {"line": 18, "column": 15}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 11}, "end": {"line": 18, "column": 15}}, "token": {"kind": "identifier", "text": "Text"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 15}, "end": {"line": 18, "column": 16}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 18, "column": 16}, "end": {"line": 18, "column": 39}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 18, "column": 16}, "end": {"line": 18, "column": 39}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 18, "column": 16}, "end": {"line": 18, "column": 39}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 16}, "end": {"line": 18, "column": 17}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 18, "column": 17}, "end": {"line": 18, "column": 38}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 18, "column": 17}, "end": {"line": 18, "column": 38}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 17}, "end": {"line": 18, "column": 38}}, "token": {"kind": "stringSegment", "text": "Open airplay settings"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 38}, "end": {"line": 18, "column": 39}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 39}, "end": {"line": 18, "column": 40}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 18, "column": 40}, "end": {"line": 18, "column": 40}}, "children": []},
-]}
+warns_for_lowercase_airplay_term_swift_syntax_node := {"declReferenceExprs": [{"baseName": "Text", "range": {"end": {"column": 15, "line": 18}, "start": {"column": 11, "line": 18}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 39, "line": 18}, "start": {"column": 16, "line": 18}}, "segments": [{"stringSegment": {"content": "Open airplay settings", "range": {"end": {"column": 38, "line": 18}, "start": {"column": 17, "line": 18}}}}]}}, "range": {"end": {"column": 39, "line": 18}, "start": {"column": 16, "line": 18}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Text", "range": {"end": {"column": 15, "line": 18}, "start": {"column": 11, "line": 18}}}}, "range": {"end": {"column": 40, "line": 18}, "start": {"column": 11, "line": 18}}}], "stringLiteralExprs": [{"range": {"end": {"column": 39, "line": 18}, "start": {"column": 16, "line": 18}}, "segments": [{"stringSegment": {"content": "Open airplay settings", "range": {"end": {"column": 38, "line": 18}, "start": {"column": 17, "line": 18}}}}]}]}
 
 # Parser output for `Button("Choose Air Play", action: chooseRoute)` at 24:13.
-warns_for_spaced_airplay_term_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 24, "column": 13}, "end": {"line": 24, "column": 59}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 24, "column": 13}, "end": {"line": 24, "column": 19}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 13}, "end": {"line": 24, "column": 19}}, "token": {"kind": "identifier", "text": "Button"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 19}, "end": {"line": 24, "column": 20}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 24, "column": 20}, "end": {"line": 24, "column": 58}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 24, "column": 20}, "end": {"line": 24, "column": 38}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 24, "column": 20}, "end": {"line": 24, "column": 37}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 20}, "end": {"line": 24, "column": 21}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 24, "column": 21}, "end": {"line": 24, "column": 36}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 24, "column": 21}, "end": {"line": 24, "column": 36}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 21}, "end": {"line": 24, "column": 36}}, "token": {"kind": "stringSegment", "text": "Choose Air Play"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 36}, "end": {"line": 24, "column": 37}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 37}, "end": {"line": 24, "column": 38}}, "token": {"kind": "comma", "text": ","}, "children": []},
-    ]},
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 24, "column": 39}, "end": {"line": 24, "column": 58}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 39}, "end": {"line": 24, "column": 45}}, "token": {"kind": "identifier", "text": "action"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 45}, "end": {"line": 24, "column": 46}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 24, "column": 47}, "end": {"line": 24, "column": 58}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 47}, "end": {"line": 24, "column": 58}}, "token": {"kind": "identifier", "text": "chooseRoute"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 58}, "end": {"line": 24, "column": 59}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 24, "column": 59}, "end": {"line": 24, "column": 59}}, "children": []},
-]}
+warns_for_spaced_airplay_term_swift_syntax_node := {"declReferenceExprs": [{"baseName": "Button", "range": {"end": {"column": 19, "line": 24}, "start": {"column": 13, "line": 24}}}, {"baseName": "chooseRoute", "range": {"end": {"column": 58, "line": 24}, "start": {"column": 47, "line": 24}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 37, "line": 24}, "start": {"column": 20, "line": 24}}, "segments": [{"stringSegment": {"content": "Choose Air Play", "range": {"end": {"column": 36, "line": 24}, "start": {"column": 21, "line": 24}}}}]}}, "range": {"end": {"column": 38, "line": 24}, "start": {"column": 20, "line": 24}}}, {"expression": {"declReferenceExpr": {"baseName": "chooseRoute", "range": {"end": {"column": 58, "line": 24}, "start": {"column": 47, "line": 24}}}}, "label": "action", "range": {"end": {"column": 58, "line": 24}, "start": {"column": 39, "line": 24}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Button", "range": {"end": {"column": 19, "line": 24}, "start": {"column": 13, "line": 24}}}}, "range": {"end": {"column": 59, "line": 24}, "start": {"column": 13, "line": 24}}}], "stringLiteralExprs": [{"range": {"end": {"column": 37, "line": 24}, "start": {"column": 20, "line": 24}}, "segments": [{"stringSegment": {"content": "Choose Air Play", "range": {"end": {"column": 36, "line": 24}, "start": {"column": 21, "line": 24}}}}]}]}
 
 # Parser output for `Label("Use AirPlay", systemImage: "tv")` at 31:9.
-does_not_warn_for_correct_airplay_term_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 31, "column": 9}, "end": {"line": 31, "column": 48}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 31, "column": 9}, "end": {"line": 31, "column": 14}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 9}, "end": {"line": 31, "column": 14}}, "token": {"kind": "identifier", "text": "Label"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 14}, "end": {"line": 31, "column": 15}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 31, "column": 15}, "end": {"line": 31, "column": 47}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 31, "column": 15}, "end": {"line": 31, "column": 29}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 31, "column": 15}, "end": {"line": 31, "column": 28}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 15}, "end": {"line": 31, "column": 16}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 31, "column": 16}, "end": {"line": 31, "column": 27}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 31, "column": 16}, "end": {"line": 31, "column": 27}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 16}, "end": {"line": 31, "column": 27}}, "token": {"kind": "stringSegment", "text": "Use AirPlay"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 27}, "end": {"line": 31, "column": 28}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 28}, "end": {"line": 31, "column": 29}}, "token": {"kind": "comma", "text": ","}, "children": []},
-    ]},
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 31, "column": 30}, "end": {"line": 31, "column": 47}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 30}, "end": {"line": 31, "column": 41}}, "token": {"kind": "identifier", "text": "systemImage"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 41}, "end": {"line": 31, "column": 42}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 31, "column": 43}, "end": {"line": 31, "column": 47}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 43}, "end": {"line": 31, "column": 44}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 31, "column": 44}, "end": {"line": 31, "column": 46}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 31, "column": 44}, "end": {"line": 31, "column": 46}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 44}, "end": {"line": 31, "column": 46}}, "token": {"kind": "stringSegment", "text": "tv"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 46}, "end": {"line": 31, "column": 47}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 47}, "end": {"line": 31, "column": 48}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 31, "column": 48}, "end": {"line": 31, "column": 48}}, "children": []},
-]}
+does_not_warn_for_correct_airplay_term_swift_syntax_node := {"declReferenceExprs": [{"baseName": "Label", "range": {"end": {"column": 14, "line": 31}, "start": {"column": 9, "line": 31}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 28, "line": 31}, "start": {"column": 15, "line": 31}}, "segments": [{"stringSegment": {"content": "Use AirPlay", "range": {"end": {"column": 27, "line": 31}, "start": {"column": 16, "line": 31}}}}]}}, "range": {"end": {"column": 29, "line": 31}, "start": {"column": 15, "line": 31}}}, {"expression": {"stringLiteralExpr": {"range": {"end": {"column": 47, "line": 31}, "start": {"column": 43, "line": 31}}, "segments": [{"stringSegment": {"content": "tv", "range": {"end": {"column": 46, "line": 31}, "start": {"column": 44, "line": 31}}}}]}}, "label": "systemImage", "range": {"end": {"column": 47, "line": 31}, "start": {"column": 30, "line": 31}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Label", "range": {"end": {"column": 14, "line": 31}, "start": {"column": 9, "line": 31}}}}, "range": {"end": {"column": 48, "line": 31}, "start": {"column": 9, "line": 31}}}], "stringLiteralExprs": [{"range": {"end": {"column": 28, "line": 31}, "start": {"column": 15, "line": 31}}, "segments": [{"stringSegment": {"content": "Use AirPlay", "range": {"end": {"column": 27, "line": 31}, "start": {"column": 16, "line": 31}}}}]}, {"range": {"end": {"column": 47, "line": 31}, "start": {"column": 43, "line": 31}}, "segments": [{"stringSegment": {"content": "tv", "range": {"end": {"column": 46, "line": 31}, "start": {"column": 44, "line": 31}}}}]}]}
 
 # Parser output for `Logger(subsystem: "airplay")` at 44:17.
-does_not_warn_for_non_visible_airplay_string_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 44, "column": 17}, "end": {"line": 44, "column": 45}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 44, "column": 17}, "end": {"line": 44, "column": 23}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 44, "column": 17}, "end": {"line": 44, "column": 23}}, "token": {"kind": "identifier", "text": "Logger"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 44, "column": 23}, "end": {"line": 44, "column": 24}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 44, "column": 24}, "end": {"line": 44, "column": 44}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 44, "column": 24}, "end": {"line": 44, "column": 44}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 44, "column": 24}, "end": {"line": 44, "column": 33}}, "token": {"kind": "identifier", "text": "subsystem"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 44, "column": 33}, "end": {"line": 44, "column": 34}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 44, "column": 35}, "end": {"line": 44, "column": 44}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 44, "column": 35}, "end": {"line": 44, "column": 36}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 44, "column": 36}, "end": {"line": 44, "column": 43}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 44, "column": 36}, "end": {"line": 44, "column": 43}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 44, "column": 36}, "end": {"line": 44, "column": 43}}, "token": {"kind": "stringSegment", "text": "airplay"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 44, "column": 43}, "end": {"line": 44, "column": 44}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 44, "column": 44}, "end": {"line": 44, "column": 45}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 44, "column": 45}, "end": {"line": 44, "column": 45}}, "children": []},
-]}
+does_not_warn_for_non_visible_airplay_string_swift_syntax_node := {"declReferenceExprs": [{"baseName": "Logger", "range": {"end": {"column": 23, "line": 44}, "start": {"column": 17, "line": 44}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 44, "line": 44}, "start": {"column": 35, "line": 44}}, "segments": [{"stringSegment": {"content": "airplay", "range": {"end": {"column": 43, "line": 44}, "start": {"column": 36, "line": 44}}}}]}}, "label": "subsystem", "range": {"end": {"column": 44, "line": 44}, "start": {"column": 24, "line": 44}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Logger", "range": {"end": {"column": 23, "line": 44}, "start": {"column": 17, "line": 44}}}}, "range": {"end": {"column": 45, "line": 44}, "start": {"column": 17, "line": 44}}}], "stringLiteralExprs": [{"range": {"end": {"column": 44, "line": 44}, "start": {"column": 35, "line": 44}}, "segments": [{"stringSegment": {"content": "airplay", "range": {"end": {"column": 43, "line": 44}, "start": {"column": 36, "line": 44}}}}]}]}

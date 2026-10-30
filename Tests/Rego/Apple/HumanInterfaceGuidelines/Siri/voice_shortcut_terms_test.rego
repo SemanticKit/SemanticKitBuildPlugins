@@ -54,229 +54,25 @@ test_does_not_warn_for_non_visible_call_with_matching_string if {
 }
 
 # Parser output for `Text("add voice shortcut")` at 21:15.
-warns_for_text_add_voice_shortcut_lowercase_hig_example_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 21, "column": 15}, "end": {"line": 21, "column": 41}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 21, "column": 15}, "end": {"line": 21, "column": 19}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 21, "column": 15}, "end": {"line": 21, "column": 19}}, "token": {"kind": "identifier", "text": "Text"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 21, "column": 19}, "end": {"line": 21, "column": 20}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 21, "column": 20}, "end": {"line": 21, "column": 40}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 21, "column": 20}, "end": {"line": 21, "column": 40}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 21, "column": 20}, "end": {"line": 21, "column": 40}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 21, "column": 20}, "end": {"line": 21, "column": 21}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 21, "column": 21}, "end": {"line": 21, "column": 39}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 21, "column": 21}, "end": {"line": 21, "column": 39}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 21, "column": 21}, "end": {"line": 21, "column": 39}}, "token": {"kind": "stringSegment", "text": "add voice shortcut"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 21, "column": 39}, "end": {"line": 21, "column": 40}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 21, "column": 40}, "end": {"line": 21, "column": 41}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 21, "column": 41}, "end": {"line": 21, "column": 41}}, "children": []},
-]}
+warns_for_text_add_voice_shortcut_lowercase_hig_example_node := {"declReferenceExprs": [{"baseName": "Text", "range": {"end": {"column": 19, "line": 21}, "start": {"column": 15, "line": 21}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 40, "line": 21}, "start": {"column": 20, "line": 21}}, "segments": [{"stringSegment": {"content": "add voice shortcut", "range": {"end": {"column": 39, "line": 21}, "start": {"column": 21, "line": 21}}}}]}}, "range": {"end": {"column": 40, "line": 21}, "start": {"column": 20, "line": 21}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Text", "range": {"end": {"column": 19, "line": 21}, "start": {"column": 15, "line": 21}}}}, "range": {"end": {"column": 41, "line": 21}, "start": {"column": 15, "line": 21}}}], "stringLiteralExprs": [{"range": {"end": {"column": 40, "line": 21}, "start": {"column": 20, "line": 21}}, "segments": [{"stringSegment": {"content": "add voice shortcut", "range": {"end": {"column": 39, "line": 21}, "start": {"column": 21, "line": 21}}}}]}]}
 
 # Parser output for `Label("add voice shortcuts", systemImage: "mic")` at 28:9.
 # Parser output for `Button("Make it easy to add voice shortcuts", action: addShortcut)` at 29:9.
 # Parser output for `Text("Use this to ADD VOICE SHORTCUT")` at 30:9.
 warns_for_visible_string_call_phrase_variants_nodes := [
-  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 28, "column": 9}, "end": {"line": 28, "column": 57}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 28, "column": 9}, "end": {"line": 28, "column": 14}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 28, "column": 9}, "end": {"line": 28, "column": 14}}, "token": {"kind": "identifier", "text": "Label"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 28, "column": 14}, "end": {"line": 28, "column": 15}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 28, "column": 15}, "end": {"line": 28, "column": 56}}, "children": [
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 28, "column": 15}, "end": {"line": 28, "column": 37}}, "children": [
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 28, "column": 15}, "end": {"line": 28, "column": 36}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 28, "column": 15}, "end": {"line": 28, "column": 16}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 28, "column": 16}, "end": {"line": 28, "column": 35}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 28, "column": 16}, "end": {"line": 28, "column": 35}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 28, "column": 16}, "end": {"line": 28, "column": 35}}, "token": {"kind": "stringSegment", "text": "add voice shortcuts"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 28, "column": 35}, "end": {"line": 28, "column": 36}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 28, "column": 36}, "end": {"line": 28, "column": 37}}, "token": {"kind": "comma", "text": ","}, "children": []},
-      ]},
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 28, "column": 38}, "end": {"line": 28, "column": 56}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 28, "column": 38}, "end": {"line": 28, "column": 49}}, "token": {"kind": "identifier", "text": "systemImage"}, "children": []},
-        {"type": "TokenSyntax", "range": {"start": {"line": 28, "column": 49}, "end": {"line": 28, "column": 50}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 28, "column": 51}, "end": {"line": 28, "column": 56}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 28, "column": 51}, "end": {"line": 28, "column": 52}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 28, "column": 52}, "end": {"line": 28, "column": 55}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 28, "column": 52}, "end": {"line": 28, "column": 55}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 28, "column": 52}, "end": {"line": 28, "column": 55}}, "token": {"kind": "stringSegment", "text": "mic"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 28, "column": 55}, "end": {"line": 28, "column": 56}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 28, "column": 56}, "end": {"line": 28, "column": 57}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 28, "column": 57}, "end": {"line": 28, "column": 57}}, "children": []},
-  ]},
-  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 29, "column": 9}, "end": {"line": 29, "column": 75}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 29, "column": 9}, "end": {"line": 29, "column": 15}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 9}, "end": {"line": 29, "column": 15}}, "token": {"kind": "identifier", "text": "Button"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 15}, "end": {"line": 29, "column": 16}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 29, "column": 16}, "end": {"line": 29, "column": 74}}, "children": [
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 29, "column": 16}, "end": {"line": 29, "column": 54}}, "children": [
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 29, "column": 16}, "end": {"line": 29, "column": 53}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 16}, "end": {"line": 29, "column": 17}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 29, "column": 17}, "end": {"line": 29, "column": 52}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 29, "column": 17}, "end": {"line": 29, "column": 52}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 17}, "end": {"line": 29, "column": 52}}, "token": {"kind": "stringSegment", "text": "Make it easy to add voice shortcuts"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 52}, "end": {"line": 29, "column": 53}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 53}, "end": {"line": 29, "column": 54}}, "token": {"kind": "comma", "text": ","}, "children": []},
-      ]},
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 29, "column": 55}, "end": {"line": 29, "column": 74}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 55}, "end": {"line": 29, "column": 61}}, "token": {"kind": "identifier", "text": "action"}, "children": []},
-        {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 61}, "end": {"line": 29, "column": 62}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-        {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 29, "column": 63}, "end": {"line": 29, "column": 74}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 63}, "end": {"line": 29, "column": 74}}, "token": {"kind": "identifier", "text": "addShortcut"}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 29, "column": 74}, "end": {"line": 29, "column": 75}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 29, "column": 75}, "end": {"line": 29, "column": 75}}, "children": []},
-  ]},
-  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 30, "column": 9}, "end": {"line": 30, "column": 47}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 30, "column": 9}, "end": {"line": 30, "column": 13}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 30, "column": 9}, "end": {"line": 30, "column": 13}}, "token": {"kind": "identifier", "text": "Text"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 30, "column": 13}, "end": {"line": 30, "column": 14}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 30, "column": 14}, "end": {"line": 30, "column": 46}}, "children": [
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 30, "column": 14}, "end": {"line": 30, "column": 46}}, "children": [
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 30, "column": 14}, "end": {"line": 30, "column": 46}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 30, "column": 14}, "end": {"line": 30, "column": 15}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 30, "column": 15}, "end": {"line": 30, "column": 45}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 30, "column": 15}, "end": {"line": 30, "column": 45}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 30, "column": 15}, "end": {"line": 30, "column": 45}}, "token": {"kind": "stringSegment", "text": "Use this to ADD VOICE SHORTCUT"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 30, "column": 45}, "end": {"line": 30, "column": 46}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 30, "column": 46}, "end": {"line": 30, "column": 47}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 30, "column": 47}, "end": {"line": 30, "column": 47}}, "children": []},
-  ]},
+  {"declReferenceExprs": [{"baseName": "Label", "range": {"end": {"column": 14, "line": 28}, "start": {"column": 9, "line": 28}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 36, "line": 28}, "start": {"column": 15, "line": 28}}, "segments": [{"stringSegment": {"content": "add voice shortcuts", "range": {"end": {"column": 35, "line": 28}, "start": {"column": 16, "line": 28}}}}]}}, "range": {"end": {"column": 37, "line": 28}, "start": {"column": 15, "line": 28}}}, {"expression": {"stringLiteralExpr": {"range": {"end": {"column": 56, "line": 28}, "start": {"column": 51, "line": 28}}, "segments": [{"stringSegment": {"content": "mic", "range": {"end": {"column": 55, "line": 28}, "start": {"column": 52, "line": 28}}}}]}}, "label": "systemImage", "range": {"end": {"column": 56, "line": 28}, "start": {"column": 38, "line": 28}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Label", "range": {"end": {"column": 14, "line": 28}, "start": {"column": 9, "line": 28}}}}, "range": {"end": {"column": 57, "line": 28}, "start": {"column": 9, "line": 28}}}], "stringLiteralExprs": [{"range": {"end": {"column": 36, "line": 28}, "start": {"column": 15, "line": 28}}, "segments": [{"stringSegment": {"content": "add voice shortcuts", "range": {"end": {"column": 35, "line": 28}, "start": {"column": 16, "line": 28}}}}]}, {"range": {"end": {"column": 56, "line": 28}, "start": {"column": 51, "line": 28}}, "segments": [{"stringSegment": {"content": "mic", "range": {"end": {"column": 55, "line": 28}, "start": {"column": 52, "line": 28}}}}]}]},
+  {"declReferenceExprs": [{"baseName": "Button", "range": {"end": {"column": 15, "line": 29}, "start": {"column": 9, "line": 29}}}, {"baseName": "addShortcut", "range": {"end": {"column": 74, "line": 29}, "start": {"column": 63, "line": 29}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 53, "line": 29}, "start": {"column": 16, "line": 29}}, "segments": [{"stringSegment": {"content": "Make it easy to add voice shortcuts", "range": {"end": {"column": 52, "line": 29}, "start": {"column": 17, "line": 29}}}}]}}, "range": {"end": {"column": 54, "line": 29}, "start": {"column": 16, "line": 29}}}, {"expression": {"declReferenceExpr": {"baseName": "addShortcut", "range": {"end": {"column": 74, "line": 29}, "start": {"column": 63, "line": 29}}}}, "label": "action", "range": {"end": {"column": 74, "line": 29}, "start": {"column": 55, "line": 29}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Button", "range": {"end": {"column": 15, "line": 29}, "start": {"column": 9, "line": 29}}}}, "range": {"end": {"column": 75, "line": 29}, "start": {"column": 9, "line": 29}}}], "stringLiteralExprs": [{"range": {"end": {"column": 53, "line": 29}, "start": {"column": 16, "line": 29}}, "segments": [{"stringSegment": {"content": "Make it easy to add voice shortcuts", "range": {"end": {"column": 52, "line": 29}, "start": {"column": 17, "line": 29}}}}]}]},
+  {"declReferenceExprs": [{"baseName": "Text", "range": {"end": {"column": 13, "line": 30}, "start": {"column": 9, "line": 30}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 46, "line": 30}, "start": {"column": 14, "line": 30}}, "segments": [{"stringSegment": {"content": "Use this to ADD VOICE SHORTCUT", "range": {"end": {"column": 45, "line": 30}, "start": {"column": 15, "line": 30}}}}]}}, "range": {"end": {"column": 46, "line": 30}, "start": {"column": 14, "line": 30}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Text", "range": {"end": {"column": 13, "line": 30}, "start": {"column": 9, "line": 30}}}}, "range": {"end": {"column": 47, "line": 30}, "start": {"column": 9, "line": 30}}}], "stringLiteralExprs": [{"range": {"end": {"column": 46, "line": 30}, "start": {"column": 14, "line": 30}}, "segments": [{"stringSegment": {"content": "Use this to ADD VOICE SHORTCUT", "range": {"end": {"column": 45, "line": 30}, "start": {"column": 15, "line": 30}}}}]}]},
 ]
 
 # Parser output for `routine.help("make a voice command for the morning routine")` at 34:8.
-warns_for_help_member_make_voice_command_lowercase_substring_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 34, "column": 8}, "end": {"line": 34, "column": 68}}, "children": [
-  {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 34, "column": 8}, "end": {"line": 34, "column": 20}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 34, "column": 8}, "end": {"line": 34, "column": 15}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 34, "column": 8}, "end": {"line": 34, "column": 15}}, "token": {"kind": "identifier", "text": "routine"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 34, "column": 15}, "end": {"line": 34, "column": 16}}, "token": {"kind": "period", "text": "."}, "children": []},
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 34, "column": 16}, "end": {"line": 34, "column": 20}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 34, "column": 16}, "end": {"line": 34, "column": 20}}, "token": {"kind": "identifier", "text": "help"}, "children": []},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 34, "column": 20}, "end": {"line": 34, "column": 21}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 34, "column": 21}, "end": {"line": 34, "column": 67}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 34, "column": 21}, "end": {"line": 34, "column": 67}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 34, "column": 21}, "end": {"line": 34, "column": 67}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 34, "column": 21}, "end": {"line": 34, "column": 22}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 34, "column": 22}, "end": {"line": 34, "column": 66}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 34, "column": 22}, "end": {"line": 34, "column": 66}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 34, "column": 22}, "end": {"line": 34, "column": 66}}, "token": {"kind": "stringSegment", "text": "make a voice command for the morning routine"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 34, "column": 66}, "end": {"line": 34, "column": 67}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 34, "column": 67}, "end": {"line": 34, "column": 68}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 34, "column": 68}, "end": {"line": 34, "column": 68}}, "children": []},
-]}
+warns_for_help_member_make_voice_command_lowercase_substring_node := {"declReferenceExprs": [{"baseName": "routine", "range": {"end": {"column": 15, "line": 34}, "start": {"column": 8, "line": 34}}}, {"baseName": "help", "range": {"end": {"column": 20, "line": 34}, "start": {"column": 16, "line": 34}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 67, "line": 34}, "start": {"column": 21, "line": 34}}, "segments": [{"stringSegment": {"content": "make a voice command for the morning routine", "range": {"end": {"column": 66, "line": 34}, "start": {"column": 22, "line": 34}}}}]}}, "range": {"end": {"column": 67, "line": 34}, "start": {"column": 21, "line": 34}}}], "calledExpression": {"memberAccessExpr": {"base": {"declReferenceExpr": {"baseName": "routine", "range": {"end": {"column": 15, "line": 34}, "start": {"column": 8, "line": 34}}}}, "declName": {"baseName": "help", "range": {"end": {"column": 20, "line": 34}, "start": {"column": 16, "line": 34}}}, "range": {"end": {"column": 20, "line": 34}, "start": {"column": 8, "line": 34}}}}, "range": {"end": {"column": 68, "line": 34}, "start": {"column": 8, "line": 34}}}], "memberAccessExprs": [{"base": {"declReferenceExpr": {"baseName": "routine", "range": {"end": {"column": 15, "line": 34}, "start": {"column": 8, "line": 34}}}}, "declName": {"baseName": "help", "range": {"end": {"column": 20, "line": 34}, "start": {"column": 16, "line": 34}}}, "range": {"end": {"column": 20, "line": 34}, "start": {"column": 8, "line": 34}}}], "stringLiteralExprs": [{"range": {"end": {"column": 67, "line": 34}, "start": {"column": 21, "line": 34}}, "segments": [{"stringSegment": {"content": "make a voice command for the morning routine", "range": {"end": {"column": 66, "line": 34}, "start": {"column": 22, "line": 34}}}}]}]}
 
 # Parser output for `TextField("create a voice prompt before saving", text: $prompt)` at 47:19.
-warns_for_textfield_create_voice_prompt_lowercase_substring_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 47, "column": 19}, "end": {"line": 47, "column": 82}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 47, "column": 19}, "end": {"line": 47, "column": 28}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 47, "column": 19}, "end": {"line": 47, "column": 28}}, "token": {"kind": "identifier", "text": "TextField"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 47, "column": 28}, "end": {"line": 47, "column": 29}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 47, "column": 29}, "end": {"line": 47, "column": 81}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 47, "column": 29}, "end": {"line": 47, "column": 67}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 47, "column": 29}, "end": {"line": 47, "column": 66}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 47, "column": 29}, "end": {"line": 47, "column": 30}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 47, "column": 30}, "end": {"line": 47, "column": 65}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 47, "column": 30}, "end": {"line": 47, "column": 65}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 47, "column": 30}, "end": {"line": 47, "column": 65}}, "token": {"kind": "stringSegment", "text": "create a voice prompt before saving"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 47, "column": 65}, "end": {"line": 47, "column": 66}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 47, "column": 66}, "end": {"line": 47, "column": 67}}, "token": {"kind": "comma", "text": ","}, "children": []},
-    ]},
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 47, "column": 68}, "end": {"line": 47, "column": 81}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 47, "column": 68}, "end": {"line": 47, "column": 72}}, "token": {"kind": "identifier", "text": "text"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 47, "column": 72}, "end": {"line": 47, "column": 73}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 47, "column": 74}, "end": {"line": 47, "column": 81}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 47, "column": 74}, "end": {"line": 47, "column": 81}}, "token": {"kind": "identifier", "text": "$prompt"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 47, "column": 81}, "end": {"line": 47, "column": 82}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 47, "column": 82}, "end": {"line": 47, "column": 82}}, "children": []},
-]}
+warns_for_textfield_create_voice_prompt_lowercase_substring_node := {"declReferenceExprs": [{"baseName": "TextField", "range": {"end": {"column": 28, "line": 47}, "start": {"column": 19, "line": 47}}}, {"baseName": "$prompt", "range": {"end": {"column": 81, "line": 47}, "start": {"column": 74, "line": 47}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 66, "line": 47}, "start": {"column": 29, "line": 47}}, "segments": [{"stringSegment": {"content": "create a voice prompt before saving", "range": {"end": {"column": 65, "line": 47}, "start": {"column": 30, "line": 47}}}}]}}, "range": {"end": {"column": 67, "line": 47}, "start": {"column": 29, "line": 47}}}, {"expression": {"declReferenceExpr": {"baseName": "$prompt", "range": {"end": {"column": 81, "line": 47}, "start": {"column": 74, "line": 47}}}}, "label": "text", "range": {"end": {"column": 81, "line": 47}, "start": {"column": 68, "line": 47}}}], "calledExpression": {"declReferenceExpr": {"baseName": "TextField", "range": {"end": {"column": 28, "line": 47}, "start": {"column": 19, "line": 47}}}}, "range": {"end": {"column": 82, "line": 47}, "start": {"column": 19, "line": 47}}}], "stringLiteralExprs": [{"range": {"end": {"column": 66, "line": 47}, "start": {"column": 29, "line": 47}}, "segments": [{"stringSegment": {"content": "create a voice prompt before saving", "range": {"end": {"column": 65, "line": 47}, "start": {"column": 30, "line": 47}}}}]}]}
 
 # Parser output for `Button("Add to Shortcuts", action: addShortcut)` at 58:12.
-does_not_warn_for_non_matching_visible_string_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 58, "column": 12}, "end": {"line": 58, "column": 59}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 58, "column": 12}, "end": {"line": 58, "column": 18}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 58, "column": 12}, "end": {"line": 58, "column": 18}}, "token": {"kind": "identifier", "text": "Button"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 58, "column": 18}, "end": {"line": 58, "column": 19}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 58, "column": 19}, "end": {"line": 58, "column": 58}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 58, "column": 19}, "end": {"line": 58, "column": 38}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 58, "column": 19}, "end": {"line": 58, "column": 37}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 58, "column": 19}, "end": {"line": 58, "column": 20}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 58, "column": 20}, "end": {"line": 58, "column": 36}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 58, "column": 20}, "end": {"line": 58, "column": 36}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 58, "column": 20}, "end": {"line": 58, "column": 36}}, "token": {"kind": "stringSegment", "text": "Add to Shortcuts"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 58, "column": 36}, "end": {"line": 58, "column": 37}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 58, "column": 37}, "end": {"line": 58, "column": 38}}, "token": {"kind": "comma", "text": ","}, "children": []},
-    ]},
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 58, "column": 39}, "end": {"line": 58, "column": 58}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 58, "column": 39}, "end": {"line": 58, "column": 45}}, "token": {"kind": "identifier", "text": "action"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 58, "column": 45}, "end": {"line": 58, "column": 46}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 58, "column": 47}, "end": {"line": 58, "column": 58}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 58, "column": 47}, "end": {"line": 58, "column": 58}}, "token": {"kind": "identifier", "text": "addShortcut"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 58, "column": 58}, "end": {"line": 58, "column": 59}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 58, "column": 59}, "end": {"line": 58, "column": 59}}, "children": []},
-]}
+does_not_warn_for_non_matching_visible_string_node := {"declReferenceExprs": [{"baseName": "Button", "range": {"end": {"column": 18, "line": 58}, "start": {"column": 12, "line": 58}}}, {"baseName": "addShortcut", "range": {"end": {"column": 58, "line": 58}, "start": {"column": 47, "line": 58}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 37, "line": 58}, "start": {"column": 19, "line": 58}}, "segments": [{"stringSegment": {"content": "Add to Shortcuts", "range": {"end": {"column": 36, "line": 58}, "start": {"column": 20, "line": 58}}}}]}}, "range": {"end": {"column": 38, "line": 58}, "start": {"column": 19, "line": 58}}}, {"expression": {"declReferenceExpr": {"baseName": "addShortcut", "range": {"end": {"column": 58, "line": 58}, "start": {"column": 47, "line": 58}}}}, "label": "action", "range": {"end": {"column": 58, "line": 58}, "start": {"column": 39, "line": 58}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Button", "range": {"end": {"column": 18, "line": 58}, "start": {"column": 12, "line": 58}}}}, "range": {"end": {"column": 59, "line": 58}, "start": {"column": 12, "line": 58}}}], "stringLiteralExprs": [{"range": {"end": {"column": 37, "line": 58}, "start": {"column": 19, "line": 58}}, "segments": [{"stringSegment": {"content": "Add to Shortcuts", "range": {"end": {"column": 36, "line": 58}, "start": {"column": 20, "line": 58}}}}]}]}
 
 # Parser output for `IntentDescription("add voice shortcut")` at 66:10.
-does_not_warn_for_non_visible_call_with_matching_string_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 66, "column": 10}, "end": {"line": 66, "column": 49}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 66, "column": 10}, "end": {"line": 66, "column": 27}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 66, "column": 10}, "end": {"line": 66, "column": 27}}, "token": {"kind": "identifier", "text": "IntentDescription"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 66, "column": 27}, "end": {"line": 66, "column": 28}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 66, "column": 28}, "end": {"line": 66, "column": 48}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 66, "column": 28}, "end": {"line": 66, "column": 48}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 66, "column": 28}, "end": {"line": 66, "column": 48}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 66, "column": 28}, "end": {"line": 66, "column": 29}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 66, "column": 29}, "end": {"line": 66, "column": 47}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 66, "column": 29}, "end": {"line": 66, "column": 47}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 66, "column": 29}, "end": {"line": 66, "column": 47}}, "token": {"kind": "stringSegment", "text": "add voice shortcut"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 66, "column": 47}, "end": {"line": 66, "column": 48}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 66, "column": 48}, "end": {"line": 66, "column": 49}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 66, "column": 49}, "end": {"line": 66, "column": 49}}, "children": []},
-]}
+does_not_warn_for_non_visible_call_with_matching_string_node := {"declReferenceExprs": [{"baseName": "IntentDescription", "range": {"end": {"column": 27, "line": 66}, "start": {"column": 10, "line": 66}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 48, "line": 66}, "start": {"column": 28, "line": 66}}, "segments": [{"stringSegment": {"content": "add voice shortcut", "range": {"end": {"column": 47, "line": 66}, "start": {"column": 29, "line": 66}}}}]}}, "range": {"end": {"column": 48, "line": 66}, "start": {"column": 28, "line": 66}}}], "calledExpression": {"declReferenceExpr": {"baseName": "IntentDescription", "range": {"end": {"column": 27, "line": 66}, "start": {"column": 10, "line": 66}}}}, "range": {"end": {"column": 49, "line": 66}, "start": {"column": 10, "line": 66}}}], "stringLiteralExprs": [{"range": {"end": {"column": 48, "line": 66}, "start": {"column": 28, "line": 66}}, "segments": [{"stringSegment": {"content": "add voice shortcut", "range": {"end": {"column": 47, "line": 66}, "start": {"column": 29, "line": 66}}}}]}]}

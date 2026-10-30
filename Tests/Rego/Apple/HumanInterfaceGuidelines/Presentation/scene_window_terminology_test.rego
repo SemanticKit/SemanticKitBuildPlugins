@@ -51,172 +51,19 @@ test_does_not_warn_for_scenery_word_boundary if {
 }
 
 # Parser output for `Text("Open this scene from the Window menu")` at 12:9.
-warns_for_scene_term_in_visible_text_copy_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 12, "column": 9}, "end": {"line": 12, "column": 53}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 12, "column": 9}, "end": {"line": 12, "column": 13}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 9}, "end": {"line": 12, "column": 13}}, "token": {"kind": "identifier", "text": "Text"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 13}, "end": {"line": 12, "column": 14}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 12, "column": 14}, "end": {"line": 12, "column": 52}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 12, "column": 14}, "end": {"line": 12, "column": 52}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 12, "column": 14}, "end": {"line": 12, "column": 52}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 14}, "end": {"line": 12, "column": 15}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 12, "column": 15}, "end": {"line": 12, "column": 51}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 12, "column": 15}, "end": {"line": 12, "column": 51}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 15}, "end": {"line": 12, "column": 51}}, "token": {"kind": "stringSegment", "text": "Open this scene from the Window menu"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 51}, "end": {"line": 12, "column": 52}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 12, "column": 52}, "end": {"line": 12, "column": 53}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 12, "column": 53}, "end": {"line": 12, "column": 53}}, "children": []},
-]}
+warns_for_scene_term_in_visible_text_copy_node := {"declReferenceExprs": [{"baseName": "Text", "range": {"end": {"column": 13, "line": 12}, "start": {"column": 9, "line": 12}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 52, "line": 12}, "start": {"column": 14, "line": 12}}, "segments": [{"stringSegment": {"content": "Open this scene from the Window menu", "range": {"end": {"column": 51, "line": 12}, "start": {"column": 15, "line": 12}}}}]}}, "range": {"end": {"column": 52, "line": 12}, "start": {"column": 14, "line": 12}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Text", "range": {"end": {"column": 13, "line": 12}, "start": {"column": 9, "line": 12}}}}, "range": {"end": {"column": 53, "line": 12}, "start": {"column": 9, "line": 12}}}], "stringLiteralExprs": [{"range": {"end": {"column": 52, "line": 12}, "start": {"column": 14, "line": 12}}, "segments": [{"stringSegment": {"content": "Open this scene from the Window menu", "range": {"end": {"column": 51, "line": 12}, "start": {"column": 15, "line": 12}}}}]}]}
 
 # Parser output for `Button("Open New Scene", action: openScene)` at 27:13.
-warns_for_scene_term_in_action_label_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 27, "column": 13}, "end": {"line": 27, "column": 56}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 27, "column": 13}, "end": {"line": 27, "column": 19}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 13}, "end": {"line": 27, "column": 19}}, "token": {"kind": "identifier", "text": "Button"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 19}, "end": {"line": 27, "column": 20}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 27, "column": 20}, "end": {"line": 27, "column": 55}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 27, "column": 20}, "end": {"line": 27, "column": 37}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 27, "column": 20}, "end": {"line": 27, "column": 36}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 20}, "end": {"line": 27, "column": 21}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 27, "column": 21}, "end": {"line": 27, "column": 35}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 27, "column": 21}, "end": {"line": 27, "column": 35}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 21}, "end": {"line": 27, "column": 35}}, "token": {"kind": "stringSegment", "text": "Open New Scene"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 35}, "end": {"line": 27, "column": 36}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 36}, "end": {"line": 27, "column": 37}}, "token": {"kind": "comma", "text": ","}, "children": []},
-    ]},
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 27, "column": 38}, "end": {"line": 27, "column": 55}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 38}, "end": {"line": 27, "column": 44}}, "token": {"kind": "identifier", "text": "action"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 44}, "end": {"line": 27, "column": 45}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 27, "column": 46}, "end": {"line": 27, "column": 55}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 46}, "end": {"line": 27, "column": 55}}, "token": {"kind": "identifier", "text": "openScene"}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 55}, "end": {"line": 27, "column": 56}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 27, "column": 56}, "end": {"line": 27, "column": 56}}, "children": []},
-]}
+warns_for_scene_term_in_action_label_node := {"declReferenceExprs": [{"baseName": "Button", "range": {"end": {"column": 19, "line": 27}, "start": {"column": 13, "line": 27}}}, {"baseName": "openScene", "range": {"end": {"column": 55, "line": 27}, "start": {"column": 46, "line": 27}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 36, "line": 27}, "start": {"column": 20, "line": 27}}, "segments": [{"stringSegment": {"content": "Open New Scene", "range": {"end": {"column": 35, "line": 27}, "start": {"column": 21, "line": 27}}}}]}}, "range": {"end": {"column": 37, "line": 27}, "start": {"column": 20, "line": 27}}}, {"expression": {"declReferenceExpr": {"baseName": "openScene", "range": {"end": {"column": 55, "line": 27}, "start": {"column": 46, "line": 27}}}}, "label": "action", "range": {"end": {"column": 55, "line": 27}, "start": {"column": 38, "line": 27}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Button", "range": {"end": {"column": 19, "line": 27}, "start": {"column": 13, "line": 27}}}}, "range": {"end": {"column": 56, "line": 27}, "start": {"column": 13, "line": 27}}}], "stringLiteralExprs": [{"range": {"end": {"column": 36, "line": 27}, "start": {"column": 20, "line": 27}}, "segments": [{"stringSegment": {"content": "Open New Scene", "range": {"end": {"column": 35, "line": 27}, "start": {"column": 21, "line": 27}}}}]}]}
 
 # Parser output for `status.help("Shows the active scene")` at 34:8.
-warns_for_member_help_scene_term_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 34, "column": 8}, "end": {"line": 34, "column": 45}}, "children": [
-  {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 34, "column": 8}, "end": {"line": 34, "column": 19}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 34, "column": 8}, "end": {"line": 34, "column": 14}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 34, "column": 8}, "end": {"line": 34, "column": 14}}, "token": {"kind": "identifier", "text": "status"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 34, "column": 14}, "end": {"line": 34, "column": 15}}, "token": {"kind": "period", "text": "."}, "children": []},
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 34, "column": 15}, "end": {"line": 34, "column": 19}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 34, "column": 15}, "end": {"line": 34, "column": 19}}, "token": {"kind": "identifier", "text": "help"}, "children": []},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 34, "column": 19}, "end": {"line": 34, "column": 20}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 34, "column": 20}, "end": {"line": 34, "column": 44}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 34, "column": 20}, "end": {"line": 34, "column": 44}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 34, "column": 20}, "end": {"line": 34, "column": 44}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 34, "column": 20}, "end": {"line": 34, "column": 21}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 34, "column": 21}, "end": {"line": 34, "column": 43}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 34, "column": 21}, "end": {"line": 34, "column": 43}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 34, "column": 21}, "end": {"line": 34, "column": 43}}, "token": {"kind": "stringSegment", "text": "Shows the active scene"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 34, "column": 43}, "end": {"line": 34, "column": 44}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 34, "column": 44}, "end": {"line": 34, "column": 45}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 34, "column": 45}, "end": {"line": 34, "column": 45}}, "children": []},
-]}
+warns_for_member_help_scene_term_node := {"declReferenceExprs": [{"baseName": "status", "range": {"end": {"column": 14, "line": 34}, "start": {"column": 8, "line": 34}}}, {"baseName": "help", "range": {"end": {"column": 19, "line": 34}, "start": {"column": 15, "line": 34}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 44, "line": 34}, "start": {"column": 20, "line": 34}}, "segments": [{"stringSegment": {"content": "Shows the active scene", "range": {"end": {"column": 43, "line": 34}, "start": {"column": 21, "line": 34}}}}]}}, "range": {"end": {"column": 44, "line": 34}, "start": {"column": 20, "line": 34}}}], "calledExpression": {"memberAccessExpr": {"base": {"declReferenceExpr": {"baseName": "status", "range": {"end": {"column": 14, "line": 34}, "start": {"column": 8, "line": 34}}}}, "declName": {"baseName": "help", "range": {"end": {"column": 19, "line": 34}, "start": {"column": 15, "line": 34}}}, "range": {"end": {"column": 19, "line": 34}, "start": {"column": 8, "line": 34}}}}, "range": {"end": {"column": 45, "line": 34}, "start": {"column": 8, "line": 34}}}], "memberAccessExprs": [{"base": {"declReferenceExpr": {"baseName": "status", "range": {"end": {"column": 14, "line": 34}, "start": {"column": 8, "line": 34}}}}, "declName": {"baseName": "help", "range": {"end": {"column": 19, "line": 34}, "start": {"column": 15, "line": 34}}}, "range": {"end": {"column": 19, "line": 34}, "start": {"column": 8, "line": 34}}}], "stringLiteralExprs": [{"range": {"end": {"column": 44, "line": 34}, "start": {"column": 20, "line": 34}}, "segments": [{"stringSegment": {"content": "Shows the active scene", "range": {"end": {"column": 43, "line": 34}, "start": {"column": 21, "line": 34}}}}]}]}
 
 # Parser output for `Text("Open this window from the Window menu")` at 41:9.
-does_not_warn_for_window_copy_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 41, "column": 9}, "end": {"line": 41, "column": 54}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 41, "column": 9}, "end": {"line": 41, "column": 13}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 41, "column": 9}, "end": {"line": 41, "column": 13}}, "token": {"kind": "identifier", "text": "Text"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 41, "column": 13}, "end": {"line": 41, "column": 14}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 41, "column": 14}, "end": {"line": 41, "column": 53}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 41, "column": 14}, "end": {"line": 41, "column": 53}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 41, "column": 14}, "end": {"line": 41, "column": 53}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 41, "column": 14}, "end": {"line": 41, "column": 15}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 41, "column": 15}, "end": {"line": 41, "column": 52}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 41, "column": 15}, "end": {"line": 41, "column": 52}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 41, "column": 15}, "end": {"line": 41, "column": 52}}, "token": {"kind": "stringSegment", "text": "Open this window from the Window menu"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 41, "column": 52}, "end": {"line": 41, "column": 53}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 41, "column": 53}, "end": {"line": 41, "column": 54}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 41, "column": 54}, "end": {"line": 41, "column": 54}}, "children": []},
-]}
+does_not_warn_for_window_copy_node := {"declReferenceExprs": [{"baseName": "Text", "range": {"end": {"column": 13, "line": 41}, "start": {"column": 9, "line": 41}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 53, "line": 41}, "start": {"column": 14, "line": 41}}, "segments": [{"stringSegment": {"content": "Open this window from the Window menu", "range": {"end": {"column": 52, "line": 41}, "start": {"column": 15, "line": 41}}}}]}}, "range": {"end": {"column": 53, "line": 41}, "start": {"column": 14, "line": 41}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Text", "range": {"end": {"column": 13, "line": 41}, "start": {"column": 9, "line": 41}}}}, "range": {"end": {"column": 54, "line": 41}, "start": {"column": 9, "line": 41}}}], "stringLiteralExprs": [{"range": {"end": {"column": 53, "line": 41}, "start": {"column": 14, "line": 41}}, "segments": [{"stringSegment": {"content": "Open this window from the Window menu", "range": {"end": {"column": 52, "line": 41}, "start": {"column": 15, "line": 41}}}}]}]}
 
 # Parser output for `WindowGroup(id: "primary-scene") { ContentView() }` at 8:5.
-does_not_warn_for_non_visible_scene_identifier_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 8, "column": 5}, "end": {"line": 8, "column": 55}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 8, "column": 5}, "end": {"line": 8, "column": 16}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 8, "column": 5}, "end": {"line": 8, "column": 16}}, "token": {"kind": "identifier", "text": "WindowGroup"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 8, "column": 16}, "end": {"line": 8, "column": 17}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 8, "column": 17}, "end": {"line": 8, "column": 36}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 8, "column": 17}, "end": {"line": 8, "column": 36}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 8, "column": 17}, "end": {"line": 8, "column": 19}}, "token": {"kind": "identifier", "text": "id"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 8, "column": 19}, "end": {"line": 8, "column": 20}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 8, "column": 21}, "end": {"line": 8, "column": 36}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 8, "column": 21}, "end": {"line": 8, "column": 22}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 8, "column": 22}, "end": {"line": 8, "column": 35}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 8, "column": 22}, "end": {"line": 8, "column": 35}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 8, "column": 22}, "end": {"line": 8, "column": 35}}, "token": {"kind": "stringSegment", "text": "primary-scene"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 8, "column": 35}, "end": {"line": 8, "column": 36}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 8, "column": 36}, "end": {"line": 8, "column": 37}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "ClosureExprSyntax", "range": {"start": {"line": 8, "column": 38}, "end": {"line": 8, "column": 55}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 8, "column": 38}, "end": {"line": 8, "column": 39}}, "token": {"kind": "leftBrace", "text": "{"}, "children": []},
-    {"type": "CodeBlockItemListSyntax", "range": {"start": {"line": 8, "column": 40}, "end": {"line": 8, "column": 53}}, "children": [
-      {"type": "CodeBlockItemSyntax", "range": {"start": {"line": 8, "column": 40}, "end": {"line": 8, "column": 53}}, "children": [
-        {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 8, "column": 40}, "end": {"line": 8, "column": 53}}, "children": [
-          {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 8, "column": 40}, "end": {"line": 8, "column": 51}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 8, "column": 40}, "end": {"line": 8, "column": 51}}, "token": {"kind": "identifier", "text": "ContentView"}, "children": []},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 8, "column": 51}, "end": {"line": 8, "column": 52}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-          {"type": "LabeledExprListSyntax", "range": {"start": {"line": 8, "column": 52}, "end": {"line": 8, "column": 52}}, "children": []},
-          {"type": "TokenSyntax", "range": {"start": {"line": 8, "column": 52}, "end": {"line": 8, "column": 53}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-          {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 8, "column": 54}, "end": {"line": 8, "column": 54}}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 8, "column": 54}, "end": {"line": 8, "column": 55}}, "token": {"kind": "rightBrace", "text": "}"}, "children": []},
-  ]},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 8, "column": 55}, "end": {"line": 8, "column": 55}}, "children": []},
-]}
+does_not_warn_for_non_visible_scene_identifier_node := {"declReferenceExprs": [{"baseName": "WindowGroup", "range": {"end": {"column": 16, "line": 8}, "start": {"column": 5, "line": 8}}}, {"baseName": "ContentView", "range": {"end": {"column": 51, "line": 8}, "start": {"column": 40, "line": 8}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 36, "line": 8}, "start": {"column": 21, "line": 8}}, "segments": [{"stringSegment": {"content": "primary-scene", "range": {"end": {"column": 35, "line": 8}, "start": {"column": 22, "line": 8}}}}]}}, "label": "id", "range": {"end": {"column": 36, "line": 8}, "start": {"column": 17, "line": 8}}}], "calledExpression": {"declReferenceExpr": {"baseName": "WindowGroup", "range": {"end": {"column": 16, "line": 8}, "start": {"column": 5, "line": 8}}}}, "range": {"end": {"column": 55, "line": 8}, "start": {"column": 5, "line": 8}}, "trailingClosure": {"range": {"end": {"column": 55, "line": 8}, "start": {"column": 38, "line": 8}}, "statements": [{"item": {"expr": {"functionCallExpr": {"calledExpression": {"declReferenceExpr": {"baseName": "ContentView", "range": {"end": {"column": 51, "line": 8}, "start": {"column": 40, "line": 8}}}}, "range": {"end": {"column": 53, "line": 8}, "start": {"column": 40, "line": 8}}}}}, "range": {"end": {"column": 53, "line": 8}, "start": {"column": 40, "line": 8}}}]}}, {"calledExpression": {"declReferenceExpr": {"baseName": "ContentView", "range": {"end": {"column": 51, "line": 8}, "start": {"column": 40, "line": 8}}}}, "range": {"end": {"column": 53, "line": 8}, "start": {"column": 40, "line": 8}}}], "stringLiteralExprs": [{"range": {"end": {"column": 36, "line": 8}, "start": {"column": 21, "line": 8}}, "segments": [{"stringSegment": {"content": "primary-scene", "range": {"end": {"column": 35, "line": 8}, "start": {"column": 22, "line": 8}}}}]}]}
 
 # Parser output for `Text("Choose scenery")` at 18:9.
-does_not_warn_for_scenery_word_boundary_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 18, "column": 9}, "end": {"line": 18, "column": 31}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 18, "column": 9}, "end": {"line": 18, "column": 13}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 9}, "end": {"line": 18, "column": 13}}, "token": {"kind": "identifier", "text": "Text"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 13}, "end": {"line": 18, "column": 14}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 18, "column": 14}, "end": {"line": 18, "column": 30}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 18, "column": 14}, "end": {"line": 18, "column": 30}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 18, "column": 14}, "end": {"line": 18, "column": 30}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 14}, "end": {"line": 18, "column": 15}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 18, "column": 15}, "end": {"line": 18, "column": 29}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 18, "column": 15}, "end": {"line": 18, "column": 29}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 15}, "end": {"line": 18, "column": 29}}, "token": {"kind": "stringSegment", "text": "Choose scenery"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 29}, "end": {"line": 18, "column": 30}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 30}, "end": {"line": 18, "column": 31}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 18, "column": 31}, "end": {"line": 18, "column": 31}}, "children": []},
-]}
+does_not_warn_for_scenery_word_boundary_node := {"declReferenceExprs": [{"baseName": "Text", "range": {"end": {"column": 13, "line": 18}, "start": {"column": 9, "line": 18}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 30, "line": 18}, "start": {"column": 14, "line": 18}}, "segments": [{"stringSegment": {"content": "Choose scenery", "range": {"end": {"column": 29, "line": 18}, "start": {"column": 15, "line": 18}}}}]}}, "range": {"end": {"column": 30, "line": 18}, "start": {"column": 14, "line": 18}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Text", "range": {"end": {"column": 13, "line": 18}, "start": {"column": 9, "line": 18}}}}, "range": {"end": {"column": 31, "line": 18}, "start": {"column": 9, "line": 18}}}], "stringLiteralExprs": [{"range": {"end": {"column": 30, "line": 18}, "start": {"column": 14, "line": 18}}, "segments": [{"stringSegment": {"content": "Choose scenery", "range": {"end": {"column": 29, "line": 18}, "start": {"column": 15, "line": 18}}}}]}]}

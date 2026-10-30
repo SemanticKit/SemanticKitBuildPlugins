@@ -20,21 +20,13 @@ table_column_heading_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
-  callee := call.children[0]
-  callee.type == "DeclReferenceExprSyntax"
-  callee.children[0].token.text == "TableColumn"
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  labeled_argument := argument_list.children[_]
-  literal := labeled_argument.children[_]
-  literal.type == "StringLiteralExprSyntax"
-  segment_list := literal.children[_]
-  segment_list.type == "StringLiteralSegmentListSyntax"
-  segment := segment_list.children[_]
-  segment.type == "StringSegmentSyntax"
-  heading := segment.children[0].token.text
+  some call in input.functionCallExprs
+  callee := call.calledExpression.declReferenceExpr
+  callee.baseName == "TableColumn"
+  some labeled_argument in call.arguments
+  literal := labeled_argument.expression.stringLiteralExpr
+  segment := literal.segments[_].stringSegment
+  heading := segment.content
   endswith(heading, ":")
 }
 
@@ -45,21 +37,13 @@ table_column_heading_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
-  callee := call.children[0]
-  callee.type == "DeclReferenceExprSyntax"
-  callee.children[0].token.text == "TableColumn"
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  labeled_argument := argument_list.children[_]
-  literal := labeled_argument.children[_]
-  literal.type == "StringLiteralExprSyntax"
-  segment_list := literal.children[_]
-  segment_list.type == "StringLiteralSegmentListSyntax"
-  segment := segment_list.children[_]
-  segment.type == "StringSegmentSyntax"
-  heading := segment.children[0].token.text
+  some call in input.functionCallExprs
+  callee := call.calledExpression.declReferenceExpr
+  callee.baseName == "TableColumn"
+  some labeled_argument in call.arguments
+  literal := labeled_argument.expression.stringLiteralExpr
+  segment := literal.segments[_].stringSegment
+  heading := segment.content
   punctuation := sentence_ending_punctuations[_]
   endswith(heading, punctuation)
 }

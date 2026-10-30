@@ -29,83 +29,10 @@ test_does_not_warn_for_safe_area_inset if {
 }
 
 # Parser output for `background.ignoresSafeArea()` at 30:9.
-ignores_safe_area_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 30, "column": 9}, "end": {"line": 30, "column": 37}}, "children": [
-  {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 30, "column": 9}, "end": {"line": 30, "column": 35}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 30, "column": 9}, "end": {"line": 30, "column": 19}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 30, "column": 9}, "end": {"line": 30, "column": 19}}, "token": {"kind": "identifier", "text": "background"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 30, "column": 19}, "end": {"line": 30, "column": 20}}, "token": {"kind": "period", "text": "."}, "children": []},
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 30, "column": 20}, "end": {"line": 30, "column": 35}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 30, "column": 20}, "end": {"line": 30, "column": 35}}, "token": {"kind": "identifier", "text": "ignoresSafeArea"}, "children": []},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 30, "column": 35}, "end": {"line": 30, "column": 36}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 30, "column": 36}, "end": {"line": 30, "column": 36}}, "children": []},
-  {"type": "TokenSyntax", "range": {"start": {"line": 30, "column": 36}, "end": {"line": 30, "column": 37}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 30, "column": 37}, "end": {"line": 30, "column": 37}}, "children": []},
-]}
+ignores_safe_area_node := {"declReferenceExprs": [{"baseName": "background", "range": {"end": {"column": 19, "line": 30}, "start": {"column": 9, "line": 30}}}, {"baseName": "ignoresSafeArea", "range": {"end": {"column": 35, "line": 30}, "start": {"column": 20, "line": 30}}}], "functionCallExprs": [{"calledExpression": {"memberAccessExpr": {"base": {"declReferenceExpr": {"baseName": "background", "range": {"end": {"column": 19, "line": 30}, "start": {"column": 9, "line": 30}}}}, "declName": {"baseName": "ignoresSafeArea", "range": {"end": {"column": 35, "line": 30}, "start": {"column": 20, "line": 30}}}, "range": {"end": {"column": 35, "line": 30}, "start": {"column": 9, "line": 30}}}}, "range": {"end": {"column": 37, "line": 30}, "start": {"column": 9, "line": 30}}}], "memberAccessExprs": [{"base": {"declReferenceExpr": {"baseName": "background", "range": {"end": {"column": 19, "line": 30}, "start": {"column": 9, "line": 30}}}}, "declName": {"baseName": "ignoresSafeArea", "range": {"end": {"column": 35, "line": 30}, "start": {"column": 20, "line": 30}}}, "range": {"end": {"column": 35, "line": 30}, "start": {"column": 9, "line": 30}}}]}
 
 # Parser output for `map.edgesIgnoringSafeArea(.all)` at 31:9.
-edges_ignoring_safe_area_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 31, "column": 9}, "end": {"line": 31, "column": 40}}, "children": [
-  {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 31, "column": 9}, "end": {"line": 31, "column": 34}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 31, "column": 9}, "end": {"line": 31, "column": 12}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 9}, "end": {"line": 31, "column": 12}}, "token": {"kind": "identifier", "text": "map"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 12}, "end": {"line": 31, "column": 13}}, "token": {"kind": "period", "text": "."}, "children": []},
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 31, "column": 13}, "end": {"line": 31, "column": 34}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 13}, "end": {"line": 31, "column": 34}}, "token": {"kind": "identifier", "text": "edgesIgnoringSafeArea"}, "children": []},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 34}, "end": {"line": 31, "column": 35}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 31, "column": 35}, "end": {"line": 31, "column": 39}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 31, "column": 35}, "end": {"line": 31, "column": 39}}, "children": [
-      {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 31, "column": 35}, "end": {"line": 31, "column": 39}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 35}, "end": {"line": 31, "column": 36}}, "token": {"kind": "period", "text": "."}, "children": []},
-        {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 31, "column": 36}, "end": {"line": 31, "column": 39}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 36}, "end": {"line": 31, "column": 39}}, "token": {"kind": "identifier", "text": "all"}, "children": []},
-        ]},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 39}, "end": {"line": 31, "column": 40}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 31, "column": 40}, "end": {"line": 31, "column": 40}}, "children": []},
-]}
+edges_ignoring_safe_area_node := {"declReferenceExprs": [{"baseName": "map", "range": {"end": {"column": 12, "line": 31}, "start": {"column": 9, "line": 31}}}, {"baseName": "edgesIgnoringSafeArea", "range": {"end": {"column": 34, "line": 31}, "start": {"column": 13, "line": 31}}}, {"baseName": "all", "range": {"end": {"column": 39, "line": 31}, "start": {"column": 36, "line": 31}}}], "functionCallExprs": [{"arguments": [{"expression": {"memberAccessExpr": {"declName": {"baseName": "all", "range": {"end": {"column": 39, "line": 31}, "start": {"column": 36, "line": 31}}}, "range": {"end": {"column": 39, "line": 31}, "start": {"column": 35, "line": 31}}}}, "range": {"end": {"column": 39, "line": 31}, "start": {"column": 35, "line": 31}}}], "calledExpression": {"memberAccessExpr": {"base": {"declReferenceExpr": {"baseName": "map", "range": {"end": {"column": 12, "line": 31}, "start": {"column": 9, "line": 31}}}}, "declName": {"baseName": "edgesIgnoringSafeArea", "range": {"end": {"column": 34, "line": 31}, "start": {"column": 13, "line": 31}}}, "range": {"end": {"column": 34, "line": 31}, "start": {"column": 9, "line": 31}}}}, "range": {"end": {"column": 40, "line": 31}, "start": {"column": 9, "line": 31}}}], "memberAccessExprs": [{"base": {"declReferenceExpr": {"baseName": "map", "range": {"end": {"column": 12, "line": 31}, "start": {"column": 9, "line": 31}}}}, "declName": {"baseName": "edgesIgnoringSafeArea", "range": {"end": {"column": 34, "line": 31}, "start": {"column": 13, "line": 31}}}, "range": {"end": {"column": 34, "line": 31}, "start": {"column": 9, "line": 31}}}, {"declName": {"baseName": "all", "range": {"end": {"column": 39, "line": 31}, "start": {"column": 36, "line": 31}}}, "range": {"end": {"column": 39, "line": 31}, "start": {"column": 35, "line": 31}}}]}
 
 # Parser output for `list.safeAreaInset(edge: .bottom) { toolbar }` at 32:9.
-safe_area_inset_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 32, "column": 9}, "end": {"line": 32, "column": 54}}, "children": [
-  {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 32, "column": 9}, "end": {"line": 32, "column": 27}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 32, "column": 9}, "end": {"line": 32, "column": 13}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 32, "column": 9}, "end": {"line": 32, "column": 13}}, "token": {"kind": "identifier", "text": "list"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 32, "column": 13}, "end": {"line": 32, "column": 14}}, "token": {"kind": "period", "text": "."}, "children": []},
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 32, "column": 14}, "end": {"line": 32, "column": 27}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 32, "column": 14}, "end": {"line": 32, "column": 27}}, "token": {"kind": "identifier", "text": "safeAreaInset"}, "children": []},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 32, "column": 27}, "end": {"line": 32, "column": 28}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 32, "column": 28}, "end": {"line": 32, "column": 41}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 32, "column": 28}, "end": {"line": 32, "column": 41}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 32, "column": 28}, "end": {"line": 32, "column": 32}}, "token": {"kind": "identifier", "text": "edge"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 32, "column": 32}, "end": {"line": 32, "column": 33}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "MemberAccessExprSyntax", "range": {"start": {"line": 32, "column": 34}, "end": {"line": 32, "column": 41}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 32, "column": 34}, "end": {"line": 32, "column": 35}}, "token": {"kind": "period", "text": "."}, "children": []},
-        {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 32, "column": 35}, "end": {"line": 32, "column": 41}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 32, "column": 35}, "end": {"line": 32, "column": 41}}, "token": {"kind": "identifier", "text": "bottom"}, "children": []},
-        ]},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 32, "column": 41}, "end": {"line": 32, "column": 42}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "ClosureExprSyntax", "range": {"start": {"line": 32, "column": 43}, "end": {"line": 32, "column": 54}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 32, "column": 43}, "end": {"line": 32, "column": 44}}, "token": {"kind": "leftBrace", "text": "{"}, "children": []},
-    {"type": "CodeBlockItemListSyntax", "range": {"start": {"line": 32, "column": 45}, "end": {"line": 32, "column": 52}}, "children": [
-      {"type": "CodeBlockItemSyntax", "range": {"start": {"line": 32, "column": 45}, "end": {"line": 32, "column": 52}}, "children": [
-        {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 32, "column": 45}, "end": {"line": 32, "column": 52}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 32, "column": 45}, "end": {"line": 32, "column": 52}}, "token": {"kind": "identifier", "text": "toolbar"}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 32, "column": 53}, "end": {"line": 32, "column": 54}}, "token": {"kind": "rightBrace", "text": "}"}, "children": []},
-  ]},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 32, "column": 54}, "end": {"line": 32, "column": 54}}, "children": []},
-]}
+safe_area_inset_node := {"declReferenceExprs": [{"baseName": "list", "range": {"end": {"column": 13, "line": 32}, "start": {"column": 9, "line": 32}}}, {"baseName": "safeAreaInset", "range": {"end": {"column": 27, "line": 32}, "start": {"column": 14, "line": 32}}}, {"baseName": "bottom", "range": {"end": {"column": 41, "line": 32}, "start": {"column": 35, "line": 32}}}, {"baseName": "toolbar", "range": {"end": {"column": 52, "line": 32}, "start": {"column": 45, "line": 32}}}], "functionCallExprs": [{"arguments": [{"expression": {"memberAccessExpr": {"declName": {"baseName": "bottom", "range": {"end": {"column": 41, "line": 32}, "start": {"column": 35, "line": 32}}}, "range": {"end": {"column": 41, "line": 32}, "start": {"column": 34, "line": 32}}}}, "label": "edge", "range": {"end": {"column": 41, "line": 32}, "start": {"column": 28, "line": 32}}}], "calledExpression": {"memberAccessExpr": {"base": {"declReferenceExpr": {"baseName": "list", "range": {"end": {"column": 13, "line": 32}, "start": {"column": 9, "line": 32}}}}, "declName": {"baseName": "safeAreaInset", "range": {"end": {"column": 27, "line": 32}, "start": {"column": 14, "line": 32}}}, "range": {"end": {"column": 27, "line": 32}, "start": {"column": 9, "line": 32}}}}, "range": {"end": {"column": 54, "line": 32}, "start": {"column": 9, "line": 32}}, "trailingClosure": {"range": {"end": {"column": 54, "line": 32}, "start": {"column": 43, "line": 32}}, "statements": [{"item": {"expr": {"declReferenceExpr": {"baseName": "toolbar", "range": {"end": {"column": 52, "line": 32}, "start": {"column": 45, "line": 32}}}}}, "range": {"end": {"column": 52, "line": 32}, "start": {"column": 45, "line": 32}}}]}}], "memberAccessExprs": [{"base": {"declReferenceExpr": {"baseName": "list", "range": {"end": {"column": 13, "line": 32}, "start": {"column": 9, "line": 32}}}}, "declName": {"baseName": "safeAreaInset", "range": {"end": {"column": 27, "line": 32}, "start": {"column": 14, "line": 32}}}, "range": {"end": {"column": 27, "line": 32}, "start": {"column": 9, "line": 32}}}, {"declName": {"baseName": "bottom", "range": {"end": {"column": 41, "line": 32}, "start": {"column": 35, "line": 32}}}, "range": {"end": {"column": 41, "line": 32}, "start": {"column": 34, "line": 32}}}]}

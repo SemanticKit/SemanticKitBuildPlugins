@@ -20,13 +20,8 @@ accessibility_hidden_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
+  some call in input.functionCallExprs
 
-  callee := call.children[0]
-  callee.type == "MemberAccessExprSyntax"
-  member := callee.children[count(callee.children) - 1]
-  member.type == "DeclReferenceExprSyntax"
-  token := member.children[0].token
-  token.text == "accessibilityHidden"
+  member := call.calledExpression.memberAccessExpr.declName
+    member.baseName == "accessibilityHidden"
 }

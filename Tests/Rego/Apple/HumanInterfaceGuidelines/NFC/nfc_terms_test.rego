@@ -56,291 +56,33 @@ test_does_not_warn_for_preferred_nfc_copy if {
 }
 
 # Parser output for `Text("Start NFC scan")` at 18:9.
-warns_for_visible_nfc_technical_term_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 18, "column": 9}, "end": {"line": 18, "column": 31}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 18, "column": 9}, "end": {"line": 18, "column": 13}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 9}, "end": {"line": 18, "column": 13}}, "token": {"kind": "identifier", "text": "Text"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 13}, "end": {"line": 18, "column": 14}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 18, "column": 14}, "end": {"line": 18, "column": 30}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 18, "column": 14}, "end": {"line": 18, "column": 30}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 18, "column": 14}, "end": {"line": 18, "column": 30}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 14}, "end": {"line": 18, "column": 15}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 18, "column": 15}, "end": {"line": 18, "column": 29}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 18, "column": 15}, "end": {"line": 18, "column": 29}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 15}, "end": {"line": 18, "column": 29}}, "token": {"kind": "stringSegment", "text": "Start NFC scan"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 29}, "end": {"line": 18, "column": 30}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 18, "column": 30}, "end": {"line": 18, "column": 31}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 18, "column": 31}, "end": {"line": 18, "column": 31}}, "children": []},
-]}
+warns_for_visible_nfc_technical_term_node := {"declReferenceExprs": [{"baseName": "Text", "range": {"end": {"column": 13, "line": 18}, "start": {"column": 9, "line": 18}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 30, "line": 18}, "start": {"column": 14, "line": 18}}, "segments": [{"stringSegment": {"content": "Start NFC scan", "range": {"end": {"column": 29, "line": 18}, "start": {"column": 15, "line": 18}}}}]}}, "range": {"end": {"column": 30, "line": 18}, "start": {"column": 14, "line": 18}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Text", "range": {"end": {"column": 13, "line": 18}, "start": {"column": 9, "line": 18}}}}, "range": {"end": {"column": 31, "line": 18}, "start": {"column": 9, "line": 18}}}], "stringLiteralExprs": [{"range": {"end": {"column": 30, "line": 18}, "start": {"column": 14, "line": 18}}, "segments": [{"stringSegment": {"content": "Start NFC scan", "range": {"end": {"column": 29, "line": 18}, "start": {"column": 15, "line": 18}}}}]}]}
 
 # Parser output for `Text("Use Core NFC")` at 23:9.
 # Parser output for `Button("Near-field communication scan", action: scan)` at 24:9.
 # Parser output for `Label("Near field communication reader", systemImage: "wave.3.right")` at 25:9.
 warns_for_visible_nfc_technical_term_variants_nodes := [
-  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 23, "column": 9}, "end": {"line": 23, "column": 29}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 23, "column": 9}, "end": {"line": 23, "column": 13}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 23, "column": 9}, "end": {"line": 23, "column": 13}}, "token": {"kind": "identifier", "text": "Text"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 23, "column": 13}, "end": {"line": 23, "column": 14}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 23, "column": 14}, "end": {"line": 23, "column": 28}}, "children": [
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 23, "column": 14}, "end": {"line": 23, "column": 28}}, "children": [
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 23, "column": 14}, "end": {"line": 23, "column": 28}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 23, "column": 14}, "end": {"line": 23, "column": 15}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 23, "column": 15}, "end": {"line": 23, "column": 27}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 23, "column": 15}, "end": {"line": 23, "column": 27}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 23, "column": 15}, "end": {"line": 23, "column": 27}}, "token": {"kind": "stringSegment", "text": "Use Core NFC"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 23, "column": 27}, "end": {"line": 23, "column": 28}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 23, "column": 28}, "end": {"line": 23, "column": 29}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 23, "column": 29}, "end": {"line": 23, "column": 29}}, "children": []},
-  ]},
-  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 24, "column": 9}, "end": {"line": 24, "column": 62}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 24, "column": 9}, "end": {"line": 24, "column": 15}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 9}, "end": {"line": 24, "column": 15}}, "token": {"kind": "identifier", "text": "Button"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 15}, "end": {"line": 24, "column": 16}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 24, "column": 16}, "end": {"line": 24, "column": 61}}, "children": [
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 24, "column": 16}, "end": {"line": 24, "column": 48}}, "children": [
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 24, "column": 16}, "end": {"line": 24, "column": 47}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 16}, "end": {"line": 24, "column": 17}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 24, "column": 17}, "end": {"line": 24, "column": 46}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 24, "column": 17}, "end": {"line": 24, "column": 46}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 17}, "end": {"line": 24, "column": 46}}, "token": {"kind": "stringSegment", "text": "Near-field communication scan"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 46}, "end": {"line": 24, "column": 47}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 47}, "end": {"line": 24, "column": 48}}, "token": {"kind": "comma", "text": ","}, "children": []},
-      ]},
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 24, "column": 49}, "end": {"line": 24, "column": 61}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 49}, "end": {"line": 24, "column": 55}}, "token": {"kind": "identifier", "text": "action"}, "children": []},
-        {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 55}, "end": {"line": 24, "column": 56}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-        {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 24, "column": 57}, "end": {"line": 24, "column": 61}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 57}, "end": {"line": 24, "column": 61}}, "token": {"kind": "identifier", "text": "scan"}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 61}, "end": {"line": 24, "column": 62}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 24, "column": 62}, "end": {"line": 24, "column": 62}}, "children": []},
-  ]},
-  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 25, "column": 9}, "end": {"line": 25, "column": 78}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 25, "column": 9}, "end": {"line": 25, "column": 14}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 25, "column": 9}, "end": {"line": 25, "column": 14}}, "token": {"kind": "identifier", "text": "Label"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 25, "column": 14}, "end": {"line": 25, "column": 15}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 25, "column": 15}, "end": {"line": 25, "column": 77}}, "children": [
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 25, "column": 15}, "end": {"line": 25, "column": 49}}, "children": [
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 25, "column": 15}, "end": {"line": 25, "column": 48}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 25, "column": 15}, "end": {"line": 25, "column": 16}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 25, "column": 16}, "end": {"line": 25, "column": 47}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 25, "column": 16}, "end": {"line": 25, "column": 47}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 25, "column": 16}, "end": {"line": 25, "column": 47}}, "token": {"kind": "stringSegment", "text": "Near field communication reader"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 25, "column": 47}, "end": {"line": 25, "column": 48}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 25, "column": 48}, "end": {"line": 25, "column": 49}}, "token": {"kind": "comma", "text": ","}, "children": []},
-      ]},
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 25, "column": 50}, "end": {"line": 25, "column": 77}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 25, "column": 50}, "end": {"line": 25, "column": 61}}, "token": {"kind": "identifier", "text": "systemImage"}, "children": []},
-        {"type": "TokenSyntax", "range": {"start": {"line": 25, "column": 61}, "end": {"line": 25, "column": 62}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 25, "column": 63}, "end": {"line": 25, "column": 77}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 25, "column": 63}, "end": {"line": 25, "column": 64}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 25, "column": 64}, "end": {"line": 25, "column": 76}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 25, "column": 64}, "end": {"line": 25, "column": 76}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 25, "column": 64}, "end": {"line": 25, "column": 76}}, "token": {"kind": "stringSegment", "text": "wave.3.right"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 25, "column": 76}, "end": {"line": 25, "column": 77}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 25, "column": 77}, "end": {"line": 25, "column": 78}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 25, "column": 78}, "end": {"line": 25, "column": 78}}, "children": []},
-  ]},
+  {"declReferenceExprs": [{"baseName": "Text", "range": {"end": {"column": 13, "line": 23}, "start": {"column": 9, "line": 23}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 28, "line": 23}, "start": {"column": 14, "line": 23}}, "segments": [{"stringSegment": {"content": "Use Core NFC", "range": {"end": {"column": 27, "line": 23}, "start": {"column": 15, "line": 23}}}}]}}, "range": {"end": {"column": 28, "line": 23}, "start": {"column": 14, "line": 23}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Text", "range": {"end": {"column": 13, "line": 23}, "start": {"column": 9, "line": 23}}}}, "range": {"end": {"column": 29, "line": 23}, "start": {"column": 9, "line": 23}}}], "stringLiteralExprs": [{"range": {"end": {"column": 28, "line": 23}, "start": {"column": 14, "line": 23}}, "segments": [{"stringSegment": {"content": "Use Core NFC", "range": {"end": {"column": 27, "line": 23}, "start": {"column": 15, "line": 23}}}}]}]},
+  {"declReferenceExprs": [{"baseName": "Button", "range": {"end": {"column": 15, "line": 24}, "start": {"column": 9, "line": 24}}}, {"baseName": "scan", "range": {"end": {"column": 61, "line": 24}, "start": {"column": 57, "line": 24}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 47, "line": 24}, "start": {"column": 16, "line": 24}}, "segments": [{"stringSegment": {"content": "Near-field communication scan", "range": {"end": {"column": 46, "line": 24}, "start": {"column": 17, "line": 24}}}}]}}, "range": {"end": {"column": 48, "line": 24}, "start": {"column": 16, "line": 24}}}, {"expression": {"declReferenceExpr": {"baseName": "scan", "range": {"end": {"column": 61, "line": 24}, "start": {"column": 57, "line": 24}}}}, "label": "action", "range": {"end": {"column": 61, "line": 24}, "start": {"column": 49, "line": 24}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Button", "range": {"end": {"column": 15, "line": 24}, "start": {"column": 9, "line": 24}}}}, "range": {"end": {"column": 62, "line": 24}, "start": {"column": 9, "line": 24}}}], "stringLiteralExprs": [{"range": {"end": {"column": 47, "line": 24}, "start": {"column": 16, "line": 24}}, "segments": [{"stringSegment": {"content": "Near-field communication scan", "range": {"end": {"column": 46, "line": 24}, "start": {"column": 17, "line": 24}}}}]}]},
+  {"declReferenceExprs": [{"baseName": "Label", "range": {"end": {"column": 14, "line": 25}, "start": {"column": 9, "line": 25}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 48, "line": 25}, "start": {"column": 15, "line": 25}}, "segments": [{"stringSegment": {"content": "Near field communication reader", "range": {"end": {"column": 47, "line": 25}, "start": {"column": 16, "line": 25}}}}]}}, "range": {"end": {"column": 49, "line": 25}, "start": {"column": 15, "line": 25}}}, {"expression": {"stringLiteralExpr": {"range": {"end": {"column": 77, "line": 25}, "start": {"column": 63, "line": 25}}, "segments": [{"stringSegment": {"content": "wave.3.right", "range": {"end": {"column": 76, "line": 25}, "start": {"column": 64, "line": 25}}}}]}}, "label": "systemImage", "range": {"end": {"column": 77, "line": 25}, "start": {"column": 50, "line": 25}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Label", "range": {"end": {"column": 14, "line": 25}, "start": {"column": 9, "line": 25}}}}, "range": {"end": {"column": 78, "line": 25}, "start": {"column": 9, "line": 25}}}], "stringLiteralExprs": [{"range": {"end": {"column": 48, "line": 25}, "start": {"column": 15, "line": 25}}, "segments": [{"stringSegment": {"content": "Near field communication reader", "range": {"end": {"column": 47, "line": 25}, "start": {"column": 16, "line": 25}}}}]}, {"range": {"end": {"column": 77, "line": 25}, "start": {"column": 63, "line": 25}}, "segments": [{"stringSegment": {"content": "wave.3.right", "range": {"end": {"column": 76, "line": 25}, "start": {"column": 64, "line": 25}}}}]}]},
 ]
 
 # Parser output for `Label("Tap the NFC reader", systemImage: "wave.3.right")` at 27:9.
-warns_for_contact_term_with_nfc_context_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 27, "column": 9}, "end": {"line": 27, "column": 65}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 27, "column": 9}, "end": {"line": 27, "column": 14}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 9}, "end": {"line": 27, "column": 14}}, "token": {"kind": "identifier", "text": "Label"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 14}, "end": {"line": 27, "column": 15}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 27, "column": 15}, "end": {"line": 27, "column": 64}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 27, "column": 15}, "end": {"line": 27, "column": 36}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 27, "column": 15}, "end": {"line": 27, "column": 35}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 15}, "end": {"line": 27, "column": 16}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 27, "column": 16}, "end": {"line": 27, "column": 34}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 27, "column": 16}, "end": {"line": 27, "column": 34}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 16}, "end": {"line": 27, "column": 34}}, "token": {"kind": "stringSegment", "text": "Tap the NFC reader"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 34}, "end": {"line": 27, "column": 35}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-      {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 35}, "end": {"line": 27, "column": 36}}, "token": {"kind": "comma", "text": ","}, "children": []},
-    ]},
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 27, "column": 37}, "end": {"line": 27, "column": 64}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 37}, "end": {"line": 27, "column": 48}}, "token": {"kind": "identifier", "text": "systemImage"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 48}, "end": {"line": 27, "column": 49}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 27, "column": 50}, "end": {"line": 27, "column": 64}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 50}, "end": {"line": 27, "column": 51}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 27, "column": 51}, "end": {"line": 27, "column": 63}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 27, "column": 51}, "end": {"line": 27, "column": 63}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 51}, "end": {"line": 27, "column": 63}}, "token": {"kind": "stringSegment", "text": "wave.3.right"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 63}, "end": {"line": 27, "column": 64}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 27, "column": 64}, "end": {"line": 27, "column": 65}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 27, "column": 65}, "end": {"line": 27, "column": 65}}, "children": []},
-]}
+warns_for_contact_term_with_nfc_context_node := {"declReferenceExprs": [{"baseName": "Label", "range": {"end": {"column": 14, "line": 27}, "start": {"column": 9, "line": 27}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 35, "line": 27}, "start": {"column": 15, "line": 27}}, "segments": [{"stringSegment": {"content": "Tap the NFC reader", "range": {"end": {"column": 34, "line": 27}, "start": {"column": 16, "line": 27}}}}]}}, "range": {"end": {"column": 36, "line": 27}, "start": {"column": 15, "line": 27}}}, {"expression": {"stringLiteralExpr": {"range": {"end": {"column": 64, "line": 27}, "start": {"column": 50, "line": 27}}, "segments": [{"stringSegment": {"content": "wave.3.right", "range": {"end": {"column": 63, "line": 27}, "start": {"column": 51, "line": 27}}}}]}}, "label": "systemImage", "range": {"end": {"column": 64, "line": 27}, "start": {"column": 37, "line": 27}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Label", "range": {"end": {"column": 14, "line": 27}, "start": {"column": 9, "line": 27}}}}, "range": {"end": {"column": 65, "line": 27}, "start": {"column": 9, "line": 27}}}], "stringLiteralExprs": [{"range": {"end": {"column": 35, "line": 27}, "start": {"column": 15, "line": 27}}, "segments": [{"stringSegment": {"content": "Tap the NFC reader", "range": {"end": {"column": 34, "line": 27}, "start": {"column": 16, "line": 27}}}}]}, {"range": {"end": {"column": 64, "line": 27}, "start": {"column": 50, "line": 27}}, "segments": [{"stringSegment": {"content": "wave.3.right", "range": {"end": {"column": 63, "line": 27}, "start": {"column": 51, "line": 27}}}}]}]}
 
 # Parser output for `Button("Tag friends", action: tagFriends)` at 41:9.
 # Parser output for `Text("Hashtag ideas")` at 42:9.
 does_not_warn_for_unrelated_tag_copy_nodes := [
-  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 41, "column": 9}, "end": {"line": 41, "column": 50}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 41, "column": 9}, "end": {"line": 41, "column": 15}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 41, "column": 9}, "end": {"line": 41, "column": 15}}, "token": {"kind": "identifier", "text": "Button"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 41, "column": 15}, "end": {"line": 41, "column": 16}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 41, "column": 16}, "end": {"line": 41, "column": 49}}, "children": [
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 41, "column": 16}, "end": {"line": 41, "column": 30}}, "children": [
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 41, "column": 16}, "end": {"line": 41, "column": 29}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 41, "column": 16}, "end": {"line": 41, "column": 17}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 41, "column": 17}, "end": {"line": 41, "column": 28}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 41, "column": 17}, "end": {"line": 41, "column": 28}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 41, "column": 17}, "end": {"line": 41, "column": 28}}, "token": {"kind": "stringSegment", "text": "Tag friends"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 41, "column": 28}, "end": {"line": 41, "column": 29}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 41, "column": 29}, "end": {"line": 41, "column": 30}}, "token": {"kind": "comma", "text": ","}, "children": []},
-      ]},
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 41, "column": 31}, "end": {"line": 41, "column": 49}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 41, "column": 31}, "end": {"line": 41, "column": 37}}, "token": {"kind": "identifier", "text": "action"}, "children": []},
-        {"type": "TokenSyntax", "range": {"start": {"line": 41, "column": 37}, "end": {"line": 41, "column": 38}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-        {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 41, "column": 39}, "end": {"line": 41, "column": 49}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 41, "column": 39}, "end": {"line": 41, "column": 49}}, "token": {"kind": "identifier", "text": "tagFriends"}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 41, "column": 49}, "end": {"line": 41, "column": 50}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 41, "column": 50}, "end": {"line": 41, "column": 50}}, "children": []},
-  ]},
-  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 42, "column": 9}, "end": {"line": 42, "column": 30}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 42, "column": 9}, "end": {"line": 42, "column": 13}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 9}, "end": {"line": 42, "column": 13}}, "token": {"kind": "identifier", "text": "Text"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 13}, "end": {"line": 42, "column": 14}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 42, "column": 14}, "end": {"line": 42, "column": 29}}, "children": [
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 42, "column": 14}, "end": {"line": 42, "column": 29}}, "children": [
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 42, "column": 14}, "end": {"line": 42, "column": 29}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 14}, "end": {"line": 42, "column": 15}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 42, "column": 15}, "end": {"line": 42, "column": 28}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 42, "column": 15}, "end": {"line": 42, "column": 28}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 15}, "end": {"line": 42, "column": 28}}, "token": {"kind": "stringSegment", "text": "Hashtag ideas"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 28}, "end": {"line": 42, "column": 29}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 42, "column": 29}, "end": {"line": 42, "column": 30}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 42, "column": 30}, "end": {"line": 42, "column": 30}}, "children": []},
-  ]},
+  {"declReferenceExprs": [{"baseName": "Button", "range": {"end": {"column": 15, "line": 41}, "start": {"column": 9, "line": 41}}}, {"baseName": "tagFriends", "range": {"end": {"column": 49, "line": 41}, "start": {"column": 39, "line": 41}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 29, "line": 41}, "start": {"column": 16, "line": 41}}, "segments": [{"stringSegment": {"content": "Tag friends", "range": {"end": {"column": 28, "line": 41}, "start": {"column": 17, "line": 41}}}}]}}, "range": {"end": {"column": 30, "line": 41}, "start": {"column": 16, "line": 41}}}, {"expression": {"declReferenceExpr": {"baseName": "tagFriends", "range": {"end": {"column": 49, "line": 41}, "start": {"column": 39, "line": 41}}}}, "label": "action", "range": {"end": {"column": 49, "line": 41}, "start": {"column": 31, "line": 41}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Button", "range": {"end": {"column": 15, "line": 41}, "start": {"column": 9, "line": 41}}}}, "range": {"end": {"column": 50, "line": 41}, "start": {"column": 9, "line": 41}}}], "stringLiteralExprs": [{"range": {"end": {"column": 29, "line": 41}, "start": {"column": 16, "line": 41}}, "segments": [{"stringSegment": {"content": "Tag friends", "range": {"end": {"column": 28, "line": 41}, "start": {"column": 17, "line": 41}}}}]}]},
+  {"declReferenceExprs": [{"baseName": "Text", "range": {"end": {"column": 13, "line": 42}, "start": {"column": 9, "line": 42}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 29, "line": 42}, "start": {"column": 14, "line": 42}}, "segments": [{"stringSegment": {"content": "Hashtag ideas", "range": {"end": {"column": 28, "line": 42}, "start": {"column": 15, "line": 42}}}}]}}, "range": {"end": {"column": 29, "line": 42}, "start": {"column": 14, "line": 42}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Text", "range": {"end": {"column": 13, "line": 42}, "start": {"column": 9, "line": 42}}}}, "range": {"end": {"column": 30, "line": 42}, "start": {"column": 9, "line": 42}}}], "stringLiteralExprs": [{"range": {"end": {"column": 29, "line": 42}, "start": {"column": 14, "line": 42}}, "segments": [{"stringSegment": {"content": "Hashtag ideas", "range": {"end": {"column": 28, "line": 42}, "start": {"column": 15, "line": 42}}}}]}]},
 ]
 
 # Parser output for `Label("Tap the reader", systemImage: "hand.tap")` at 47:9.
 # Parser output for `Text("Touch the screen")` at 48:9.
 does_not_warn_for_contact_terms_without_nfc_context_nodes := [
-  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 47, "column": 9}, "end": {"line": 47, "column": 57}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 47, "column": 9}, "end": {"line": 47, "column": 14}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 47, "column": 9}, "end": {"line": 47, "column": 14}}, "token": {"kind": "identifier", "text": "Label"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 47, "column": 14}, "end": {"line": 47, "column": 15}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 47, "column": 15}, "end": {"line": 47, "column": 56}}, "children": [
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 47, "column": 15}, "end": {"line": 47, "column": 32}}, "children": [
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 47, "column": 15}, "end": {"line": 47, "column": 31}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 47, "column": 15}, "end": {"line": 47, "column": 16}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 47, "column": 16}, "end": {"line": 47, "column": 30}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 47, "column": 16}, "end": {"line": 47, "column": 30}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 47, "column": 16}, "end": {"line": 47, "column": 30}}, "token": {"kind": "stringSegment", "text": "Tap the reader"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 47, "column": 30}, "end": {"line": 47, "column": 31}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 47, "column": 31}, "end": {"line": 47, "column": 32}}, "token": {"kind": "comma", "text": ","}, "children": []},
-      ]},
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 47, "column": 33}, "end": {"line": 47, "column": 56}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 47, "column": 33}, "end": {"line": 47, "column": 44}}, "token": {"kind": "identifier", "text": "systemImage"}, "children": []},
-        {"type": "TokenSyntax", "range": {"start": {"line": 47, "column": 44}, "end": {"line": 47, "column": 45}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 47, "column": 46}, "end": {"line": 47, "column": 56}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 47, "column": 46}, "end": {"line": 47, "column": 47}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 47, "column": 47}, "end": {"line": 47, "column": 55}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 47, "column": 47}, "end": {"line": 47, "column": 55}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 47, "column": 47}, "end": {"line": 47, "column": 55}}, "token": {"kind": "stringSegment", "text": "hand.tap"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 47, "column": 55}, "end": {"line": 47, "column": 56}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 47, "column": 56}, "end": {"line": 47, "column": 57}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 47, "column": 57}, "end": {"line": 47, "column": 57}}, "children": []},
-  ]},
-  {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 48, "column": 9}, "end": {"line": 48, "column": 33}}, "children": [
-    {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 48, "column": 9}, "end": {"line": 48, "column": 13}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 48, "column": 9}, "end": {"line": 48, "column": 13}}, "token": {"kind": "identifier", "text": "Text"}, "children": []},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 48, "column": 13}, "end": {"line": 48, "column": 14}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-    {"type": "LabeledExprListSyntax", "range": {"start": {"line": 48, "column": 14}, "end": {"line": 48, "column": 32}}, "children": [
-      {"type": "LabeledExprSyntax", "range": {"start": {"line": 48, "column": 14}, "end": {"line": 48, "column": 32}}, "children": [
-        {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 48, "column": 14}, "end": {"line": 48, "column": 32}}, "children": [
-          {"type": "TokenSyntax", "range": {"start": {"line": 48, "column": 14}, "end": {"line": 48, "column": 15}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-          {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 48, "column": 15}, "end": {"line": 48, "column": 31}}, "children": [
-            {"type": "StringSegmentSyntax", "range": {"start": {"line": 48, "column": 15}, "end": {"line": 48, "column": 31}}, "children": [
-              {"type": "TokenSyntax", "range": {"start": {"line": 48, "column": 15}, "end": {"line": 48, "column": 31}}, "token": {"kind": "stringSegment", "text": "Touch the screen"}, "children": []},
-            ]},
-          ]},
-          {"type": "TokenSyntax", "range": {"start": {"line": 48, "column": 31}, "end": {"line": 48, "column": 32}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        ]},
-      ]},
-    ]},
-    {"type": "TokenSyntax", "range": {"start": {"line": 48, "column": 32}, "end": {"line": 48, "column": 33}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-    {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 48, "column": 33}, "end": {"line": 48, "column": 33}}, "children": []},
-  ]},
+  {"declReferenceExprs": [{"baseName": "Label", "range": {"end": {"column": 14, "line": 47}, "start": {"column": 9, "line": 47}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 31, "line": 47}, "start": {"column": 15, "line": 47}}, "segments": [{"stringSegment": {"content": "Tap the reader", "range": {"end": {"column": 30, "line": 47}, "start": {"column": 16, "line": 47}}}}]}}, "range": {"end": {"column": 32, "line": 47}, "start": {"column": 15, "line": 47}}}, {"expression": {"stringLiteralExpr": {"range": {"end": {"column": 56, "line": 47}, "start": {"column": 46, "line": 47}}, "segments": [{"stringSegment": {"content": "hand.tap", "range": {"end": {"column": 55, "line": 47}, "start": {"column": 47, "line": 47}}}}]}}, "label": "systemImage", "range": {"end": {"column": 56, "line": 47}, "start": {"column": 33, "line": 47}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Label", "range": {"end": {"column": 14, "line": 47}, "start": {"column": 9, "line": 47}}}}, "range": {"end": {"column": 57, "line": 47}, "start": {"column": 9, "line": 47}}}], "stringLiteralExprs": [{"range": {"end": {"column": 31, "line": 47}, "start": {"column": 15, "line": 47}}, "segments": [{"stringSegment": {"content": "Tap the reader", "range": {"end": {"column": 30, "line": 47}, "start": {"column": 16, "line": 47}}}}]}, {"range": {"end": {"column": 56, "line": 47}, "start": {"column": 46, "line": 47}}, "segments": [{"stringSegment": {"content": "hand.tap", "range": {"end": {"column": 55, "line": 47}, "start": {"column": 47, "line": 47}}}}]}]},
+  {"declReferenceExprs": [{"baseName": "Text", "range": {"end": {"column": 13, "line": 48}, "start": {"column": 9, "line": 48}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 32, "line": 48}, "start": {"column": 14, "line": 48}}, "segments": [{"stringSegment": {"content": "Touch the screen", "range": {"end": {"column": 31, "line": 48}, "start": {"column": 15, "line": 48}}}}]}}, "range": {"end": {"column": 32, "line": 48}, "start": {"column": 14, "line": 48}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Text", "range": {"end": {"column": 13, "line": 48}, "start": {"column": 9, "line": 48}}}}, "range": {"end": {"column": 33, "line": 48}, "start": {"column": 9, "line": 48}}}], "stringLiteralExprs": [{"range": {"end": {"column": 32, "line": 48}, "start": {"column": 14, "line": 48}}, "segments": [{"stringSegment": {"content": "Touch the screen", "range": {"end": {"column": 31, "line": 48}, "start": {"column": 15, "line": 48}}}}]}]},
 ]
 
 # Parser output for `Text("Hold near the pass")` at 34:9.
-does_not_warn_for_preferred_nfc_copy_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 34, "column": 9}, "end": {"line": 34, "column": 35}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 34, "column": 9}, "end": {"line": 34, "column": 13}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 34, "column": 9}, "end": {"line": 34, "column": 13}}, "token": {"kind": "identifier", "text": "Text"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 34, "column": 13}, "end": {"line": 34, "column": 14}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 34, "column": 14}, "end": {"line": 34, "column": 34}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 34, "column": 14}, "end": {"line": 34, "column": 34}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 34, "column": 14}, "end": {"line": 34, "column": 34}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 34, "column": 14}, "end": {"line": 34, "column": 15}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 34, "column": 15}, "end": {"line": 34, "column": 33}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 34, "column": 15}, "end": {"line": 34, "column": 33}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 34, "column": 15}, "end": {"line": 34, "column": 33}}, "token": {"kind": "stringSegment", "text": "Hold near the pass"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 34, "column": 33}, "end": {"line": 34, "column": 34}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 34, "column": 34}, "end": {"line": 34, "column": 35}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 34, "column": 35}, "end": {"line": 34, "column": 35}}, "children": []},
-]}
+does_not_warn_for_preferred_nfc_copy_node := {"declReferenceExprs": [{"baseName": "Text", "range": {"end": {"column": 13, "line": 34}, "start": {"column": 9, "line": 34}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 34, "line": 34}, "start": {"column": 14, "line": 34}}, "segments": [{"stringSegment": {"content": "Hold near the pass", "range": {"end": {"column": 33, "line": 34}, "start": {"column": 15, "line": 34}}}}]}}, "range": {"end": {"column": 34, "line": 34}, "start": {"column": 14, "line": 34}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Text", "range": {"end": {"column": 13, "line": 34}, "start": {"column": 9, "line": 34}}}}, "range": {"end": {"column": 35, "line": 34}, "start": {"column": 9, "line": 34}}}], "stringLiteralExprs": [{"range": {"end": {"column": 34, "line": 34}, "start": {"column": 14, "line": 34}}, "segments": [{"stringSegment": {"content": "Hold near the pass", "range": {"end": {"column": 33, "line": 34}, "start": {"column": 15, "line": 34}}}}]}]}

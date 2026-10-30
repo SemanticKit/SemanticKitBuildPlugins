@@ -18,49 +18,7 @@ test_does_not_warn_for_asset_image_swift_syntax if {
 }
 
 # Parser output for `Image(systemName: "square.and.arrow.up")` at 24:13.
-warns_for_system_symbol_image_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 24, "column": 13}, "end": {"line": 24, "column": 53}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 24, "column": 13}, "end": {"line": 24, "column": 18}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 13}, "end": {"line": 24, "column": 18}}, "token": {"kind": "identifier", "text": "Image"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 18}, "end": {"line": 24, "column": 19}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 24, "column": 19}, "end": {"line": 24, "column": 52}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 24, "column": 19}, "end": {"line": 24, "column": 52}}, "children": [
-      {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 19}, "end": {"line": 24, "column": 29}}, "token": {"kind": "identifier", "text": "systemName"}, "children": []},
-      {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 29}, "end": {"line": 24, "column": 30}}, "token": {"kind": "colon", "text": ":"}, "children": []},
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 24, "column": 31}, "end": {"line": 24, "column": 52}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 31}, "end": {"line": 24, "column": 32}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 24, "column": 32}, "end": {"line": 24, "column": 51}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 24, "column": 32}, "end": {"line": 24, "column": 51}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 32}, "end": {"line": 24, "column": 51}}, "token": {"kind": "stringSegment", "text": "square.and.arrow.up"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 51}, "end": {"line": 24, "column": 52}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 24, "column": 52}, "end": {"line": 24, "column": 53}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 24, "column": 53}, "end": {"line": 24, "column": 53}}, "children": []},
-]}
+warns_for_system_symbol_image_swift_syntax_node := {"declReferenceExprs": [{"baseName": "Image", "range": {"end": {"column": 18, "line": 24}, "start": {"column": 13, "line": 24}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 52, "line": 24}, "start": {"column": 31, "line": 24}}, "segments": [{"stringSegment": {"content": "square.and.arrow.up", "range": {"end": {"column": 51, "line": 24}, "start": {"column": 32, "line": 24}}}}]}}, "label": "systemName", "range": {"end": {"column": 52, "line": 24}, "start": {"column": 19, "line": 24}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Image", "range": {"end": {"column": 18, "line": 24}, "start": {"column": 13, "line": 24}}}}, "range": {"end": {"column": 53, "line": 24}, "start": {"column": 13, "line": 24}}}], "stringLiteralExprs": [{"range": {"end": {"column": 52, "line": 24}, "start": {"column": 31, "line": 24}}, "segments": [{"stringSegment": {"content": "square.and.arrow.up", "range": {"end": {"column": 51, "line": 24}, "start": {"column": 32, "line": 24}}}}]}]}
 
 # Parser output for `Image("assetName")` at 31:13.
-does_not_warn_for_asset_image_swift_syntax_node := {"type": "FunctionCallExprSyntax", "range": {"start": {"line": 31, "column": 13}, "end": {"line": 31, "column": 31}}, "children": [
-  {"type": "DeclReferenceExprSyntax", "range": {"start": {"line": 31, "column": 13}, "end": {"line": 31, "column": 18}}, "children": [
-    {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 13}, "end": {"line": 31, "column": 18}}, "token": {"kind": "identifier", "text": "Image"}, "children": []},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 18}, "end": {"line": 31, "column": 19}}, "token": {"kind": "leftParen", "text": "("}, "children": []},
-  {"type": "LabeledExprListSyntax", "range": {"start": {"line": 31, "column": 19}, "end": {"line": 31, "column": 30}}, "children": [
-    {"type": "LabeledExprSyntax", "range": {"start": {"line": 31, "column": 19}, "end": {"line": 31, "column": 30}}, "children": [
-      {"type": "StringLiteralExprSyntax", "range": {"start": {"line": 31, "column": 19}, "end": {"line": 31, "column": 30}}, "children": [
-        {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 19}, "end": {"line": 31, "column": 20}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-        {"type": "StringLiteralSegmentListSyntax", "range": {"start": {"line": 31, "column": 20}, "end": {"line": 31, "column": 29}}, "children": [
-          {"type": "StringSegmentSyntax", "range": {"start": {"line": 31, "column": 20}, "end": {"line": 31, "column": 29}}, "children": [
-            {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 20}, "end": {"line": 31, "column": 29}}, "token": {"kind": "stringSegment", "text": "assetName"}, "children": []},
-          ]},
-        ]},
-        {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 29}, "end": {"line": 31, "column": 30}}, "token": {"kind": "stringQuote", "text": "\""}, "children": []},
-      ]},
-    ]},
-  ]},
-  {"type": "TokenSyntax", "range": {"start": {"line": 31, "column": 30}, "end": {"line": 31, "column": 31}}, "token": {"kind": "rightParen", "text": ")"}, "children": []},
-  {"type": "MultipleTrailingClosureElementListSyntax", "range": {"start": {"line": 31, "column": 31}, "end": {"line": 31, "column": 31}}, "children": []},
-]}
+does_not_warn_for_asset_image_swift_syntax_node := {"declReferenceExprs": [{"baseName": "Image", "range": {"end": {"column": 18, "line": 31}, "start": {"column": 13, "line": 31}}}], "functionCallExprs": [{"arguments": [{"expression": {"stringLiteralExpr": {"range": {"end": {"column": 30, "line": 31}, "start": {"column": 19, "line": 31}}, "segments": [{"stringSegment": {"content": "assetName", "range": {"end": {"column": 29, "line": 31}, "start": {"column": 20, "line": 31}}}}]}}, "range": {"end": {"column": 30, "line": 31}, "start": {"column": 19, "line": 31}}}], "calledExpression": {"declReferenceExpr": {"baseName": "Image", "range": {"end": {"column": 18, "line": 31}, "start": {"column": 13, "line": 31}}}}, "range": {"end": {"column": 31, "line": 31}, "start": {"column": 13, "line": 31}}}], "stringLiteralExprs": [{"range": {"end": {"column": 30, "line": 31}, "start": {"column": 19, "line": 31}}, "segments": [{"stringSegment": {"content": "assetName", "range": {"end": {"column": 29, "line": 31}, "start": {"column": 20, "line": 31}}}}]}]}

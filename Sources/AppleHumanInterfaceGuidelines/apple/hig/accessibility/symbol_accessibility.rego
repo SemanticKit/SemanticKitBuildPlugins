@@ -20,15 +20,11 @@ symbol_accessibility_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
+  some call in input.functionCallExprs
 
-  callee := call.children[0]
-  callee.type == "DeclReferenceExprSyntax"
-  callee.children[0].token.text == "Image"
+  callee := call.calledExpression.declReferenceExpr
+  callee.baseName == "Image"
 
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  argument := argument_list.children[_]
-  argument.children[0].token.text == "systemName"
+  some argument in call.arguments
+  argument.label == "systemName"
 }

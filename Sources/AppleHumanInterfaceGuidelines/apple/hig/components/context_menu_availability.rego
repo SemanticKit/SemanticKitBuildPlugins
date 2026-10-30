@@ -20,12 +20,14 @@ context_menu_availability_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
+  some call in input.functionCallExprs
 
-  callee := call.children[0]
   # `name(...)` or the modifier form `base.name(...)`
-  reference := {callee, callee.children[count(callee.children) - 1]}[_]
-  reference.type == "DeclReferenceExprSyntax"
-  reference.children[0].token.text == "contextMenu"
+  reference := called_reference(call)
+  reference.baseName == "contextMenu"
 }
+
+# The name a call calls: `Text` in `Text("…")`, `help` in `.help("…")`.
+called_reference(call) := call.calledExpression.declReferenceExpr
+
+called_reference(call) := call.calledExpression.memberAccessExpr.declName

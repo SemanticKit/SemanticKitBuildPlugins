@@ -20,24 +20,16 @@ technical_ar_terms_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
+  some call in input.functionCallExprs
 
-  callee := call.children[0]
-  callee.type == "DeclReferenceExprSyntax"
-  visible_string_call_names[callee.children[0].token.text]
+  callee := call.calledExpression.declReferenceExpr
+  visible_string_call_names[callee.baseName]
 
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  argument := argument_list.children[_]
-  literal := argument.children[_]
-  literal.type == "StringLiteralExprSyntax"
-  segment_list := literal.children[_]
-  segment_list.type == "StringLiteralSegmentListSyntax"
-  segment := segment_list.children[_]
-  segment.type == "StringSegmentSyntax"
+  some argument in call.arguments
+  literal := argument.expression.stringLiteralExpr
+  segment := literal.segments[_].stringSegment
   term := technical_ar_terms[_]
-  contains(lower(segment.children[0].token.text), term)
+  contains(lower(segment.content), term)
 }
 
 technical_ar_terms_warning contains {
@@ -47,26 +39,16 @@ technical_ar_terms_warning contains {
   "column": call.range.start.column,
   "severity": "warning",
 } if {
-  call := input
-  call.type == "FunctionCallExprSyntax"
+  some call in input.functionCallExprs
 
-  callee := call.children[0]
-  callee.type == "MemberAccessExprSyntax"
-  member := callee.children[count(callee.children) - 1]
-  member.type == "DeclReferenceExprSyntax"
-  visible_string_call_names[member.children[0].token.text]
+  member := call.calledExpression.memberAccessExpr.declName
+  visible_string_call_names[member.baseName]
 
-  argument_list := call.children[_]
-  argument_list.type == "LabeledExprListSyntax"
-  argument := argument_list.children[_]
-  literal := argument.children[_]
-  literal.type == "StringLiteralExprSyntax"
-  segment_list := literal.children[_]
-  segment_list.type == "StringLiteralSegmentListSyntax"
-  segment := segment_list.children[_]
-  segment.type == "StringSegmentSyntax"
+  some argument in call.arguments
+  literal := argument.expression.stringLiteralExpr
+  segment := literal.segments[_].stringSegment
   term := technical_ar_terms[_]
-  contains(lower(segment.children[0].token.text), term)
+  contains(lower(segment.content), term)
 }
 
 visible_string_call_names := {"Text", "Label", "Button", "TextField", "help"}

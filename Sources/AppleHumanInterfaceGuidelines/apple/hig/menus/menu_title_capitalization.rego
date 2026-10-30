@@ -32,22 +32,14 @@ menu_title_capitalization_warning contains {
 	"column": call.range.start.column,
 	"severity": "warning",
 } if {
-	call := input
-	call.type == "FunctionCallExprSyntax"
-	callee := call.children[0]
-	callee.type == "DeclReferenceExprSyntax"
-	rule := menu_title_rules[callee.children[0].token.text]
-	argument_list := call.children[_]
-	argument_list.type == "LabeledExprListSyntax"
-	labeled_argument := argument_list.children[_]
-	literal := labeled_argument.children[_]
-	literal.type == "StringLiteralExprSyntax"
-	segment_list := literal.children[_]
-	segment_list.type == "StringLiteralSegmentListSyntax"
-	segment := segment_list.children[_]
-	segment.type == "StringSegmentSyntax"
+	some call in input.functionCallExprs
+	callee := call.calledExpression.declReferenceExpr
+	rule := menu_title_rules[callee.baseName]
+	some labeled_argument in call.arguments
+	literal := labeled_argument.expression.stringLiteralExpr
+	segment := literal.segments[_].stringSegment
 	words := [word |
-		word := split(segment.children[0].token.text, " ")[_]
+		word := split(segment.content, " ")[_]
 		word != ""
 	]
 	count(words) > 1

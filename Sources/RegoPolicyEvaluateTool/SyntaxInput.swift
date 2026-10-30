@@ -1,84 +1,57 @@
 import AST
 import Foundation
+import SwiftOperators
 import SwiftParser
 import SwiftSyntax
 
-/// The syntax tree of one Swift source file, as the values policies receive
-/// as `input`.
+/// One Swift source file as the `input` its policies read.
 ///
-/// Every node is the parser's own node, written as
-/// `{"type", "range": {"start", "end"}, "token"?, "children"}`: `type` is the
-/// SwiftSyntax node type (`FunctionCallExprSyntax`), `range` holds 1-based
-/// line and column positions without trivia, `token` is present on tokens
-/// only and holds the token kind's case name (`identifier`, `stringSegment`,
-/// `leftParen`, ...) and the token's text, and `children` are the node's children in source
-/// order, as `Syntax.children(viewMode: .all)` lists them.
+/// The parser's tree, with its sequence expressions folded by the standard
+/// operators, is walked once by a `SyntaxVisitor` (``SyntaxInputVisitor``).
+/// `input` holds one list for each kind of node policies look for, named
+/// after the node type: `functionCallExprs`, `memberAccessExprs`,
+/// `declReferenceExprs`, `stringLiteralExprs`, `infixOperatorExprs`,
+/// `dictionaryExprs`, `genericSpecializationExprs`, `macroExpansionExprs`,
+/// `returnStmts`, `variableDecls`, `functionDecls`, `initializerDecls`,
+/// `enumCaseDecls`, `structDecls`, `classDecls`, `enumDecls`, `actorDecls`,
+/// `extensionDecls`, `protocolDecls`, `identifierTypes`, `memberTypes` and
+/// `dictionaryTypes`. Every node of that kind in the file is in its list, in
+/// source order, with its swift-syntax properties by name (see
+/// ``RegoInputConvertible``):
+///
+/// ```rego
+/// some call in input.functionCallExprs
+/// call.calledExpression.declReferenceExpr.baseName == "Button"
+/// some argument in call.arguments
+/// some segment in argument.expression.stringLiteralExpr.segments
+/// segment.stringSegment.content == "OK"
+/// ```
+///
+/// Each node in a list also has `context`: the declarations around it,
+/// outermost first, each `{"<case>": {...}}` as in a member block, without
+/// its `memberBlock`, `body` or the values of its bindings. A list with no
+/// nodes is left out.
+///
+/// Given the ``OntologyVocabulary`` of the target and its dependencies,
+/// `input.vocabulary` holds it: `ontologies`, `terms` and `prefixes`, the
+/// names the ontologies in scope declare.
 struct SyntaxInput {
-    /// Every node of the tree in pre-order, root first.
-    let nodes: [AST.RegoValue]
+    let value: AST.RegoValue
 
-    /// The positions in `nodes` of the nodes of each node type.
-    private let indicesByType: [String: [Int]]
-
-    init(contentsOf url: URL) throws {
-        try self.init(source: String(contentsOf: url, encoding: .utf8), fileName: url.path)
+    init(contentsOf url: URL, vocabulary: OntologyVocabulary? = nil) throws {
+        try self.init(source: String(contentsOf: url, encoding: .utf8), fileName: url.path, vocabulary: vocabulary)
     }
 
-    init(source: String, fileName: String) {
-        let tree = Parser.parse(source: source)
-        let converter = SourceLocationConverter(fileName: fileName, tree: tree)
-        var nodes: [AST.RegoValue] = []
-        var indicesByType: [String: [Int]] = [:]
-        _ = Self.value(of: Syntax(tree), converter: converter, collecting: &nodes, indicesByType: &indicesByType)
-        self.nodes = nodes
-        self.indicesByType = indicesByType
-    }
-
-    /// The nodes whose type is one of `types`, in pre-order; every node when
-    /// `types` is `nil`.
-    func nodes(ofTypes types: Set<String>?) -> [AST.RegoValue] {
-        guard let types else { return nodes }
-        return types.flatMap { indicesByType[$0] ?? [] }.sorted().map { nodes[$0] }
-    }
-
-    private static func value(
-        of node: Syntax,
-        converter: SourceLocationConverter,
-        collecting nodes: inout [AST.RegoValue],
-        indicesByType: inout [String: [Int]]
-    ) -> AST.RegoValue {
-        let index = nodes.count
-        nodes.append(.null)
-        let type = String(describing: node.syntaxNodeType)
-        indicesByType[type, default: []].append(index)
-
-        let start = converter.location(for: node.positionAfterSkippingLeadingTrivia)
-        let end = converter.location(for: node.endPositionBeforeTrailingTrivia)
-        var object: [AST.RegoValue: AST.RegoValue] = [
-            "type": .string(type),
-            "range": ["start": position(start), "end": position(end)],
-            "children": .array(node.children(viewMode: .all).map {
-                value(of: $0, converter: converter, collecting: &nodes, indicesByType: &indicesByType)
-            }),
-        ]
-        if let token = node.as(TokenSyntax.self) {
-            object["token"] = [
-                "kind": .string(Self.caseName(of: token.tokenKind)),
-                "text": .string(token.text),
-            ]
+    init(source: String, fileName: String, vocabulary: OntologyVocabulary? = nil) {
+        let parsed = Parser.parse(source: source)
+        // A sequence the standard operators cannot fold stays a `sequenceExpr`.
+        let tree = OperatorTable.standardOperators.foldAll(parsed) { _ in }
+        let visitor = SyntaxInputVisitor(locations: SourceLocationConverter(fileName: fileName, tree: tree))
+        visitor.walk(tree)
+        if let vocabulary, !vocabulary.isEmpty {
+            value = visitor.input.setting("vocabulary", vocabulary.regoValue)
+        } else {
+            value = visitor.input
         }
-
-        let value = AST.RegoValue.object(object)
-        nodes[index] = value
-        return value
-    }
-
-    /// `identifier` for `.identifier("Button")`, `leftParen` for `.leftParen`.
-    private static func caseName(of kind: TokenKind) -> String {
-        Mirror(reflecting: kind).children.first?.label ?? String(describing: kind)
-    }
-
-    private static func position(_ location: SourceLocation) -> AST.RegoValue {
-        ["line": .number(RegoNumber(value: location.line)), "column": .number(RegoNumber(value: location.column))]
     }
 }
