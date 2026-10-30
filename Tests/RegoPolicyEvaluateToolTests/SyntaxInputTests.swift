@@ -103,6 +103,31 @@ struct SyntaxInputTests {
         #expect(member["body"]?["statements"]?.element(0)?["item"]?["expr"]?["functionCallExpr"] != nil)
     }
 
+    @Test("A variable in a node's context keeps its pattern and type, not the values of its bindings")
+    func variableContext() throws {
+        let source = """
+            struct Zoo {
+                var tweety: Bird = Bird(name: "Tweety") { didSet { log(tweety) } }
+            }
+            """
+        let input = SyntaxInput(source: source, fileName: "VariableContext.swift").value
+        let call = try #require(input["functionCallExprs"]?.element(0))
+        #expect(call["calledExpression"]?["declReferenceExpr"]?["baseName"] == "Bird")
+
+        let variable = try #require(call["context"]?.element(1)?["variableDecl"])
+        #expect(variable["bindingSpecifier"] == "var")
+        let binding = try #require(variable["bindings"]?.element(0))
+        #expect(binding["pattern"]?["identifierPattern"]?["identifier"] == "tweety")
+        #expect(binding["typeAnnotation"]?["type"]?["identifierType"]?["name"] == "Bird")
+        #expect(binding["initializer"] == nil)
+        #expect(binding["accessorBlock"] == nil)
+
+        // The variable's own entry keeps its values.
+        let declaration = try #require(input["variableDecls"]?.element(0)?["bindings"]?.element(0))
+        #expect(declaration["initializer"] != nil)
+        #expect(declaration["accessorBlock"] != nil)
+    }
+
     @Test("A list with no nodes is left out, and lists keep source order")
     func lists() throws {
         let input = SyntaxInput(source: "f(g())", fileName: "Order.swift").value

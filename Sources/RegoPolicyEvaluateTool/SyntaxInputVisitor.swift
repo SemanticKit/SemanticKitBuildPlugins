@@ -28,9 +28,10 @@ final class SyntaxInputVisitor: SyntaxVisitor {
     }
 
     /// Collects a declaration and makes it part of the context of what it contains.
-    private func enter(_ value: AST.RegoValue, _ name: String) -> SyntaxVisitorContinueKind {
+    private func enter(_ node: some DeclSyntaxProtocol & RegoInputConvertible, _ name: String) -> SyntaxVisitorContinueKind {
+        let value = node.regoInput(locations)
         collect(value, in: "\(name)s")
-        context.append([name: Self.header(of: value, name)])
+        context.append([name: Self.header(of: node, value)])
         return .visitChildren
     }
 
@@ -38,41 +39,41 @@ final class SyntaxInputVisitor: SyntaxVisitor {
         context.removeLast()
     }
 
-    /// The declaration without its contents; a variable without the values
-    /// of its bindings.
-    private static func header(of value: AST.RegoValue, _ name: String) -> AST.RegoValue {
+    /// The declaration's `value` without its contents; a variable's without
+    /// the values of its bindings.
+    private static func header(of node: some DeclSyntaxProtocol, _ value: AST.RegoValue) -> AST.RegoValue {
         let header = value.removing(contents)
-        guard name == "variableDecl", case .array(let bindings)? = header["bindings"] else { return header }
+        guard node.is(VariableDeclSyntax.self), case .array(let bindings)? = header["bindings"] else { return header }
         return header.setting("bindings", .array(bindings.map { $0.removing(["initializer", "accessorBlock"]) }))
     }
 
     // MARK: Declarations
 
-    override func visit(_ node: StructDeclSyntax) -> SyntaxVisitorContinueKind { enter(node.regoInput(locations), "structDecl") }
+    override func visit(_ node: StructDeclSyntax) -> SyntaxVisitorContinueKind { enter(node, "structDecl") }
     override func visitPost(_ node: StructDeclSyntax) { leave() }
 
-    override func visit(_ node: ClassDeclSyntax) -> SyntaxVisitorContinueKind { enter(node.regoInput(locations), "classDecl") }
+    override func visit(_ node: ClassDeclSyntax) -> SyntaxVisitorContinueKind { enter(node, "classDecl") }
     override func visitPost(_ node: ClassDeclSyntax) { leave() }
 
-    override func visit(_ node: EnumDeclSyntax) -> SyntaxVisitorContinueKind { enter(node.regoInput(locations), "enumDecl") }
+    override func visit(_ node: EnumDeclSyntax) -> SyntaxVisitorContinueKind { enter(node, "enumDecl") }
     override func visitPost(_ node: EnumDeclSyntax) { leave() }
 
-    override func visit(_ node: ActorDeclSyntax) -> SyntaxVisitorContinueKind { enter(node.regoInput(locations), "actorDecl") }
+    override func visit(_ node: ActorDeclSyntax) -> SyntaxVisitorContinueKind { enter(node, "actorDecl") }
     override func visitPost(_ node: ActorDeclSyntax) { leave() }
 
-    override func visit(_ node: ProtocolDeclSyntax) -> SyntaxVisitorContinueKind { enter(node.regoInput(locations), "protocolDecl") }
+    override func visit(_ node: ProtocolDeclSyntax) -> SyntaxVisitorContinueKind { enter(node, "protocolDecl") }
     override func visitPost(_ node: ProtocolDeclSyntax) { leave() }
 
-    override func visit(_ node: ExtensionDeclSyntax) -> SyntaxVisitorContinueKind { enter(node.regoInput(locations), "extensionDecl") }
+    override func visit(_ node: ExtensionDeclSyntax) -> SyntaxVisitorContinueKind { enter(node, "extensionDecl") }
     override func visitPost(_ node: ExtensionDeclSyntax) { leave() }
 
-    override func visit(_ node: FunctionDeclSyntax) -> SyntaxVisitorContinueKind { enter(node.regoInput(locations), "functionDecl") }
+    override func visit(_ node: FunctionDeclSyntax) -> SyntaxVisitorContinueKind { enter(node, "functionDecl") }
     override func visitPost(_ node: FunctionDeclSyntax) { leave() }
 
-    override func visit(_ node: InitializerDeclSyntax) -> SyntaxVisitorContinueKind { enter(node.regoInput(locations), "initializerDecl") }
+    override func visit(_ node: InitializerDeclSyntax) -> SyntaxVisitorContinueKind { enter(node, "initializerDecl") }
     override func visitPost(_ node: InitializerDeclSyntax) { leave() }
 
-    override func visit(_ node: VariableDeclSyntax) -> SyntaxVisitorContinueKind { enter(node.regoInput(locations), "variableDecl") }
+    override func visit(_ node: VariableDeclSyntax) -> SyntaxVisitorContinueKind { enter(node, "variableDecl") }
     override func visitPost(_ node: VariableDeclSyntax) { leave() }
 
     override func visit(_ node: EnumCaseDeclSyntax) -> SyntaxVisitorContinueKind {
